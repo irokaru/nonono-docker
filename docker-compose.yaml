@@ -31,6 +31,13 @@ services:
     environment:
       - TZ=${TZ}
 
+  node:
+    image: node:12.14-alpine
+    tty: true
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+
   db:
     image: mysql:8.0
     volumes:
