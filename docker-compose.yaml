@@ -1,5 +1,17 @@
 version: "3"
 services:
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    environment:
+      DOMAINS: 'nononotyaya.net -> http://web:8080'
+      STAGE: production
+    volumes:
+      - ./org-chimata-ssl-certs:/var/lib/https-portal
+
   app:
     build:
       context: ./docker/php
@@ -23,7 +35,7 @@ services:
     depends_on:
       - app
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
       - ./src:/var/www/html
       - ./logs:/var/log/nginx
