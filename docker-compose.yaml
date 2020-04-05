@@ -33,7 +33,7 @@ services:
       - TZ=${TZ}
 
   web:
-    image: nginx:1.17-alpine
+    build: ./docker/nginx
     container_name: nonono-web-container
     depends_on:
       - php
@@ -47,7 +47,7 @@ services:
       - TZ=${TZ}
 
   node:
-    image: node:12.14-alpine
+    image: node:12.14
     container_name: nonono-node-container
     tty: true
     volumes:

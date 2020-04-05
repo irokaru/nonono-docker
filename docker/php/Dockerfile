@@ -1,17 +1,17 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.3-fpm
 LABEL maintainer "irokaru"
 
 ARG TZ
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /composer
 
-RUN set -eux && \
-  apk add --update-cache --no-cache --virtual=.build-dependencies tzdata && \
-  cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-  apk del .build-dependencies && \
-  docker-php-ext-install bcmath pdo_mysql && \
-  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
-  composer config -g repos.packagist composer https://packagist.jp && \
-  composer global require hirak/prestissimo
+# install composer
+RUN cd /usr/bin && curl -s http://getcomposer.org/installer | php && ln -s /usr/bin/composer.phar /usr/bin/composer
+RUN apt-get update \
+ && apt-get install -y git zip unzip vim sqlite \
+ && cp /usr/share/zoneinfo/${TZ} /etc/localtime
+
+RUN apt-get install -y apt-utils libfreetype6-dev libpq-dev zlib1g-dev libzip-dev libjpeg-dev libpng-dev \
+    && docker-php-ext-install pdo_mysql mysqli mbstring zip \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
 
 WORKDIR /var/www/html
