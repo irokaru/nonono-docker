@@ -2,6 +2,7 @@ version: "3"
 services:
   https-portal:
     image: steveltn/https-portal:1
+    container_name: nonono-https-portal-container
     ports:
       - 80:80
       - 443:443
@@ -12,11 +13,12 @@ services:
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
 
-  app:
+  php:
     build:
       context: ./docker/php
       args:
         - TZ=${TZ}
+    container_name: nonono-php-container
     volumes:
       - ./src:/var/www/html
       - ./logs:/var/log/php
@@ -32,10 +34,11 @@ services:
 
   web:
     image: nginx:1.17-alpine
+    container_name: nonono-web-container
     depends_on:
-      - app
+      - php
     ports:
-      - 8080:8080
+      - 8000:8000
     volumes:
       - ./src:/var/www/html
       - ./logs:/var/log/nginx
@@ -45,6 +48,7 @@ services:
 
   node:
     image: node:12.14-alpine
+    container_name: nonono-node-container
     tty: true
     volumes:
       - ./src:/var/www/html
@@ -52,6 +56,7 @@ services:
 
   db:
     image: mysql:8.0
+    container_name: nonono-mysql-container
     volumes:
       - db-store:/var/lib/mysql
       - ./logs:/var/log/mysql
