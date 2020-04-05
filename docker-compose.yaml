@@ -7,8 +7,8 @@ services:
       - 443:443
     restart: always
     environment:
-      DOMAINS: 'nononotyaya.net -> http://web:8080'
-      STAGE: production
+      DOMAINS: ${DOMAIN}
+      STAGE: ${STAGE}
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
 
