@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "irokaru/nonono-docker",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "nonono docker system.",
     "keywords": [
         "framework",
         "laravel"
@@ -16,6 +16,7 @@
     "require-dev": {
         "facade/ignition": "^1.4",
         "fzaninotto/faker": "^1.9.1",
+        "laravel/ui": "^1.0",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
         "phpunit/phpunit": "^8.0"
