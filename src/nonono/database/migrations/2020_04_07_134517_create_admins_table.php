@@ -16,10 +16,9 @@ class CreateAdminsTable extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->string('name')->unique();
             $table->string('password');
-            $table->timestamps();
         });
 
-        App\Models\Admin::create([
+        \App\Models\Admin::create([
             'name'     => getenv('ADMIN_NAME'),
             'password' => Illuminate\Support\Facades\Hash::make(getenv('ADMIN_PASS')),
         ]);
