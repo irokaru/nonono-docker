@@ -16,7 +16,7 @@ class HistoryResource extends JsonResource
     {
         return [
             'id'          => $this->id,
-            'date'        => $this->date->format('H/m/d'),
+            'date'        => $this->date,
             'discription' => $this->discription,
         ];
     }

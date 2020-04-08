@@ -21,3 +21,5 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', 'AuthController@logout')->name('auth.logout');
     });
 });
+
+Route::get('history', 'HistoryController@index')->name('history.index');

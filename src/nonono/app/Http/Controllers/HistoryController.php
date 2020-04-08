@@ -10,6 +10,6 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        return HistoryResource::collection(History::all()->orderBy('id', 'desc'));
+        return HistoryResource::collection(History::orderBy('id', 'desc')->get());
     }
 }
