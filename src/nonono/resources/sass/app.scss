@@ -1,8 +1,318 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('//fonts.googleapis.com/earlyaccess/notosansjapanese.css');
+@import url('//use.fontawesome.com/releases/v5.4.1/css/all.css');
 
 // Variables
 @import 'variables';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
+* {
+  font-family: "Noto Sans Japanese";
+}
+
+html {
+  margin: 0;
+  color: #101010;
+  overflow-y: scroll;
+}
+
+body {
+  font-size: 15px;
+  margin: 0;
+  background-image: url('/img/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+h1 {
+  width: 100%;
+  font-size: 1em;
+  margin: 1em 0;
+
+  img {
+      width: 100%;
+  }
+}
+
+h2 {
+  width: 100%;
+  font-size: 2em;
+  color: rgba(255, 255, 255, 0.96);
+  background: rgba(10, 10, 10, 0.4);
+  text-align: center;
+  margin: 0 0 1.5em;
+  padding: 1.25em 0;
+}
+
+h3 {
+  color: rgb(102, 102, 102);
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 2.5em 0 1em;
+  padding: 0 .3em;
+  border-bottom: 4px solid rgba(0,0,0,.5);
+  border-radius: 0;
+
+  &.head {
+    margin: .5em 0;
+  }
+
+  i {
+    font-size: 1.1em;
+    text-align: center;
+    min-width: 1.3em;
+  }
+}
+
+h4 {
+  background: rgba(0,0,0,.6);
+  font-size: 1.1em;
+  color: rgba(255, 255, 255, 0.9);
+  padding: .4em .6em;
+  margin: 0;
+  margin-top: 1.5em;
+}
+
+p {
+  margin: .75em .5em;
+}
+
+a {
+  text-decoration: none;
+  color: #6699cc;
+  transition: .3s color;
+  &:hover {
+    color: #334d66;
+  }
+}
+
+img {
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+i {
+  min-width: 1.5em;
+  text-align: center;
+}
+
+ul {
+  color: #333333;
+  box-sizing: border-box;
+  list-style-type: none;
+
+  &.none {
+    margin: .75em .5em;
+    padding: 0;
+  }
+  &.dash {
+    border: 2px dashed #333333;
+    background: rgba(255, 255, 255, .4);
+    margin: .5em 1.5em;
+    padding: .5em;
+  }
+  li {
+    $list-color: #4e4e4e;
+    padding: .3em .3em .3em 1.3em;
+    position: relative;
+
+    &.arrow::before {
+      position: absolute;
+      content: "";
+      display: block;
+      top: .8em;
+      left: 0;
+      width: .4em;
+      height: .4em;
+      border-right: 3px solid $list-color;
+      border-bottom: 3px solid $list-color;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
+    &.triangle::before {
+      position:absolute;
+      content:'';
+      top: 0.6em;
+      left: 0.2em;
+      height:0;
+      width:0;
+      border-style: solid;
+      border-width: 6px 0 6px 9px;
+      border-color: transparent transparent transparent $list-color;
+    }
+    &>ul.dash {
+      border: 0;
+      background: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+pre {
+  word-break: break-all;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
+}
+
+code {
+  font-family: Consolas;
+  border-radius: 4px;
+  font-size: .9em;
+  line-height: 140%;
+}
+
+pre code {
+  display: block;
+  padding: .75em;
+  background: rgba(251, 235, 212, 0.753);
+}
+
+pre code>* {
+  font-family: Consolas;
+}
+
+p>code {
+  background: rgba(251, 235, 212, 0.753);
+  color: #d81b60;
+  font-size: 14px;
+  margin: 0 3px;
+  padding: 1px 5px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+blockquote {
+  position: relative;
+  padding: 1em 1.5em;
+  box-sizing: border-box;
+  font-style: italic;
+  background: #e6e6e6;
+  color: #636363;
+  border-left: 4px solid #9dd4ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  p {
+    margin: 0;
+  }
+}
+
+#app {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  margin: auto;
+  max-width: 900px;
+}
+
+.form {
+  margin: 1em 0;
+  padding: 1em 10%;
+  border: 1px dashed rgba(0,0,0,.4);
+  background: rgba(0,0,0,.1);
+  font-size: 1.05em;
+  @media (max-width: 1113px) {
+    border-width: 1px 0;
+  }
+  @media (max-width: $mobile-break) {
+    padding: 1em 5%;
+  }
+  dt {
+    margin: 0 .3em;
+  }
+  dd {
+    margin: 0;
+  }
+  input, textarea {
+    transition: all .3s ease-in-out;
+    outline: none;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 1em;
+    padding: .4em;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    color: #555;
+    background: rgba(255, 255, 255, 0.6);
+    font-size: 1em;
+    resize: none;
+    &:focus {
+      -webkit-box-shadow: 0 0 8px rgb(254, 254, 255);
+      box-shadow: 0 0 8px rgb(254, 254, 255);
+      border: 1px solid rgb(254, 254, 255);
+      background: rgba(255, 255, 255, 0.86);
+    }
+  }
+  .attachment {
+    text-align: center;
+    button {
+      background-color: #333;
+      border: none;
+      padding: 10px;
+      width: 60%;
+      border-radius: 3px;
+      box-shadow: 1px 5px 20px -5px rgba(0, 0, 0, .5);
+      color: #fff;
+      margin: 2em 0;
+      cursor: pointer;
+      font-size: .9em;
+      transition: .3s;
+      &:disabled {
+        background-color: #999;
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile-break) {
+h2 {
+  padding-top: 3.5em;
+}
+}
+
+/* ==========================================
+ フェードの動き方
+ ==========================================*/
+.fade-enter-active {
+  transition: all .15s ease;
+}
+.fade-leave-active {
+  transition: all .15s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.fade-enter, .fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+
+/* ==========================================
+ スクロールバー
+ ==========================================*/
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(50,50,50,.7);
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,.4);
+}

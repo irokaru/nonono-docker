@@ -1,7 +1,8 @@
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 // Pages
-import Home from './pages/Home'
-import Login from './pages/admin/Login'
+import Home from './pages/Home';
+import Login from './pages/admin/Login';
+import Admin from './pages/admin/Admin';
 
 // Routes
 const routes = [
@@ -10,7 +11,15 @@ const routes = [
     name: 'home',
     component: Home,
     meta: {
-      auth: undefined
+      auth: undefined,
+    }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Admin,
+    meta: {
+      auth: true,
     }
   },
   {
@@ -18,7 +27,7 @@ const routes = [
     name: 'login',
     component: Login,
     meta: {
-      auth: false
+      auth: false,
     }
   },
 ];
@@ -29,4 +38,4 @@ const router = new VueRouter({
   routes,
 });
 
-export default router
+export default router;
