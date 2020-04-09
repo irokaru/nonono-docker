@@ -23,3 +23,4 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('history', 'HistoryController@index')->name('history.index');
+Route::post('history', 'HistoryController@store')->name('history.store');
