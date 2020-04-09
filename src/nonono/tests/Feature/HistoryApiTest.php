@@ -76,4 +76,32 @@ class HistoryApiTest extends TestCase
         $response = $this->json('POST', route('history.store'), $history_array);
         $response->assertStatus(401);
     }
+
+    public function test_history_update_ok()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth = TestTool::getJwtAuthorization($admin);
+
+        $history = factory(History::class)->create();
+        $history_array = $history->toArray();
+        $history_array['id'] = 1;
+        unset($history_array['created_at']);
+        unset($history_array['updated_at']);
+
+        $suites = [
+            ['2000-01-01', 'hogehoge'],
+            ['2020-02-10', 'fugafuga'],
+        ];
+
+        foreach ($suites as $suite) {
+            $history_array['date']        = $suite[0];
+            $history_array['discription'] = $suite[1];
+
+            $res_update = $this->withHeaders($auth)->json('PUT', route('history.update'), $history_array);
+            $res_update->assertOk();
+
+            $res_index = $this->get(route('history.index'));
+            $res_index->assertOk()->assertExactJson([$history_array]);
+        }
+    }
 }

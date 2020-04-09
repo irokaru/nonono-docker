@@ -24,3 +24,4 @@ Route::prefix('auth')->group(function () {
 
 Route::get('history', 'HistoryController@index')->name('history.index');
 Route::post('history', 'HistoryController@store')->name('history.store');
+Route::put('history', 'HistoryController@update')->name('history.update');
