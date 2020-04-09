@@ -142,4 +142,48 @@ class HistoryApiTest extends TestCase
         $response = $this->json('PUT', route('history.update'), $history_array);
         $response->assertStatus(401);
     }
+
+    public function test_history_delete_ok()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth = TestTool::getJwtAuthorization($admin);
+
+        $history = factory(History::class, 5)->create();
+        $target_id = 3;
+
+        $res_delete = $this->withHeaders($auth)->json('DELETE', route('history.delete', ['id' => $target_id]));
+        $res_delete->assertOk();
+        $this->assertTrue(History::where('id', $target_id)->doesntExist());
+    }
+
+    public function test_history_delete_ng_validate()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth = TestTool::getJwtAuthorization($admin);
+
+        $history = factory(History::class, 5)->create();
+
+        $res_delete = $this->withHeaders($auth)->json('DELETE', route('history.delete', ['id' => -1]));
+        $res_delete->assertStatus(422);
+    }
+
+    public function test_history_delete_ng_no_auth()
+    {
+        $history = factory(History::class, 5)->create();
+
+        $res_delete = $this->json('DELETE', route('history.delete', ['id' => 1]));
+        $res_delete->assertStatus(401);
+    }
+
+    public function test_history_delete_ng_doesnt_exist_data()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth = TestTool::getJwtAuthorization($admin);
+
+        $history = factory(History::class, 5)->create();
+
+        $res_delete = $this->withHeaders($auth)->json('DELETE', route('history.delete', ['id' => 999]));
+        $res_delete->assertStatus(400);
+    }
+
 }

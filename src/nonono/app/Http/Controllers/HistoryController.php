@@ -16,7 +16,7 @@ class HistoryController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['store', 'update']);
+        $this->middleware('auth:api')->only(['store', 'update', 'delete']);
     }
 
     public function index()
@@ -54,6 +54,23 @@ class HistoryController extends Controller
         $history->date        = $params['date'];
         $history->discription = $params['discription'];
         $history->save();
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function delete($id)
+    {
+        $validator = Validator::make(['id' => $id], ['id' => 'required|integer|min:0']);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $history = History::find($id);
+        if (!$history) {
+            return response()->json(['status' => 'error', 'message' => 'data not exists'], 400);
+        }
+
+        $history->delete();
 
         return response()->json(['status' => 'success'], 200);
     }
