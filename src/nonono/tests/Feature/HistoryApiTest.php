@@ -47,7 +47,7 @@ class HistoryApiTest extends TestCase
         $res_index->assertOk()->assertExactJson([$history_array]);
     }
 
-    public function test_history_ng_validate()
+    public function test_history_store_ng_validate()
     {
         $admin = factory(Admin::class)->create();
         $auth = TestTool::getJwtAuthorization($admin);
@@ -69,7 +69,7 @@ class HistoryApiTest extends TestCase
         }
     }
 
-    public function test_history_ng_no_auth()
+    public function test_history_store_ng_no_auth()
     {
         $history = factory(History::class)->make();
         $history_array = $history->toArray();
@@ -103,5 +103,43 @@ class HistoryApiTest extends TestCase
             $res_index = $this->get(route('history.index'));
             $res_index->assertOk()->assertExactJson([$history_array]);
         }
+    }
+
+    public function test_history_update_ng_validate()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth = TestTool::getJwtAuthorization($admin);
+
+        $history = factory(History::class)->create();
+        $history_array = $history->toArray();
+        $history_array['id'] = 1;
+        unset($history_array['created_at']);
+        unset($history_array['updated_at']);
+
+        $suites = [
+         // [date, discription],
+            ['2020-01-01', null],
+            ['0000', 'hogehoge'],
+            [null,   'hogehoge'],
+            [null,   null],
+        ];
+
+        foreach ($suites as $suite) {
+            $history_array['date']        = $suite[0];
+            $history_array['discription'] = $suite[1];
+
+            $res_update = $this->withHeaders($auth)->json('PUT', route('history.update'), $history_array);
+            $res_update->assertStatus(422);
+        }
+    }
+
+    public function test_history_update_ng_no_auth()
+    {
+        $history = factory(History::class)->create();
+        $history_array = $history->toArray();
+        $history_array['id'] = 1;
+
+        $response = $this->json('PUT', route('history.update'), $history_array);
+        $response->assertStatus(401);
     }
 }
