@@ -6,14 +6,143 @@
 
       <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用履歴管理ページ
 
+        <h3>新規更新履歴</h3>
+
+        <form class="form" autocomplete="off" onsubmit="return false;">
+
+          <input type="text" v-model="form.date" placeholder="yyyy-mm-dd">
+          <input type="text" v-model="form.discription" placeholder="説明">
+          <button class="btn" @click="sendStore(form)">追加</button>
+
+        </form>
+
+
+        <h3>既存更新履歴</h3>
+
+        <form class="form" autocomplete="off" onsubmit="return false;">
+
+          <ul>
+            <li class="history-data" v-for="history in histories" :key="history.id">
+              <input type="hidden" :value="history.id">
+              <input type="text" :input="history.date" v-model="history.date" placeholder="yyyy-mm-dd">
+              <input type="text" :input="history.discription" v-model="history.discription" placeholder="説明">
+              <button class="btn" @click="sendUpdate(history)">更新</button>
+              <button class="btn" @click="sendDelete(history.id)">削除</button>
+            </li>
+          </ul>
+
+        </form>
     </div>
 
 </div>
 </template>
 
 <script>
-export default {
+import HistoryApi from '@/api/HistoryApi';
 
+export default {
+  data () {
+    return {
+      form: {
+        date: null,
+        discription: null,
+      },
+      histories: [],
+      isLoading: true,
+      isSending: false,
+    }
+  },
+  methods: {
+    /**
+     * 更新履歴を取得する処理
+     * @returns {array}
+     */
+    async getHistory () {
+      this.isLoading = true;
+      const historyResult = await HistoryApi.get();
+      this.isLoading = false;
+
+      if (historyResult.status === 'success') {
+        return historyResult.history;
+      }
+
+      alert(historyResult.message);
+      return [];
+    },
+    /**
+     * 更新処理
+     * @param {object} history
+     * @returns {void}
+     */
+    async sendStore (history) {
+      if (this.isSending || this.isLoading) return;
+
+      this.isSending = true;
+      const historyResult = await HistoryApi.store(history);
+      this.isSending = false;
+
+      if (historyResult.status === 'success') {
+        alert('追加完了');
+      } else if (historyResult.status === 'error') {
+        if (historyResult.message) {alert(historyResult.message);}
+        return;
+      }
+
+      this.histories = await this.getHistory();
+    },
+    /**
+     * 更新処理
+     * @param {object} history
+     * @returns {void}
+     */
+    async sendUpdate (history) {
+      if (this.isSending || this.isLoading) return;
+
+      this.isSending = true;
+      const historyResult = await HistoryApi.update(history);
+      this.isSending = false;
+
+      if (historyResult.status === 'success') {
+        alert('更新完了');
+      } else if (historyResult.status === 'error') {
+        if (historyResult.message) {alert(historyResult.message);}
+        return;
+      }
+
+      this.histories = await this.getHistory();
+    },
+    /**
+     * 削除処理
+     * @param {int} id
+     * @returns {void}
+     */
+    async sendDelete (id) {
+      if (this.isSending || this.isLoading) return;
+
+      this.isSending = true;
+      const historyResult = await HistoryApi.delete(id);
+      this.isSending = false;
+
+      if (historyResult.status === 'success') {
+        alert('削除完了');
+      } else if (historyResult.status === 'error') {
+        if (historyResult.message) {alert(historyResult.message);}
+        return;
+      }
+
+      this.histories = await this.getHistory();
+    },
+  },
+  async mounted () {
+    const date  = new Date();
+    const year  = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day   = ('0' + (date.getDay() + 1)).slice(-2);
+    const today = `${year}-${month}-${day}`;
+    this.form.date = today;
+
+    this.histories = await this.getHistory();
+  },
 }
 </script>
 
