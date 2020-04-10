@@ -17,6 +17,7 @@ class CreateGamesTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->date('release_date');
+            $table->boolean('release_flag');
             $table->string('thumbnail_path');
             $table->string('category');
             $table->string('infomation')->nullable();

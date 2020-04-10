@@ -17,4 +17,9 @@ class Game extends Model
         'title', 'release_date', 'thumbnail_path',
         'category', 'infomation', 'url',
     ];
+
+    public static function getReleasedGames()
+    {
+        return self::where('release_flag', true)->get();
+    }
 }
