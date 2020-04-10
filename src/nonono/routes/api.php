@@ -29,3 +29,4 @@ Route::delete('history/{id}', 'HistoryController@delete')->name('history.delete'
 
 Route::get('games', 'GameController@index')->name('games.index');
 Route::get('games/all', 'GameController@indexAll')->name('games.index.all');
+Route::post('games', 'GameController@store')->name('games.store');
