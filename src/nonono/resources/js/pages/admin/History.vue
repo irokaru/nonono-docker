@@ -2,43 +2,52 @@
 <div>
   <h2>管理者用履歴管理ページ</h2>
 
-    <div class="content">
+  <div class="content">
 
-      <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用履歴管理ページ
+    <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用履歴管理ページ
 
-        <h3>新規更新履歴</h3>
+      <h3>新規更新履歴</h3>
 
-        <form class="form" autocomplete="off" onsubmit="return false;">
+      <form class="form" autocomplete="off" onsubmit="return false;">
 
-          <input type="text" v-model="form.date" placeholder="yyyy-mm-dd">
-          <input type="text" v-model="form.discription" placeholder="説明">
-          <button class="btn" @click="sendStore(form)">追加</button>
+        <input type="text" v-model="form.date" placeholder="yyyy-mm-dd">
+        <input type="text" v-model="form.discription" placeholder="説明">
+        <button class="btn" @click="sendStore(form)">追加</button>
 
-        </form>
+      </form>
 
+      <h3>既存更新履歴</h3>
 
-        <h3>既存更新履歴</h3>
+      <form class="form" autocomplete="off" onsubmit="return false;">
 
-        <form class="form" autocomplete="off" onsubmit="return false;">
+        <p v-if="histories.length === 0">更新履歴は無いです</p>
 
-          <ul>
-            <li class="history-data" v-for="history in histories" :key="history.id">
-              <input type="hidden" :value="history.id">
-              <input type="text" :input="history.date" v-model="history.date" placeholder="yyyy-mm-dd">
-              <input type="text" :input="history.discription" v-model="history.discription" placeholder="説明">
-              <button class="btn" @click="sendUpdate(history)">更新</button>
-              <button class="btn" @click="sendDelete(history.id)">削除</button>
-            </li>
-          </ul>
+        <ul>
+          <li class="history-data" v-for="history in histories" :key="history.id">
+            <input type="hidden" :value="history.id">
+            <input type="text" :input="history.date" v-model="history.date" placeholder="yyyy-mm-dd">
+            <input type="text" :input="history.discription" v-model="history.discription" placeholder="説明">
+            <button class="btn" @click="sendUpdate(history)">更新</button>
+            <button class="btn" @click="sendDelete(history.id)">削除</button>
+          </li>
+        </ul>
 
-        </form>
+      </form>
+
+  </div>
+
+  <div class="load-modal" v-if="isLoading || isSending">
+    <div class="load-modal__bg">
+      <Loading class="center"></Loading>
     </div>
+  </div>
 
 </div>
 </template>
 
 <script>
 import HistoryApi from '@/api/HistoryApi';
+import Loading    from '@/components/Loading';
 
 export default {
   data () {
@@ -143,6 +152,9 @@ export default {
 
     this.histories = await this.getHistory();
   },
+  components: {
+    Loading,
+  }
 }
 </script>
 
