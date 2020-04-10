@@ -91,13 +91,14 @@ export default {
       this.isSending = false;
 
       if (historyResult.status === 'success') {
-        alert('追加完了');
+        // alert('追加完了');
       } else if (historyResult.status === 'error') {
         if (historyResult.message) {alert(historyResult.message);}
         return;
       }
 
       this.histories = await this.getHistory();
+      history.discription = '';
     },
     /**
      * 更新処理
@@ -112,7 +113,7 @@ export default {
       this.isSending = false;
 
       if (historyResult.status === 'success') {
-        alert('更新完了');
+        // alert('更新完了');
       } else if (historyResult.status === 'error') {
         if (historyResult.message) {alert(historyResult.message);}
         return;
@@ -133,7 +134,7 @@ export default {
       this.isSending = false;
 
       if (historyResult.status === 'success') {
-        alert('削除完了');
+        // alert('削除完了');
       } else if (historyResult.status === 'error') {
         if (historyResult.message) {alert(historyResult.message);}
         return;
