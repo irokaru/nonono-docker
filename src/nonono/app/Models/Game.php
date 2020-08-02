@@ -18,6 +18,10 @@ class Game extends Model
         'category', 'infomation', 'url',
     ];
 
+    protected $casts = [
+        'release_flag' => 'boolean',
+    ];
+
     public static function getReleasedGames()
     {
         return self::where('release_flag', true)->get();

@@ -97,7 +97,7 @@ class GameController extends Controller
         }
 
         if (!CommonUtil::isTesting()) {  // テストのときは削除処理はしない
-            unlink(public_path() . '/' . $game->thumbnail_path);
+            unlink(public_path() . $game->thumbnail_path);
         }
 
         $thumbnail     = $request->file('thumbnail');
