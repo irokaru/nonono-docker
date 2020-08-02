@@ -1,0 +1,8 @@
+BasicData:6
+BGM:0
+CharaChip:0
+MapChip:1
+MapData:0
+Picture:2
+SE:1
+SystemGraphic:2

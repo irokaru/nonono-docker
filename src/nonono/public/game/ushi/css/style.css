@@ -1,0 +1,146 @@
+@import url(https://fonts.googleapis.com/earlyaccess/nicomoji.css);
+
+* {
+  font-family: "Nico Moji";
+  box-sizing: border-box;
+  color: #333;
+  font-weight: bold;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAMAAAAMs7fIAAAAD1BMVEXGxsbe3t7////k5OT09PRLnX0BAAAAOUlEQVR42r3OyQEAIAgDwRDtv2YvQGIB7nNeC2JnjMD+EMimNIUmtERpi9CRSi6FQi6lJJVZJ3ykAdMHAVt3nu/7AAAAAElFTkSuQmCC');
+  background-attachment: fixed;
+}
+
+.wrapper {
+  margin: auto;
+  padding: 2em 1em;
+  max-width: 900px;
+  width: 100%;
+  background: rgba(255, 255, 255, .7);
+}
+
+h1 {
+  margin: .25em 0 1em;
+  font-size: 3em;
+  text-align: center;
+}
+
+h2 {
+  margin: .25em 0;
+  font-size: 2em;
+  text-align: center;
+}
+
+dl {
+  margin: auto;
+  width: 100%;
+  height: 270px;
+  line-height: 180%;
+  overflow: auto;
+  background-color: rgba(238, 238, 238, 0.6);
+  border: 2px solid rgba(0, 0, 0, 0.25);
+}
+
+dl dt {
+  float: left;
+  padding: .25em;
+}
+
+dl dd {
+  margin: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+  padding: .25em;
+  padding-left: 10em;
+}
+
+@media(max-width: 680px) {
+  dl dt {
+    float: none;
+  }
+  dl dd {
+    padding: .25em;
+  }
+}
+
+dl dd:last-child {
+  border: 0;
+}
+
+footer {
+  margin: 1em 0;
+  padding: 1.5em;
+  text-align: right;
+  border-top: 2px solid rgba(0, 0, 0, .3);
+}
+
+.intro {
+  background: url(../img/intro.png) no-repeat;
+  background-size: contain;
+  width: 100%;
+  height: calc(0.894 * 100vw);
+  max-height: 772px;
+}
+
+.downloads {
+  text-align: center;
+}
+
+.news {
+  margin: 2em 0;
+}
+
+p.strong {
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: .25em 0;
+}
+
+a {
+  transition: .3s;
+}
+
+a:hover {
+  color: #666;
+}
+
+a.btn {
+  display: inline-block;
+  margin: 1.5em 1em;
+  padding: .75em 1em;
+  font-size: 1.3em;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  transition: .3s;
+}
+
+.btn span {
+  color: inherit;
+  display: block;
+  font-size: .75em;
+}
+
+.btn.blue {
+  background: rgb(180, 204, 255);
+  color: rgb(0, 68, 214);
+}
+
+.btn.blue:hover {
+  background: rgb(0, 68, 214);
+  color: rgb(180, 204, 255);
+}
+
+.btn.green {
+  background: rgb(183, 255, 180);
+  color: rgb(0, 177, 109);
+}
+
+.btn.green:hover {
+  background: rgb(0, 177, 109);
+  color: rgb(183, 255, 180);
+}

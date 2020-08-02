@@ -1,0 +1,158 @@
+@media (max-width: 1110px) { /* ← どの画面サイズからモバイル向けにするかの設定 */
+/* ================================================================== */
+/* ヘッダー（上の部分のやつ） */
+header {
+  width: 100vw;
+  background: #222;
+  z-index: 9999;
+}
+
+header h1 {
+  color: #eee;
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0.2em;
+}
+
+/* ================================================================== */
+/* メニュー（左にある縦長のやつ） */
+nav {
+  transform: translateX(-100%);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding-top: 1.5em;
+  background: rgba(255, 255, 255, .8);
+  transition: .3s ease-in;
+  z-index: 8888;
+}
+
+nav.active {
+  transform: translateX(0%); 
+}
+
+.menu-btn {
+  font-size: 1.5em;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 2em;
+  height: 2em;
+  display: flex;
+	align-items: center;
+	justify-content: center;
+  margin: auto;
+  border-bottom-left-radius: 4px;
+  background: #222;
+  z-index: 9999;
+}
+/* ================================================================== */
+/* 本体 */
+.main article {
+  margin: 0.1em 0;
+  margin-bottom: 5em;
+  padding: 0;
+}
+
+.main div.box {
+  width: 95%;
+  margin: auto;
+  margin-bottom: 1em;
+}
+
+.main div img {
+  max-width: 90vw;
+  height: auto ;
+}
+
+.img-wrapper {
+  text-align: center;
+}
+
+/* ================================================================== */
+/* フッター(ページの一番下の出るやつ) */
+footer {
+  text-align: center;
+  padding: .5em 0;
+}
+
+/* ================================================================== */
+/* トランジション */
+/* <transition name="fade" mode="out-in" class="main"> にしたときの挙動*/
+.fade-enter-active, .fade-leave-active {
+  min-width: 100%;
+}
+
+.fade-enter, .fade-leave-to {
+  min-width: 100%;
+}
+
+/* <transition name="down-slide" mode="out-in" class="main"> にしたときの挙動*/
+.down-slide-enter-active {
+  min-width: 100%;
+}
+
+.down-slide-leave-active {
+  min-width: 100%;
+}
+
+.down-slide-enter {
+  min-width: 100%;
+}
+
+.down-slide-leave-to {
+  min-width: 100%;
+}
+
+/* <transition name="up-slide" mode="out-in" class="main"> にしたときの挙動*/
+.up-slide-enter-active {
+  min-width: 100%;
+}
+
+.up-slide-leave-active {
+  min-width: 100%;
+}
+
+.up-slide-enter {
+  min-width: 100%;
+}
+
+.up-slide-leave-to {
+  min-width: 100%;
+}
+
+/* <transition name="right-slide" mode="out-in" class="main"> にしたときの挙動*/
+.right-slide-enter-active {
+  min-width: 100%;
+}
+
+.right-slide-leave-active {
+  min-width: 100%;
+}
+
+.right-slide-enter {
+  min-width: 100%;
+}
+
+.right-slide-leave-to {
+  min-width: 100%;
+}
+
+/* <transition name="left-slide" mode="out-in" class="main"> にしたときの挙動*/
+.left-slide-enter-active {
+  min-width: 100%;
+}
+.left-slide-leave-active {
+  min-width: 100%;
+}
+
+.left-slide-enter {
+  min-width: 100%;
+}
+
+.left-slide-leave-to {
+  min-width: 100%;
+}
+
+}

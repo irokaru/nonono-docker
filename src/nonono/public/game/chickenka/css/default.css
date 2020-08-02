@@ -1,0 +1,471 @@
+/* ================================================================== */
+/* 基本的な設定とか */
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+@import url("https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css");
+html, body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 18px;
+  font-family: "Rounded Mplus 1c", "Yu Gothic", Meiryo, sans-serif;
+  font-weight: 400;
+  color: #332800;
+}
+
+html {
+  overflow-y: scroll;
+ }
+
+body {
+  background-image: url("../assets/background.png");
+}
+
+h2 {
+  border-bottom: 3px solid #222;
+  margin: 0.5em 0;
+  padding: 0;
+}
+
+h2 span.sub {
+  font-size: 0.6em;
+  font-weight: normal;
+  margin-left: 1em;
+}
+
+h2 span.sub::before {
+  content: "-";
+  margin-right: 1em;
+}
+
+h3 {
+  font-size: 1.2em;
+  border-left: 6px solid #5c5d13;
+  margin: 0.25em 0;
+  padding: 0.1em 0.5em;
+}
+
+ul {
+  margin: 0 0.5em;
+}
+
+ul li {
+  position: relative;
+  list-style: none;
+}
+ul li::after {
+  display: block;
+  content: '';
+  position: absolute;
+  top: .5em;
+  left: -1em;
+  width: 8px;
+  height: 8px;
+  background-color: #3498db;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+/* ================================================================== */
+/* アンカー */
+a {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: #2e38cc;
+  transition: .3s;
+}
+a::after {
+  position: absolute;
+  bottom: -.2em;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 1px;
+  background-color: #66a5da;
+  opacity: 0;
+  transition: .3s;
+}
+
+a:hover {
+  color: #66a5da;
+}
+
+a:hover::after {
+  bottom: .1em;
+  opacity: 1;
+}
+
+/* ================================================================== */
+/* リストボックス */
+dl.list-box {
+  margin: 20px auto;
+  height: 270px;
+  line-height: 180%;
+  overflow: auto;
+  background-color: rgba(255,255,255,.5);
+  border: 1px solid rgba(0,0,0,.3);
+}
+
+dl.list-box dt {
+  float: left;
+  padding: 7px 0;
+  padding-left: 6px;
+}
+
+dl.list-box dd {
+  margin: 0;
+  border-bottom: 1px dashed rgba(0,0,0,.3);
+  padding: 7px 0;
+  padding-left: 6.5em;
+}
+
+dl.list-box dd:last-child {
+  border-bottom: 0;
+}
+
+/* ================================================================== */
+/* ヘッダー（上の部分のやつ） */
+header {
+  width: 100%;
+  background: #222;
+}
+
+header h1 {
+  color: #eee;
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0.2em;
+}
+
+/* ================================================================== */
+/* メニュー（左にある縦長のやつ） */
+nav {
+  width: 234px;
+  height: 90vh;
+  position: fixed;
+  margin: 0 8px;
+  margin-top: 1.5em;
+  top: 0;
+  float: left;
+  overflow: auto;
+  z-index: 100;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 12px;
+  cursor: pointer;
+  list-style-type: none;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-bottom: 1px dashed rgba(0,0,0,.1);
+  position: relative;
+  transition: .4s;
+  -webkit-transition: .4s;
+}
+
+/* メニューホバー時の影の色（好きなものを選んでください） */
+nav ul li:hover.nav-gray {
+  color: #fff;
+  filter: drop-shadow(0px 0px 7px #000000);
+  -webkit-filter: drop-shadow(0px 3px 7px #000000);
+}
+nav ul li:hover.nav-red {
+  color: #fff;
+  filter: drop-shadow(0px 0px 7px #c84646);
+  -webkit-filter: drop-shadow(0px 3px 7px #c84646);
+}
+nav ul li:hover.nav-blue {
+  color: #fff;
+  filter: drop-shadow(0px 0px 7px #4646c8);
+  -webkit-filter: drop-shadow(0px 3px 7px #4646c8);
+}
+nav ul li:hover.nav-green {
+  color: #fff;
+  filter: drop-shadow(0px 0px 7px #46c846);
+  -webkit-filter: drop-shadow(0px 3px 7px #46c846);
+}
+
+/* メニュー項目のサブタイトル */
+nav ul li span.sub {
+  display: block;
+  font-size: 0.6em;
+  font-weight: normal;
+  margin-left: 0.5em;
+}
+
+nav ul li span.sub::before {
+  content: "-";
+  margin-right: 0.5em;
+}
+
+.menu-btn {
+  display: none;
+}
+/* ================================================================== */
+/* 本体 */
+.main article {
+  margin: 2em 0;
+  margin-bottom: 5em;
+  /* メニューの横幅だけズラす */
+  margin-left: 240px;
+  /* ((画面横幅 - メニューの横幅 - 表示したいサイズ)/2) で計算 */
+  padding: 0 calc((100vw - 240px - 800px) / 2);
+}
+
+.main div.box {
+  background: rgba(255,255,255,.6);
+  width: calc(800px - (0.4em * 2));
+  border-radius: 4px;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  box-shadow:0px 0px 20px 3px rgba(0,0,0,.3);
+}
+
+.main div img {
+  display: block;
+  margin:auto;
+  max-width: 800px;
+}
+
+.main div img.logo {
+  margin-bottom: 10px;
+}
+
+/* ================================================================== */
+/* フッター(ページの一番下の出るやつ) */
+footer {
+  color: #ffcda9;
+  background: rgba(107,54,16,.9);
+  text-align: center;
+  width: 100%;
+  padding: 1.25em 0;
+  position: fixed;
+  bottom: 0;
+}
+
+footer a {
+  color: #a9fff4;
+}
+
+footer a:hover {
+  color: #8999e2;
+}
+
+/* ================================================================== */
+/* その他 */
+/* ボタン関連 */
+.btn-center {
+  text-align:center;
+}
+
+a.square-blue {
+  display: inline-block;
+  padding: 1em 2em;
+  margin: 2em 0;
+  text-decoration: none;
+  background: #5972df;
+  color: #fff;/*文字色*/
+  font-size: 1.2em;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+}
+
+a.square-blue:active {
+  box-shadow: inset 0 0 2px rgba(128, 128, 128, 0.1);
+  transform: translateY(2px);
+}
+
+a.square-blue::after {
+  display: none;
+}
+
+.btn-center span.sub{
+  display: block;
+  font-size: 0.75em;
+}
+
+/* 画像プレビュー関連 */
+.img-cover {
+  cursor: pointer;
+  display: inline-block;
+  margin: 8px;
+  transition: .3s;
+}
+
+.img-cover:hover {
+  -webkit-filter: brightness(120%);
+  filter: brightness(120%);
+}
+
+.img-cover img {
+  object-fit: cover;
+  width: 240px;
+  height: 240px;
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.pv-bg {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  position:fixed;
+  top:0;
+  left:0;
+  z-index: 9999;
+}
+
+.pv-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  background-color: #ccc;
+  border: 10px solid #eee;
+  border-radius: 4px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .66);
+}
+
+.pv-wrapper img {
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.preview-enter-active, .preview-leave-active {
+  transition: opacity .3s ease;
+}
+
+.preview-enter, .preview-leave-to {
+  opacity: 0;
+}
+
+/* ================================================================== */
+/* トランジション */
+/* <transition name="fade" mode="out-in" class="main"> にしたときの挙動*/
+.fade-enter-active, .fade-leave-active {
+  position: fixed;
+  min-width: 800px;
+  transition: opacity .3s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  position: fixed;
+  min-width: 800px;
+  opacity: 0;
+}
+
+/* <transition name="down-slide" mode="out-in" class="main"> にしたときの挙動*/
+.down-slide-enter-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s ease;
+}
+
+.down-slide-leave-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.down-slide-enter {
+  position: fixed;
+  min-width: 800px;
+  transform: translateY(-60px);
+  opacity: 0;
+}
+
+.down-slide-leave-to {
+  position: fixed;
+  min-width: 800px;
+  transform: translateY(60px);
+  opacity: 0;
+}
+
+/* <transition name="up-slide" mode="out-in" class="main"> にしたときの挙動*/
+.up-slide-enter-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s ease;
+}
+.up-slide-leave-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.up-slide-enter {
+  position: fixed;
+  min-width: 800px;
+  transform: translateY(60px);
+  opacity: 0;
+}
+
+.up-slide-leave-to {
+  position: fixed;
+  min-width: 800px;
+  transform: translateY(-60px);
+  opacity: 0;
+}
+
+/* <transition name="right-slide" mode="out-in" class="main"> にしたときの挙動*/
+.right-slide-enter-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s ease;
+}
+
+.right-slide-leave-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s;
+}
+
+.right-slide-enter {
+  position: fixed;
+  min-width: 800px;
+  transform: translateX(-60px);
+  opacity: 0;
+}
+
+.right-slide-leave-to {
+  position: fixed;
+  min-width: 800px;
+  transform: translateX(60px);
+  opacity: 0;
+}
+
+/* <transition name="left-slide" mode="out-in" class="main"> にしたときの挙動*/
+.left-slide-enter-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s ease;
+}
+.left-slide-leave-active {
+  position: fixed;
+  min-width: 800px;
+  transition: all .6s;
+}
+
+.left-slide-enter {
+  position: fixed;
+  min-width: 800px;
+  transform: translateX(60px);
+  opacity: 0;
+}
+
+.left-slide-leave-to {
+  position: fixed;
+  min-width: 800px;
+  transform: translateX(-60px);
+  opacity: 0;
+}
