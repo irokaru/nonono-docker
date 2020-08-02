@@ -18,8 +18,8 @@ class GameController extends Controller
         'thumbnail'      => 'required|image|mimes:jpeg,png,gif|max:2048',
         'thumbnail_name' => 'required|string|min:1|max:65',
         'category'       => 'required|string|min:1|max:65',
-        'infomation'     => 'required|string|min:1|max:257',
-        'url'            => 'required|string',
+        'infomation'     => 'nullable|string|min:1|max:257',
+        'url'            => 'required|string|min:1|max:257',
     ];
 
     public function __construct()
