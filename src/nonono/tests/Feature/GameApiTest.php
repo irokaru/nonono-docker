@@ -7,6 +7,7 @@ use App\Models\Game;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\Util\TestTool;
 use Tests\TestCase;
 
@@ -17,7 +18,7 @@ class GameApiTest extends TestCase
     public function test_game_index_ok()
     {
         $games = factory(Game::class, 3)->create();
-        $games_array = static::Collection2Array($games);
+        $games_array = static::collection2array($games);
 
         $response = $this->get(route('games.index'));
         $response->assertOk()->assertExactJson($games_array);
@@ -25,7 +26,7 @@ class GameApiTest extends TestCase
 
     public function test_game_index_ok_not_released()
     {
-        $games = factory(Game::class, 3)->create(['release_flag' => false,]);
+        factory(Game::class, 3)->create(['release_flag' => false,]);
 
         $response = $this->get(route('games.index'));
         $response->assertOk()->assertExactJson([]);
@@ -38,7 +39,7 @@ class GameApiTest extends TestCase
         $admin            = factory(Admin::class)->create();
         $auth             = TestTool::getJwtAuthorization($admin);
 
-        $games_array = array_merge(static::Collection2Array($games_released), static::Collection2Array($games_no_release));
+        $games_array = array_merge(static::collection2array($games_released), static::collection2array($games_no_release));
 
         $response = $this->withHeaders($auth)->get(route('games.index.all'));
         $response->assertOk()->assertExactJson($games_array);
@@ -46,8 +47,31 @@ class GameApiTest extends TestCase
 
     public function test_game_index_all_ng_no_auth()
     {
+        factory(Game::class, 3)->create();
+        factory(Game::class, 3)->create(['release_flag' => false,]);
+
         $response = $this->get(route('games.index.all'));
-        $response->assertStatus(401);
+        $response->assertStatus(401)->assertExactJson(['error' => 'Unauthorized']);
+    }
+
+    public function test_game_store_ok()
+    {
+        $game = static::makePostDataArray();
+        $admin            = factory(Admin::class)->create();
+        $auth             = TestTool::getJwtAuthorization($admin);
+
+        $response = $this->post(route('games.store'), $game, $auth);
+        $response->assertOk();
+
+        $result = Game::all()->first()->toArray();
+
+        $compare = [
+            'title', 'release_date', 'release_flag', 'thumbnail_path', 'category', 'infomation', 'url',
+        ];
+
+        foreach ($compare as $key) {
+            $this->assertEquals($game[$key], $result[$key]);
+        }
     }
 
     // ==============================================================
@@ -57,19 +81,26 @@ class GameApiTest extends TestCase
      * @param \Illuminate\Database\Eloquent\Collection $games
      * @return array
      */
-    protected static function Collection2Array($games)
+    protected static function collection2array($games)
     {
         $reject_keys = [
             'id', 'release_flag', 'created_at', 'updated_at',
         ];
 
-        $games_array = $games->toArray();
-        for ($i = 0; $i < count($games_array); $i++) {
-            foreach($reject_keys as $key) {
-                unset($games_array[$i][$key]);
-            }
-        }
+        return TestTool::collection2array($games, $reject_keys);
+    }
 
-        return $games_array;
+    /**
+     * 投稿用ゲーム配列を生成する
+     * @return array
+     */
+    protected static function makePostDataArray()
+    {
+        $game = factory(Game::class)->make();
+        $array = $game->toArray();
+        $array['thumbnail'] = UploadedFile::fake()->image('hoge.png', 100, 100)->size(1000);
+        $array['thumbnail_name'] = 'hoge';
+        $array['thumbnail_path'] = '/img/game/hoge.png';
+        return $array;
     }
 }

@@ -14,7 +14,7 @@ class Game extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'release_date', 'thumbnail_path',
+        'title', 'release_date', 'release_flag', 'thumbnail_path',
         'category', 'infomation', 'url',
     ];
 
