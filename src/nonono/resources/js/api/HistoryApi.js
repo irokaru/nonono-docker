@@ -1,61 +1,36 @@
-import ApiTools from '@/api/ApiTools';
-
-const HistoryApi = {
+export default {
   /**
    * 更新履歴を取得する
-   * @returns {array}
+   * @returns {Promise<AxiosResponse<any>>}
    */
-  get: async () => {
-    const api = axios.get('/api/history');
-
-    return api.then(res => {
-      return {
-        status: 'success',
-        history: res.data,
-      };
-    }).catch(e => {
-      return ApiTools.genelateErrorParams(e);
-    });
+  get: () => {
+    return axios.get('/api/history');
   },
+
   /**
    *  更新履歴を追加する
    * @param {object} history history object
+   * @returns {Promise<AxiosResponse<any>>}
    */
-  store: async (history) => {
-    const api = axios.post('/api/history', history);
-
-    return api.then(res => {
-      return res.data;
-    }).catch(e => {
-      return ApiTools.genelateErrorParams(e);
-    });
+  store: (history) => {
+    return axios.post('/api/history', history);
   },
+
   /**
    *  更新履歴を更新する
    * @param {object} history history object
+   * @returns {Promise<AxiosResponse<any>>}
    */
-  update: async (history) => {
-    const api = axios.put('/api/history', history);
-
-    return api.then(res => {
-      return res.data;
-    }).catch(e => {
-      return ApiTools.genelateErrorParams(e);
-    });
+  update: (history) => {
+    return axios.put('/api/history', history);
   },
-  /**
-   *  更新履歴を更新する
-   * @param {int} id history id
-   */
-  delete: async (id) => {
-    const api = axios.delete(`/api/history/${id}`);
 
-    return api.then(res => {
-      return res.data;
-    }).catch(e => {
-      return ApiTools.genelateErrorParams(e);
-    });
+  /**
+   *  更新履歴を削除する
+   * @param {number} id history id
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  delete: (id) => {
+    return axios.delete(`/api/history/${id}`);
   },
 };
-
-export default HistoryApi;

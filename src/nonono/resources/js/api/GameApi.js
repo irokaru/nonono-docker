@@ -1,5 +1,3 @@
-import { axios } from "vue/types/umd";
-
 export default {
   /**
    * ゲーム一覧を取得する
