@@ -8,6 +8,8 @@ import VueRouter from 'vue-router';
 import auth from './auth';
 import router from './router';
 
+import Main from './Main';
+
 window.Vue = Vue;
 
 // Set Vue router
@@ -21,4 +23,5 @@ Vue.use(VueAuth, auth);
 const app = new Vue({
     el: '#app',
     router,
-});
+    render: h => h(Main),
+  });
