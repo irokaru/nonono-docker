@@ -2,16 +2,48 @@
 <div id="products">
   <h2>ぷろだくと</h2>
 
-  <div class="content"></div>
+  <div class="content">
+
+    <h3><i class="fas fa-gamepad"></i> げえむ</h3>
+
+    <div class="game-list">
+      <GameBox :title="game.title" :release_date="game.release_date"
+               :thumbnail_path="game.thumbnail_path" :category="game.category"
+               :infomation="game.infomation" :url="game.url"
+               v-for="game of games" :key="game.id"/>
+    </div>
+
+  </div>
+
 </div>
 </template>
 
 <script>
-export default {
+import GameApi from '../api/GameApi';
+import GameBox from '../components/GameBox';
 
+export default {
+  data() {
+    return {
+      games: [],
+      isLoading: true,
+    };
+  },
+  methods: {
+  },
+  async mounted() {
+    const api = [
+      GameApi.get(),
+    ];
+
+    await axios.all(api).then(([games]) => {
+      this.games = games.data;
+    }).catch(e => {
+      console.log(e);
+    });
+  },
+  components: {
+    GameBox,
+  },
 }
 </script>
-
-<style>
-
-</style>

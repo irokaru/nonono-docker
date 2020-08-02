@@ -21,7 +21,7 @@ Vue.use(VueAxios, axios);
 Vue.use(VueAuth, auth);
 
 const app = new Vue({
-    el: '#app',
-    router,
-    render: h => h(Main),
-  });
+  el: '#app',
+  router,
+  render: h => h(Main),
+});
