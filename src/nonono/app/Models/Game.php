@@ -24,6 +24,6 @@ class Game extends Model
 
     public static function getReleasedGames()
     {
-        return self::where('release_flag', true)->get();
+        return self::where('release_flag', true)->orderBy('release_date', 'desc')->get();
     }
 }
