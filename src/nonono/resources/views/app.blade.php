@@ -11,18 +11,7 @@
 
 <body>
 
-<div id="app">
-
-  <MyNav></MyNav>
-
-  <div class="main">
-    <transition name="fade" mode="out-in">
-      <router-view></router-view>
-    </transition>
-    <MyFooter></MyFooter>
-  </div>
-
-</div>
+<div id="app"></div>
 
 <script src="{{ mix('js/app.js') }}"></script>
 </body>

@@ -63,7 +63,7 @@ class GameController extends Controller
 
         $thumbnail_save_dir = static::getThumbnailSaveDir();
         $thumbnail_path     = static::getThumbnailPath($request->thumbnail_name, $thumbnail_ext);
-        if (getenv('APP_ENV') !== 'testing') {  // テストの時は出力しない
+        if (!CommonUtil::isTesting()) {  // テストの時は出力しない
             $thumbnail->move($thumbnail_save_dir, $request->thumbnail_name.'.'.$thumbnail_ext);
         }
 
