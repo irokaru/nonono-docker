@@ -1,10 +1,13 @@
 <template>
 <div class="game-box">
-  <a :href="url" target="_blank">
+  <router-link :to="url" :target="url ? '_blank':''">
 
     <div class="release">{{release_date}} 公開</div>
 
-    <div class="title">{{title}}</div>
+    <div class="title">
+      <div class="dummy" v-if="title==''"></div>
+      {{title}}
+    </div>
 
     <img :src="thumbnail_path" :alt="title">
 
@@ -17,7 +20,7 @@
       <div class="info" v-html="infomation"></div>
 
     </div>
-  </a>
+  </router-link>
 </div>
 </template>
 
@@ -53,6 +56,15 @@ export default {
       color: #ffb366;
       font-size: 1.4em;
       font-weight: bold;
+
+      .dummy {
+        display: block;
+        background: #ffb366;
+        border-radius: 8px;
+        width: 8em;
+        margin: .1em;
+        height: 1.2em;
+      }
     }
 
     .detail {

@@ -22,10 +22,12 @@
 import GameApi from '../api/GameApi';
 import GameBox from '../components/GameBox';
 
+import Dummy from '../lib/Dummy';
+
 export default {
   data() {
     return {
-      games: [],
+      games:     Dummy.game(3),
       isLoading: true,
     };
   },
