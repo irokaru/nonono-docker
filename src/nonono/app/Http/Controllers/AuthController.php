@@ -55,6 +55,21 @@ class AuthController extends Controller
     }
 
     /**
+     * check have a token.
+     *
+     * @return boolean
+     */
+    public static function check()
+    {
+        try {
+            $token = JWTAuth::parseToken()->authenticate();
+            return true;
+        } catch (JWTException $e) {
+            return false;
+        }
+    }
+
+    /**
      * Return auth guard
      */
     private function guard()

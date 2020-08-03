@@ -1,16 +1,33 @@
 import VueRouter from 'vue-router';
+
+// ------------------------------------------------
 // Pages
-import Home from './pages/Home';
-import Admin from './pages/admin/Admin';
-import AdminLogin from './pages/admin/Login';
+import Home  from './pages/Home';
+import Products from './pages/Products';
+
+import Admin        from './pages/admin/Admin';
+import AdminLogin   from './pages/admin/Login';
 import AdminHistory from './pages/admin/History';
 
+// ------------------------------------------------
+
+const DEFAULT_TITLE = 'ののの茶屋';
+
+// ------------------------------------------------
 // Routes
 const routes = [
   {
     path: '/',
     name: 'home',
     component: Home,
+    meta: {
+      auth: undefined,
+    }
+  },
+  {
+    path: '/products',
+    name: 'products',
+    component: Products,
     meta: {
       auth: undefined,
     }
@@ -41,10 +58,26 @@ const routes = [
   },
 ];
 
+// ------------------------------------------------
+
 const router = new VueRouter({
   history: true,
   mode: 'history',
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta) return next();
+
+  // set title
+  const meta = to.meta;
+  if (meta.title) {
+    document.title = `${meta.title} - ${DEFAULT_TITLE}`;
+  } else {
+    document.title = DEFAULT_TITLE;
+  }
+
+  next();
 });
 
 export default router;
