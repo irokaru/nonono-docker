@@ -1,7 +1,7 @@
 <template>
 <div id="app">
 
-  <MyNav/>
+  <common-nav/>
 
   <div class="main">
     <transition name="fade" mode="out-in">
@@ -14,9 +14,13 @@
 </template>
 
 <script>
-export default {
+import CommonNav from './components/CommonNav';
 
-}
+export default {
+  components: {
+    CommonNav,
+  },
+};
 </script>
 
 <style>
