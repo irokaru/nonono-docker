@@ -56,14 +56,25 @@
 <script>
 import Dummy from '../lib/Dummy';
 
+import HistoryApi from '../api/HistoryApi';
+
 export default {
   data() {
     return {
       history: Dummy.history(5),
     };
   },
-  mounted() {
+  async mounted() {
+    const api = [
+      HistoryApi.get(),
+    ];
 
+    await axios.all(api).then(([history]) => {
+      this.history = history.data;
+      Vue.$setStore('$history', history.data);
+    }).catch(e => {
+      console.log(e);
+    });
   },
 }
 </script>

@@ -40,7 +40,6 @@ export default {
 
     await axios.all(api).then(([games]) => {
       this.games = games.data;
-
       Vue.$setStore('$games', games.data);
     }).catch(e => {
       console.log(e);

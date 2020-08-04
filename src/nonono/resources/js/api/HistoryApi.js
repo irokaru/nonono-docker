@@ -4,8 +4,8 @@ export default {
    * @returns {Promise<AxiosResponse<any>>}
    */
   get: () => {
-    if (Vue.$hasStore('$games')) {
-      return {data: Vue.$getStore('$games')};
+    if (Vue.$hasStore('$history')) {
+      return {data: Vue.$getStore('$history')};
     }
     return axios.get('/api/history');
   },
