@@ -21,7 +21,7 @@ class HistoryController extends Controller
 
     public function index()
     {
-        return HistoryResource::collection(History::orderBy('id', 'desc')->get());
+        return HistoryResource::collection(History::orderBy('date', 'desc')->get());
     }
 
     public function store(Request $request)

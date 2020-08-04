@@ -20,7 +20,7 @@
   <dl class="history">
     <template v-for="(hist, index) of history">
       <dt :key="`history-date-${index}`">{{hist.date}}</dt>
-      <dd :key="`history-discription-${index}`">{{hist.discription}}</dd>
+      <dd :key="`history-discription-${index}`" v-html="hist.discription"></dd>
     </template>
   </dl>
 
