@@ -43,7 +43,7 @@ const routes = [
     }
   },
   {
-    path: '/admin/login',
+    path: '/login',
     name: 'admin.login',
     component: AdminLogin,
     meta: {
