@@ -7,6 +7,7 @@ import VueAxios from 'vue-axios';
 import VueRouter from 'vue-router';
 import auth from './auth';
 import router from './router';
+import Store from './lib/Store';
 
 import Main from './Main';
 
@@ -19,6 +20,9 @@ Vue.use(VueRouter);
 // Set Vue authentication
 Vue.use(VueAxios, axios);
 Vue.use(VueAuth, auth);
+
+// Set Nonono Store
+Vue.use(Store);
 
 const app = new Vue({
   el: '#app',

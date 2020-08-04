@@ -10,7 +10,7 @@
       <GameBox :title="game.title" :release_date="game.release_date"
                :thumbnail_path="game.thumbnail_path" :category="game.category"
                :infomation="game.infomation" :url="game.url"
-               v-for="game of games" :key="game.id"/>
+               v-for="(game, index) of games" :key="`games-${index}`"/>
     </div>
 
   </div>
@@ -40,6 +40,7 @@ export default {
 
     await axios.all(api).then(([games]) => {
       this.games = games.data;
+      Vue.$setStore('$games', games.data);
     }).catch(e => {
       console.log(e);
     });
