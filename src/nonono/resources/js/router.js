@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 // Pages
 import Home  from './pages/Home';
 import Products from './pages/Products';
+import Error404 from './pages/error/404';
 
 import Admin        from './pages/admin/Admin';
 import AdminLogin   from './pages/admin/Login';
@@ -30,6 +31,7 @@ const routes = [
     component: Products,
     meta: {
       auth: undefined,
+      title: 'ぷろだくと',
     }
   },
   {
@@ -56,6 +58,15 @@ const routes = [
       auth: true,
     }
   },
+  {
+    path: '*',
+    name: 'error.404',
+    component: Error404,
+    meta: {
+      auth: undefined,
+      title: '404 Not Found',
+    },
+  }
 ];
 
 // ------------------------------------------------
