@@ -1,5 +1,5 @@
 <template>
-<nav>
+<nav :class="{hidden: isAdminPage()}">
   <h1 title="トップへ"><router-link to="/"><img src="/img/logo.min.png" alt="ののの茶屋"></router-link></h1>
 
   <ul>
@@ -15,10 +15,16 @@
 
 <script>
 export default {
-
+  methods: {
+    isAdminPage() {
+      return this.$route.path.match(/^\/admin/) !== null;
+    }
+  }
 }
 </script>
 
 <style>
-
+nav.hidden {
+  display: none;
+}
 </style>
