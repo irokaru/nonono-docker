@@ -4,11 +4,11 @@ export default {
       console.log('this is global');
     }
 
-    const storeData = [
+    const storeDataList = [
       '$history', '$games', '$apps',
     ];
 
-    for (const key of storeData) {
+    for (const key of storeDataList) {
       Vue.util.defineReactive(Vue.prototype, key, []);
     }
 

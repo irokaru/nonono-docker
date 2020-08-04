@@ -7,7 +7,6 @@ export default {
     if (Vue.$hasStore('$games')) {
       return {data: Vue.$getStore('$games')};
     }
-
     return axios.get('/api/games');
   },
 

@@ -10,7 +10,7 @@
       <GameBox :title="game.title" :release_date="game.release_date"
                :thumbnail_path="game.thumbnail_path" :category="game.category"
                :infomation="game.infomation" :url="game.url"
-               v-for="game of games" :key="game.id"/>
+               v-for="(game, index) of games" :key="`games-${index}`"/>
     </div>
 
   </div>
