@@ -67,16 +67,14 @@ export default {
      * @returns {array}
      */
     async getHistory () {
-      this.isLoading = true;
-      const historyResult = await HistoryApi.get();
-      this.isLoading = false;
+      const api = HistoryApi.get();
 
-      if (historyResult.status === 'success') {
-        return historyResult.history;
-      }
-
-      alert(historyResult.message);
-      return [];
+      return await api.then(histories => {
+        return histories.data;
+      }).catch(e => {
+        console.log(e);
+        return [];
+      });
     },
     /**
      * 更新処理
@@ -87,19 +85,25 @@ export default {
       if (this.isSending || this.isLoading) return;
 
       this.isSending = true;
-      const historyResult = await HistoryApi.store(history);
-      this.isSending = false;
+      const api = HistoryApi.store(history);
 
-      if (historyResult.status === 'success') {
-        // alert('追加完了');
-      } else if (historyResult.status === 'error') {
-        if (historyResult.message) {alert(historyResult.message);}
-        return;
+      const storeResult = await api.then(res => {
+        return true;
+      }).catch(e => {
+        console.log(e);
+        return false;
+      });
+
+      if (storeResult) {
+        Vue.$resetStore('$history');
       }
 
       this.histories = await this.getHistory();
-      history.discription = '';
+      this.resetForm();
+
+      this.isSending = false;
     },
+
     /**
      * 更新処理
      * @param {object} history
@@ -109,18 +113,21 @@ export default {
       if (this.isSending || this.isLoading) return;
 
       this.isSending = true;
-      const historyResult = await HistoryApi.update(history);
+      const historyResult = HistoryApi.update(history);
+
+      const updateResult = await api.then(res => {
+        return true;
+      }).catch(e => {
+        console.log(e);
+        return false;
+      });
       this.isSending = false;
 
-      if (historyResult.status === 'success') {
-        // alert('更新完了');
-      } else if (historyResult.status === 'error') {
-        if (historyResult.message) {alert(historyResult.message);}
-        return;
-      }
-
+      this.isLoading = true;
       this.histories = await this.getHistory();
+      this.isLoading = false;
     },
+
     /**
      * 削除処理
      * @param {int} id
@@ -130,28 +137,44 @@ export default {
       if (this.isSending || this.isLoading) return;
 
       this.isSending = true;
-      const historyResult = await HistoryApi.delete(id);
+      const api = HistoryApi.delete(id);
+
+      const deleteResult = await api.then(res => {
+        return true;
+      }).catch(e => {
+        console.log(e);
+        return false;
+      });
+
       this.isSending = false;
 
-      if (historyResult.status === 'success') {
-        // alert('削除完了');
-      } else if (historyResult.status === 'error') {
-        if (historyResult.message) {alert(historyResult.message);}
-        return;
-      }
-
+      this.isLoading = true;
       this.histories = await this.getHistory();
+      this.isLoading = false;
     },
+
+    /**
+     * 入力フォームを初期化するやつ
+     * @returns {void}
+     */
+    resetForm() {
+      const date     = new Date();
+      const year     = date.getFullYear();
+      const month    = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day      = ('0' + (date.getDay() + 1)).slice(-2);
+      const today    = `${year}-${month}-${day}`;
+      this.form.date = today;
+      this.form.discription = '';
+
+    }
   },
   async mounted () {
-    const date  = new Date();
-    const year  = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day   = ('0' + (date.getDay() + 1)).slice(-2);
-    const today = `${year}-${month}-${day}`;
-    this.form.date = today;
+    this.isLoading = true;
+
+    this.resetForm();
 
     this.histories = await this.getHistory();
+    this.isLoading = false;
   },
   components: {
     Loading,
