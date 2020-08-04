@@ -25,10 +25,7 @@ const config = {
     makeRequest: true
   },
   refreshData: {
-    url: '/api/auth/refresh',
-    method: 'GET',
-    enabled: true,
-    interval: 30
+    enabled: false,
   },
   fetchData: {enabled: false},
 }
