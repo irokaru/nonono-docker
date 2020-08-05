@@ -8,6 +8,7 @@ import Error404 from './pages/error/404';
 
 import Admin        from './pages/admin/Admin';
 import AdminLogin   from './pages/admin/Login';
+import AdminGame    from './pages/admin/Game';
 import AdminHistory from './pages/admin/History';
 
 // ------------------------------------------------
@@ -57,6 +58,14 @@ const routes = [
     meta: {
       auth: true,
     }
+  },
+  {
+    path: '/admin/game',
+    name: 'admin.game',
+    component: AdminGame,
+    meta: {
+      auth: true,
+    },
   },
   {
     path: '*',
