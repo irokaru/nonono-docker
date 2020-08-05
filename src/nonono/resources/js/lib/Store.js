@@ -1,9 +1,5 @@
 export default {
   install(Vue, options) {
-    Vue.myGlobalMethod = function () {
-      console.log('this is global');
-    }
-
     const storeDataList = [
       '$history', '$games', '$apps',
     ];
@@ -19,7 +15,7 @@ export default {
      * @returns {boolean}
      */
     Vue.$setStore = function(key, value) {
-      if (!Vue.prototype[key]) {
+      if (!Vue.$existsStore(key)) {
         console.error(`${key} is not exist.`);
         return false;
       }
@@ -33,8 +29,8 @@ export default {
      * @returns {array}
      */
     Vue.$getStore = function(key) {
-      if (!Vue.prototype[key]) {
-        console.error(`${key} is not exist or empty.`);
+      if (!Vue.$existsStore(key)) {
+        console.error(`${key} is not exist.`);
         return [];
       }
       return Vue.prototype[key];
@@ -48,5 +44,26 @@ export default {
     Vue.$hasStore = function(key) {
       return Vue.$getStore(key).length !== 0;
     };
+
+    /**
+     * store内に該当するデータが存在するか
+     * @param {string} key
+     */
+    Vue.$existsStore = function(key) {
+      return key in Vue.prototype;
+    }
+
+    /**
+     * store内の該当データを初期化する
+     * @param {string} key
+     */
+    Vue.$resetStore = function(key) {
+      if (!Vue.$existsStore(key)) {
+        console.error(`${key} is not exist or empty.`);
+        return false;
+      }
+      Vue.prototype[key] = [];
+      return true;
+    }
   },
 };

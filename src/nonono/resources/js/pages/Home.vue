@@ -18,9 +18,9 @@
   <h3><i class="far fa-file-alt"></i>こうしんりれき</h3>
 
   <dl class="history">
-    <template v-for="(hist, index) of history">
-      <dt :key="`history-date-${index}`">{{hist.date}}</dt>
-      <dd :key="`history-discription-${index}`" v-html="hist.discription"></dd>
+    <template v-for="(history, index) of histories">
+      <dt :key="`history-date-${index}`">{{history.date}}</dt>
+      <dd :key="`history-discription-${index}`" v-html="history.discription"></dd>
     </template>
   </dl>
 
@@ -61,7 +61,7 @@ import HistoryApi from '../api/HistoryApi';
 export default {
   data() {
     return {
-      history: Dummy.history(5),
+      histories: Dummy.history(5),
     };
   },
   async mounted() {
@@ -69,9 +69,9 @@ export default {
       HistoryApi.get(),
     ];
 
-    await axios.all(api).then(([history]) => {
-      this.history = history.data;
-      Vue.$setStore('$history', history.data);
+    await axios.all(api).then(([histories]) => {
+      this.histories = histories.data;
+      Vue.$setStore('$history', histories.data);
     }).catch(e => {
       console.log(e);
     });

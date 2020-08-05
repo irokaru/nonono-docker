@@ -13,11 +13,22 @@ use App\Lib\CommonUtil;
 
 class GameController extends Controller
 {
-    protected static $_validate = [
+    protected static $_validate_store = [
         'title'          => 'required|string|min:1|max:65',
         'release_date'   => 'required|date',
         'release_flag'   => 'required|boolean',
         'thumbnail'      => 'required|image|mimes:jpeg,png,gif|max:2048',
+        'thumbnail_name' => 'required|string|min:1|max:65',
+        'category'       => 'required|string|min:1|max:65',
+        'infomation'     => 'nullable|string|min:1|max:257',
+        'url'            => 'required|string|min:1|max:257',
+    ];
+
+    protected static $_validate_update = [
+        'title'          => 'required|string|min:1|max:65',
+        'release_date'   => 'required|date',
+        'release_flag'   => 'required|boolean',
+        'thumbnail'      => 'nullable|image|mimes:jpeg,png,gif|max:2048',
         'thumbnail_name' => 'required|string|min:1|max:65',
         'category'       => 'required|string|min:1|max:65',
         'infomation'     => 'nullable|string|min:1|max:257',
@@ -53,7 +64,7 @@ class GameController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), static::$_validate);
+        $validator = Validator::make($request->all(), static::$_validate_store);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
@@ -86,7 +97,7 @@ class GameController extends Controller
 
     public function update(Request $request)
     {
-        $validator = Validator::make($request->all(), static::$_validate);
+        $validator = Validator::make($request->all(), static::$_validate_update);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
@@ -96,17 +107,28 @@ class GameController extends Controller
             return response()->json(['error' => 'not found.', 400]);
         }
 
-        if (!CommonUtil::isTesting()) {  // テストのときは削除処理はしない
-            unlink(public_path() . $game->thumbnail_path);
-        }
+        $thumbnail_path = $game->thumbnail_path;
+        if ($request->thumbnail) {
+            $thumbnail     = $request->file('thumbnail');
+            $thumbnail_ext = $thumbnail->extension();
 
-        $thumbnail     = $request->file('thumbnail');
-        $thumbnail_ext = $thumbnail->extension();
+            $thumbnail_save_dir = static::getThumbnailSaveDir();
+            $thumbnail_path     = static::getThumbnailPath($request->thumbnail_name, $thumbnail_ext);
+            if (!CommonUtil::isTesting()) {
+                unlink(public_path() . $game->thumbnail_path);
+                $thumbnail->move($thumbnail_save_dir, $request->thumbnail_name.'.'.$thumbnail_ext);
+            }
+        } else if ($request->thumbnail_name) {
+            $thumbnail_ext = preg_replace('/^.*\./', '', $game->thumbnail_path);
 
-        $thumbnail_save_dir = static::getThumbnailSaveDir();
-        $thumbnail_path     = static::getThumbnailPath($request->thumbnail_name, $thumbnail_ext);
-        if (!CommonUtil::isTesting()) {  // テストの時は出力しない
-            $thumbnail->move($thumbnail_save_dir, $request->thumbnail_name.'.'.$thumbnail_ext);
+            $thumbnail_path = static::getThumbnailPath($request->thumbnail_name, $thumbnail_ext);
+
+            $thumbnail_old_path = public_path() . $game->thumbnail_path;
+            $thumbnail_new_path = static::getThumbnailSaveDir() . $request->thumbnail_name.'.'.$thumbnail_ext;
+
+            if (!CommonUtil::isTesting()) {
+                \File::move($thumbnail_old_path, $thumbnail_new_path);
+            }
         }
 
         $game->title          = $request->title;
