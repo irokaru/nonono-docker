@@ -4,6 +4,7 @@
 
   <div class="content">
 
+    <p>{{error}}</p>
     <form class="form" autocomplete="off" @submit.prevent="login" v-if="!success" method="post">
       <dt>name</dt>
       <dd><input type="text" v-model="form.name"></dd>
@@ -21,6 +22,8 @@
 </template>
 
 <script>
+import LoginApi from '../../api/LoginApi';
+
 export default {
   data() {
     return {
@@ -34,20 +37,11 @@ export default {
     }
   },
   methods: {
+    /**
+     * ログイン処理
+     */
     login () {
-      const redirect = this.$auth.redirect();
-      const app = this;
-      this.$auth.login({
-        data: app.form,
-        success: (res) => {
-          app.success = true;
-        },
-        error: (res) => {
-          app.has_error = true;
-          app.error = res.response.data.error;
-        },
-        rememberMe: false,
-      });
+      LoginApi.login(this, this.form);
     },
   },
 };
