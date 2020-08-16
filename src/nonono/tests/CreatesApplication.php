@@ -18,6 +18,7 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        touch(database_path('testing.sqlite'));
         Artisan::call('migrate:refresh');
 
         return $app;
