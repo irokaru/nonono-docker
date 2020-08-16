@@ -33,7 +33,50 @@ const ApiTools = {
     }
 
     return errorArray[status];
-  }
+  },
+
+  /**
+   * 連想配列からFormDataを作成する
+   * @param {object} obj target array
+   */
+  makeFormData (obj) {
+    const array = this._objectExpand(obj);
+    let params = new FormData();
+
+    for (let [key, value] of Object.entries(array)) {
+      if (typeof value === 'boolean') {
+        value = value ? 1 : 0;
+      }
+      params.append(key, value);
+    }
+
+    return params;
+  },
+
+  /**
+   * 複数階層の連想配列から1層の連想配列を作成する
+   * @param {object} obj object
+   * @param {string} name array name
+   */
+  _objectExpand (obj, name) {
+    name = name || '';
+    let array = [];
+
+    for (let [key, value] of Object.entries(obj)) {
+      if (value === null) {
+        continue;
+      }
+
+      const keyName = name ? `${name}[${key}]` : key;
+
+      if (typeof value === 'object' && !(value instanceof File)) {
+        array = {...array, ...this._objectExpand(value, keyName)};
+      } else {
+        array[keyName] = value;
+      }
+    }
+    return array;
+  },
 };
 
 export default ApiTools;

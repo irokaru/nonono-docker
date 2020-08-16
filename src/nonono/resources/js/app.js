@@ -7,7 +7,7 @@ import VueAxios from 'vue-axios';
 import VueRouter from 'vue-router';
 import auth from './auth';
 import router from './router';
-import Store from './lib/Store';
+import Store from './plugins/Store';
 
 import Main from './Main';
 
