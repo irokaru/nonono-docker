@@ -10,7 +10,19 @@
 
     <form class="form" autocomplete="off" onsubmit="return false;" enctype="multipart/form-data">
 
+      <input type="text" v-model="form.title" placeholder="ゲームのタイトル">
+      <input type="text" v-model="form.delease_date" placeholder="yyyy-mm-dd">
 
+      <input type="checkbox" v-model="form.release_flag" id="release_flag" checked="checked">
+      <label class="checkbox" for="release_flag">公開する</label>
+
+      <input type="file" accept="image/*" @change="setThumbnailImage">
+      <img :src="previewThumbnail">
+
+      <input type="text" v-model="form.thumbnail_name" placeholder="ファイル名(拡張子抜き)">
+      <input type="text" v-model="form.category" placeholder="カテゴリ">
+      <input type="text" v-model="form.infomation" placeholder="一言コメント">
+      <input type="text" v-model="form.url" placeholder="リンク">
     </form>
 
   </div>
@@ -20,6 +32,8 @@
 </template>
 
 <script>
+import FileInput from '../../lib/FileInput';
+
 export default {
   data() {
     return {
@@ -33,13 +47,18 @@ export default {
         infomation:     '',
         url:            '',
       },
-      games: [],
-      isLoading: false,
-      isSending: false,
+      games:            [],
+      previewThumbnail: null,
+      isLoading:        false,
+      isSending:        false,
     };
   },
   methods: {
-
+    setThumbnailImage(e) {
+      const inputResult     = FileInput.input(e, 'image/');
+      this.thumbnail        = inputResult.file;
+      this.previewThumbnail = inputResult.blob;
+    },
   },
   async mounted () {
     this.isLoading = true;
