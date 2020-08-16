@@ -212,7 +212,7 @@ class GameApiTest extends TestCase
     {
         if ($reject_keys === []) {
             $reject_keys = [
-                'id', 'release_flag', 'created_at', 'updated_at',
+                'release_flag', 'created_at', 'updated_at',
             ];
         }
 
