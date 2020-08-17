@@ -1,6 +1,5 @@
 require('./bootstrap');
 
-import 'es6-promise/auto';
 import Vue from 'vue';
 import VueAuth from '@websanova/vue-auth';
 import VueAxios from 'vue-axios';
