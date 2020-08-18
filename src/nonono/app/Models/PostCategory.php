@@ -18,6 +18,8 @@ class PostCategory extends Model
         'post_id', 'category',
     ];
 
+    public $timestamps = false;
+
     public function post()
     {
         return $this->belongsTo('App\Models\Post', 'post_id');
