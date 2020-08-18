@@ -47,6 +47,21 @@ class TestTool
     }
 
     /**
+     * モデルを配列に変換する
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param array $reject_keys
+     * @return array
+     */
+    public static function model2array($model, $reject_keys=[]): array
+    {
+        $array = $model->toArray();
+        foreach($reject_keys as $key) {
+            unset($array[$key]);
+        }
+        return $array;
+    }
+
+    /**
      * コレクションを配列に変換する
      * @param \Illuminate\Database\Eloquent\Collection $collection
      * @param array $reject_keys
