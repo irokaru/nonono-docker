@@ -54,4 +54,36 @@ class PostCategory extends Model
         return self::select('post_id', DB::raw('group_concat(category) as categories'))
                    ->groupBy('post_id')->get();
     }
+
+    /**
+     * 1件追加する
+     * @param int $post_id
+     * @param string $category
+     * @return int
+     */
+    public static function insertOne($post_id, $category)
+    {
+        $result = self::create([
+            'post_id'  => $post_id,
+            'category' => $category,
+        ]);
+        return $result->id;
+    }
+
+    /**
+     * 複数件追加する
+     * @param int $post_id
+     * @param array $categories
+     * @return array
+     */
+    public static function insertSame($post_id, $categories)
+    {
+        $result = [];
+
+        foreach($categories as $category) {
+            $result[] = self::insertOne($post_id, $category);
+        }
+
+        return $result;
+    }
 }

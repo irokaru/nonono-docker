@@ -42,7 +42,6 @@ class Post extends Model
         return self::where(['id' => $post_id, 'release_flag' => true])->first();
     }
 
-
     /**
      * 全件返す
      * @return \Illuminate\Database\Eloquent\Collection|static[]
@@ -91,5 +90,20 @@ class Post extends Model
         } else {
             return $q->get();
         }
+    }
+
+    /**
+     * 1件追加する
+     * @param array $post
+     * @return int
+     */
+    public static function insertOne($post)
+    {
+        $post = self::create([
+            'title' => $post['title'],
+            'date'  => $post['date'],
+        ]);
+
+        return $post->id;
     }
 }
