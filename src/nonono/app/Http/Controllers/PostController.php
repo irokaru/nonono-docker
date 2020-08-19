@@ -88,13 +88,13 @@ class PostController extends Controller
         $data = static::formatPost($request);
 
         $post_id = Post::insertOne($data);
-        static::savePostDetail($post_id, $data['detail']);
+        PostCategory::insertSame($post_id, $data['categories']);
 
-        if (PostCategory::insertSame($post_id, $data['categories'])) {
-            return response()->json(['status' => 'success'], 200);
+        if (!static::savePostDetail($post_id, $data['detail'])) {
+            return response()->json(['error' => 'failed file output'], 400);
         }
 
-        return response()->json(['error' => 'failed'], 400);
+        return response()->json(['status' => 'success'], 200);
     }
 
     public function update(Request $request)
@@ -106,16 +106,23 @@ class PostController extends Controller
     // -----------------------------------------------------------------
 
     /**
-     * リクエストを良い感じに
+     * リクエストを良い感じにして返すやつ
      * @param Illuminate\Http\Request $request
      * @return array
      */
-    protected static function formatPost($request): array
+    protected static function formatPost(Request $request): array
     {
         $flip_keys = [
             'id', 'title', 'date', 'detail', 'categories',
         ];
-        return array_intersect_key($request->toArray(), array_flip($flip_keys));
+
+        $array = $request->toArray();
+
+        if (isset($array['date'])) {
+            $array['date'] = date('Y-m-d', strtotime($array['date']));
+        }
+
+        return array_intersect_key($array, array_flip($flip_keys));
     }
 
     /**

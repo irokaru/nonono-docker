@@ -36,6 +36,43 @@ class TestTool
     }
 
     /**
+     * 非公開メソッドを引っ張ってくる
+     * `$method->invoke(class, $args);`
+     *
+     * @param \class  $class
+     * @param string $method_name
+     * @return \ReflectionMethod
+     */
+    public static function getProtectedMethod($class, $method_name): \ReflectionMethod
+    {
+        $ref    = new \ReflectionClass($class);
+        $method = $ref->getMethod($method_name);
+
+        $method->setAccessible(true);
+
+        return $method;
+    }
+
+    /**
+     * 非公開プロパティを引っ張ってくる
+     * $property->getValue(class);
+     * $property->setValue(class, $value);
+     *
+     * @param \class  $class
+     * @param string $property_name
+     * @return \ReflectionProperty
+     */
+    public static function getProtectedProperty($class, $property_name): \ReflectionProperty
+    {
+        $ref      = new \ReflectionClass($class);
+        $property = $ref->getProperty($property_name);
+
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
+    /**
      * 認証済みユーザ情報からjwtトークンを取得する
      * @param  \App\Models\Admin $admin
      * @return array
