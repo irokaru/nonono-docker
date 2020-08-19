@@ -6,7 +6,9 @@ use App\Models\Admin;
 use App\Models\Post;
 use App\Models\PostCategory;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 use Tests\Util\TestTool;
 use Tests\TestCase;
@@ -88,6 +90,46 @@ class PostApiTest extends TestCase
         factory(Post::class, 2)->create(['release_flag' => false]);
 
         $this->get(route('post.index.all'))->assertStatus(401);
+    }
+
+    public function test_post_index_as_category_ok()
+    {
+        $category_name = 'dummytestcategory';
+
+        $posts = factory(Post::class, 5)->create(['release_flag' => true]);
+        $post_categories = [];
+        foreach ($posts as $post) {
+            $post_categories[] = new Collection([factory(PostCategory::class)->create(['post_id' => $post->id, 'category' => $category_name])]);
+        }
+
+        $another_posts = factory(Post::class, 5)->create(['release_flag' => true]);
+        $another_post_categories = [];
+        foreach ($another_posts as $post) {
+            $another_post_categories[] = factory(PostCategory::class, 5)->create(['post_id' => $post->id]);
+        }
+
+        $expect_post = [];
+        foreach ($posts as $index => $post) {
+            $expect_post[] = static::model2array($post, $post_categories[$index]);
+        }
+        array_multisort(array_column($expect_post, 'date'), SORT_DESC, $expect_post);
+
+
+        $content = $this->get(route('post.index.category', ['category' => $category_name]))->assertOk()->decodeResponseJson();
+        $this->assertEquals($expect_post, $content['data']);
+    }
+
+    public function test_post_index_as_category_ng_validate()
+    {
+        $suites = [
+            ' ',
+            Str::random(33),
+        ];
+
+        foreach ($suites as $suite) {
+            $response = $this->get(route('post.index.category', ['category' => $suite]));
+            $response->assertStatus(422);
+        }
     }
 
     public function test_post_show_ok()

@@ -31,10 +31,14 @@ class PostController extends Controller
 
     public function indexAsCategory(Request $request)
     {
-        $category = $request->category;
-        if (!$category) {
-            return $this->index();
+        $category = trim($request->category);
+
+        $validate_category = ['category' => 'required|string|min:1|max:32',];
+        $validator = Validator::make(['category' => $category], $validate_category);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
+
 
         return PostResource::collection(Post::findAllReleasedPostAsCategory($category, static::PAGINATION));
     }
