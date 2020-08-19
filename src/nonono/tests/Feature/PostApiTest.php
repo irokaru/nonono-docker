@@ -90,6 +90,42 @@ class PostApiTest extends TestCase
         $this->get(route('post.index.all'))->assertStatus(401);
     }
 
+    public function test_post_show_ok()
+    {
+        $category_count = 3;
+        $reject_keys = ['created_at', 'updated_at'];
+
+        $released = factory(Post::class)->create(['release_flag' => true]);
+        $released_categories = factory(PostCategory::class, $category_count)->create(['post_id' => $released->id]);
+        $not_released = factory(Post::class)->create(['release_flag' => false]);
+        factory(PostCategory::class, $category_count)->create(['post_id' => $not_released->id]);
+
+        $expect = static::model2array($released, $released_categories, $reject_keys);
+        $expect['detail'] = 'dummy';
+
+        $content = $this->get(route('post.show', ['post_id' => $released->id]))->assertOk()->decodeResponseJson();
+        $content['detail'] = 'dummy';
+
+        $this->assertEquals($expect, $content);
+
+        $this->get(route('post.show', ['post_id' => $not_released->id]))->assertStatus(404)->assertExactJson(['error' => 'not found']);
+    }
+
+    public function test_post_show_ng_validate()
+    {
+        $suites = [
+            'aiueo',
+            -1,
+            1.01,
+            0,
+            ' ',
+        ];
+
+        foreach ($suites as $suite) {
+            $response = $this->get(route('post.show', ['post_id' => $suite]));
+            $response->assertStatus(422);
+        }
+    }
 
     // ==============================================================
 

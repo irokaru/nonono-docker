@@ -6,6 +6,8 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\PostCategory;
 
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -39,7 +41,22 @@ class PostController extends Controller
 
     public function show(Request $request)
     {
-        return PostResource::make(Post::findOne($request->post_id));
+        $validate_show = [
+            'post_id' => 'required|integer|min:1',
+        ];
+
+        $validator = Validator::make(['post_id' => $request->post_id], $validate_show);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $post = Post::findOne($request->post_id);
+
+        if (!$post) {
+            return response()->json(['error' => 'not found'], 404);
+        }
+
+        return PostResource::make($post);
     }
 
     public function indexOfCategories()

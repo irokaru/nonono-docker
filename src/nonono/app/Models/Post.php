@@ -34,15 +34,18 @@ class Post extends Model
 
     /**
      * 1件返す
+     * @param int $post_id
+     * @return \Illuminate\Database\Eloquent\Model|object|static|null
      */
     public static function findOne($post_id)
     {
-        return self::with('post_categories')->find($post_id)->first();
+        return self::where(['id' => $post_id, 'release_flag' => true])->first();
     }
 
 
     /**
      * 全件返す
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public static function findAll($pagination = null)
     {
@@ -56,10 +59,11 @@ class Post extends Model
     /**
      * 公開済みの記事一覧を返す
      * @param null|int $pagination
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public static function findAllReleasedPosts($pagination = null)
     {
-        $q = self::with('post_categories')->select(static::$_select_list_columns)
+        $q = self::select(static::$_select_list_columns)
                  ->where('release_flag', true)->orderBy('date', 'desc');
 
         if ($pagination !== null || !is_int($pagination)) {
@@ -73,10 +77,11 @@ class Post extends Model
      * カテゴリを基に記事一覧を返す
      * @param null|string $category
      * @param null|int $pagination
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public static function findAllReleasedPostAsCategory($category = null, $pagination = null)
     {
-        $q = self::with('post_categories')->select(static::$_select_list_columns)
+        $q = self::select(static::$_select_list_columns)
                  ->where('release_flag', true)
                  ->whereHas('post_categories', function ($q) use ($category) {$q->where('category', $category);})
                  ->orderBy('date', 'desc');
