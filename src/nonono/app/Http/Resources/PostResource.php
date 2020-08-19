@@ -15,7 +15,7 @@ class PostResource extends JsonResource
      */
     public function toArray($request)
     {
-        if (!$this->release_flag) {
+        if (!isset($this->release_flag)) {
             // 一覧表示用
             return [
                 'id'       => $this->id,

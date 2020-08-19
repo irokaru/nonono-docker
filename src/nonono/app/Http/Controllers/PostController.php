@@ -12,6 +12,11 @@ class PostController extends Controller
 {
     const PAGINATION = 20;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api')->only(['indexAll']);
+    }
+
     public function index()
     {
         return PostResource::collection(Post::findAllReleasedPosts(static::PAGINATION));
