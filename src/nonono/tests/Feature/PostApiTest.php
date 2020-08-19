@@ -169,6 +169,28 @@ class PostApiTest extends TestCase
         }
     }
 
+    public function test_post_count_categories_ok()
+    {
+        $suites = [
+            // category, count
+            [Str::random(10), 4],
+            [Str::random(8),  6],
+            [Str::random(12), 10],
+        ];
+
+        $expect = [];
+        foreach($suites as $suite) {
+            factory(PostCategory::class, $suite[1])->create(['category' => $suite[0]]);
+
+            // count は文字列で返ってくるのでcastしておく
+            $expect[] = ['category' => $suite[0], 'count' => "$suite[1]"];
+            array_multisort(array_column($expect, 'category'), SORT_ASC, $expect);
+
+            $response = $this->get(route('post.index.categories'));
+            $response->assertOk()->assertExactJson($expect);
+        }
+    }
+
     // ==============================================================
 
     /**

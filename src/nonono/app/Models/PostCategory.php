@@ -32,7 +32,8 @@ class PostCategory extends Model
      */
     public static function countCategories()
     {
-        return self::groupBy('category')->select('category', DB::raw('count(*) as count'))->get();
+        return self::groupBy('category')->select('category', DB::raw('count(*) as count'))
+                   ->orderBy('category', 'asc')->get();
     }
 
     /**

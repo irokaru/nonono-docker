@@ -36,3 +36,4 @@ Route::get('posts', 'PostController@index')->name('post.index');
 Route::get('posts/all', 'PostController@indexAll')->name('post.index.all');
 Route::get('posts/category/{category}', 'PostController@indexAsCategory')->name('post.index.category');
 Route::get('post/show/{post_id}', 'PostController@show')->name('post.show');
+Route::get('posts/categories', 'PostController@indexOfCategories')->name('post.index.categories');
