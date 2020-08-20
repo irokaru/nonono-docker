@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+
+use App\Lib\CommonUtil;
+
 use App\Models\Post;
 use App\Models\PostCategory;
 
@@ -26,7 +29,7 @@ class PostController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['indexAll']);
+        $this->middleware('auth:api')->only(['indexAll', 'store']);
     }
 
     public function index()
@@ -90,11 +93,13 @@ class PostController extends Controller
         $post_id = Post::insertOne($data);
         PostCategory::insertSame($post_id, $data['categories']);
 
-        if (!static::savePostDetail($post_id, $data['detail'])) {
+        $save = CommonUtil::isTesting() ? true : static::savePostDetail($post_id, $data['detail']);
+
+        if (!$save) {
             return response()->json(['error' => 'failed file output'], 400);
         }
 
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success', 'id' => $post_id], 200);
     }
 
     public function update(Request $request)
@@ -113,7 +118,7 @@ class PostController extends Controller
     protected static function formatPost(Request $request): array
     {
         $flip_keys = [
-            'id', 'title', 'date', 'detail', 'categories',
+            'id', 'title', 'date', 'release_flag', 'detail', 'categories',
         ];
 
         $array = $request->toArray();

@@ -100,8 +100,9 @@ class Post extends Model
     public static function insertOne($post)
     {
         $post = self::create([
-            'title' => $post['title'],
-            'date'  => $post['date'],
+            'title'        => $post['title'],
+            'date'         => $post['date'],
+            'release_flag' => $post['release_flag'],
         ]);
 
         return $post->id;

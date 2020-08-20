@@ -191,6 +191,29 @@ class PostApiTest extends TestCase
         }
     }
 
+    public function test_post_store_ok()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth  = TestTool::getJwtAuthorization($admin);
+
+        $post = factory(Post::class)->make(['release_flag' => true]);
+        $categories = factory(PostCategory::class, 2)->make(['post_id' => 1]);
+
+        $data = static::model2postArray($post, $categories, [], ['post_id']);
+        $res_store = $this->json('POST', route('post.store'), $data, $auth);
+        $res_store->assertOk()->assertExactJson(['status' => 'success', 'id' => 1]);
+
+        $reject_keys = ['created_at', 'updated_at'];
+        $expect = static::model2array($post, $categories, $reject_keys);
+        $expect['id'] = 1;
+        $expect['detail'] = '';
+
+        $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+        $content['detail'] = '';
+
+        $this->assertEquals($expect, $content);
+    }
+
     // ==============================================================
 
     /**
@@ -218,5 +241,31 @@ class PostApiTest extends TestCase
         $post_array['categories'] = $categories_array;
 
         return $post_array;
+    }
+
+    /**
+     * postとcategoryをポスト用の配列に変換する
+     * @param \Illuminate\Database\Eloquent\Model $post
+     * @param \Illuminate\Database\Eloquent\Collection $categories
+     * @return array
+     */
+    protected static function model2postArray($post, $categories): array
+    {
+        $array = static::model2array($post, $categories);
+
+        $copy_key = ['title', 'date', 'release_flag'];
+
+        $store = [];
+        foreach ($copy_key as $key) {
+            $store[$key] = $post[$key];
+        }
+
+        $store['categories'] = [];
+        foreach($array['categories'] as $category) {
+            $store['categories'][] = $category['category'];
+        }
+        $store['detail'] = Str::random(100);
+
+        return $store;
     }
 }
