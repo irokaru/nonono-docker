@@ -214,6 +214,44 @@ class PostApiTest extends TestCase
         $this->assertEquals($expect, $content);
     }
 
+    public function test_post_store_ng_validate()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth  = TestTool::getJwtAuthorization($admin);
+
+        $post = factory(Post::class)->make(['release_flag' => true]);
+        $categories = factory(PostCategory::class, 2)->make(['post_id' => 1]);
+
+        $data = static::model2postArray($post, $categories, [], ['post_id']);
+
+        $suites = [
+            ['title',  Str::random(65)],
+            ['title',  ''],
+            ['date',   'hogehoge'],
+            ['detail', ''],
+            ['detail', Str::random(12801)],
+        ];
+
+        foreach ($suites as $suite) {
+            $data_ng = $data;
+            $data_ng[$suite[0]] = $suite[1];
+
+            $response = $this->json('POST', route('post.store'), $data_ng, $auth);
+            $response->assertStatus(422);
+        }
+    }
+
+    public function test_post_store_ng_auth()
+    {
+        $post = factory(Post::class)->make(['release_flag' => true]);
+        $categories = factory(PostCategory::class, 2)->make(['post_id' => 1]);
+
+        $data = static::model2postArray($post, $categories, [], ['post_id']);
+
+        $response = $this->json('POST', route('post.store'), $data);
+        $response->assertStatus(401);
+    }
+
     // ==============================================================
 
     /**
