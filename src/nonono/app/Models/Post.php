@@ -107,4 +107,25 @@ class Post extends Model
 
         return $post->id;
     }
+
+    /**
+     * 1件更新する
+     * @param array $post
+     * @return bool
+     */
+    public static function updateOne($post)
+    {
+        $target = self::where('id', $post['id'])->first();
+        if ($target === null) {
+            return false;
+        }
+
+        $target->update([
+            'title'        => $post['title'],
+            'date'         => $post['date'],
+            'release_flag' => $post['release_flag'],
+        ]);
+
+        return true;
+    }
 }

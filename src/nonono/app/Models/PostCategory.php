@@ -18,6 +18,10 @@ class PostCategory extends Model
         'post_id', 'category',
     ];
 
+    protected $casts = [
+        'post_id' => 'integer',
+    ];
+
     public $timestamps = false;
 
     public function post()
@@ -29,6 +33,7 @@ class PostCategory extends Model
 
     /**
      * 各カテゴリの記事数を返す
+     * @return Illuminate\Support\Collection
      */
     public static function countCategories()
     {
@@ -37,8 +42,29 @@ class PostCategory extends Model
     }
 
     /**
+     * idを基に1件カテゴリを返す
+     * @param int $id
+     * @return Illuminate\Database\Eloquent\Model|null
+     */
+    public static function findOne($id)
+    {
+        return self::find($id);
+    }
+
+    /**
+     * 指定した記事のカテゴリを返す
+     * @param int $post_id
+     * @return Illuminate\Support\Collection
+     */
+    public static function findAllAsPostId($post_id)
+    {
+        return self::where('post_id', $post_id)->get();
+    }
+
+    /**
      * 指定した記事のカテゴリをコンマ区切りで返す
      * @param int $post_id
+     * @return Illuminate\Database\Eloquent\Model|null
      */
     public static function findOneCategoriesAsPost($post_id)
     {
@@ -48,6 +74,7 @@ class PostCategory extends Model
 
     /**
      * 各記事のカテゴリをコンマ区切りで返す
+     * @return Illuminate\Support\Collection
      */
     public static function findAllCategoriesAsPost()
     {
@@ -76,7 +103,7 @@ class PostCategory extends Model
      * @param array $categories
      * @return array
      */
-    public static function insertSame($post_id, $categories)
+    public static function insertSome($post_id, $categories)
     {
         $result = [];
 
@@ -85,5 +112,21 @@ class PostCategory extends Model
         }
 
         return $result;
+    }
+
+    /**
+     * 1件削除する
+     * @param int $id
+     * @return bool
+     */
+    public static function deleteOne($id)
+    {
+        $category = self::findOne($id);
+        if ($category === null) {
+            false;
+        }
+
+        $category->delete();
+        return true;
     }
 }

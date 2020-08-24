@@ -198,6 +198,9 @@ class PostApiTest extends TestCase
 
         $post = factory(Post::class)->make(['release_flag' => true]);
         $categories = factory(PostCategory::class, 2)->make(['post_id' => 1]);
+        for ($i = 0; $i < count($categories); $i++) {
+            $categories[$i]['id'] = $i + 1;
+        }
 
         $data = static::model2postArray($post, $categories, [], ['post_id']);
         $res_store = $this->json('POST', route('post.store'), $data, $auth);
@@ -269,9 +272,7 @@ class PostApiTest extends TestCase
         }
 
         if ($categories_reject_keys === []) {
-            $categories_reject_keys = [
-                'id',
-            ];
+            $categories_reject_keys = [];
         }
 
         $post_array               = TestTool::model2array($post, $post_reject_keys);
