@@ -39,7 +39,7 @@ class Post extends Model
      */
     public static function findOne($post_id)
     {
-        return self::where(['id' => $post_id, 'release_flag' => true])->first();
+        return static::withCategories()->where(['id' => $post_id, 'release_flag' => true])->first();
     }
 
     /**
@@ -48,10 +48,11 @@ class Post extends Model
      */
     public static function findAll($pagination = null)
     {
+        $q = static::withCategories();
         if ($pagination !== null || !is_int($pagination)) {
-            return self::all();
+            return $q->get();
         } else {
-            return self::paginate($pagination);
+            return $q->paginate($pagination);
         }
     }
 
@@ -62,8 +63,8 @@ class Post extends Model
      */
     public static function findAllReleasedPosts($pagination = null)
     {
-        $q = self::select(static::$_select_list_columns)
-                 ->where('release_flag', true)->orderBy('date', 'desc');
+        $q = static::withCategories()->select(static::$_select_list_columns)
+                   ->where('release_flag', true)->orderBy('date', 'desc');
 
         if ($pagination !== null || !is_int($pagination)) {
             return $q->paginate($pagination);
@@ -80,10 +81,11 @@ class Post extends Model
      */
     public static function findAllReleasedPostAsCategory($category = null, $pagination = null)
     {
-        $q = self::select(static::$_select_list_columns)
-                 ->where('release_flag', true)
-                 ->whereHas('post_categories', function ($q) use ($category) {$q->where('category', $category);})
-                 ->orderBy('date', 'desc');
+        $q = static::withCategories()
+                   ->select(static::$_select_list_columns)
+                   ->where('release_flag', true)
+                   ->whereHas('post_categories', function ($q) use ($category) {$q->where('category', $category);})
+                   ->orderBy('date', 'desc');
 
         if ($pagination !== null || !is_int($pagination)) {
             return $q->paginate($pagination);
@@ -127,5 +129,16 @@ class Post extends Model
         ]);
 
         return true;
+    }
+
+    // -----------------------------------------------------------------
+
+    /**
+     * カテゴリを付与したビルダを返す
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected static function withCategories()
+    {
+        return self::with('post_categories');
     }
 }
