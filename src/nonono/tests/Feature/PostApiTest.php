@@ -330,6 +330,51 @@ class PostApiTest extends TestCase
         }
     }
 
+    public function test_post_update_ng_validate()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth  = TestTool::getJwtAuthorization($admin);
+
+        $category_count = 3;
+
+        $post_insert = factory(Post::class)->create(['release_flag' => true]);
+
+        $categories          = factory(PostCategory::class, $category_count)->create(['post_id' => $post_insert->id]);
+        $post_data           = static::model2array($post_insert, $categories,['created_at', 'updated_at']);
+        $post_data['detail'] = 'dummy';
+
+        $suites = [
+            ['title',        ''],
+            ['title',        Str::random(65)],
+            ['date',         'hogehoge'],
+            ['release_flag', 'hogehoge'],
+            ['detail',       ''],
+            ['categories',   ''],
+            ['categories',   []],
+        ];
+
+        foreach ($suites as $suite) {
+            $update_data = $post_data;
+            $update_data[$suite[0]] = $suite[1];
+            $update_res = $this->json('PUT', route('post.update'), $update_data, $auth);
+            $update_res->assertStatus(422);
+        }
+    }
+    public function test_post_update_ng_auth()
+    {
+        $category_count = 3;
+
+        $post_insert = factory(Post::class)->create(['release_flag' => true]);
+
+        $categories          = factory(PostCategory::class, $category_count)->create(['post_id' => $post_insert->id]);
+        $post_data           = static::model2array($post_insert, $categories, ['created_at', 'updated_at']);
+        $post_data['detail'] = 'dummy';
+
+        $update_res = $this->json('PUT', route('post.update'), $post_data);
+        $update_res->assertStatus(401);
+
+    }
+
     // ==============================================================
 
     /**

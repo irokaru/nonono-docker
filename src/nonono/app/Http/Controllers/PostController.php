@@ -39,7 +39,7 @@ class PostController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['indexAll', 'store']);
+        $this->middleware('auth:api')->only(['indexAll', 'store', 'update']);
     }
 
     public function index()
