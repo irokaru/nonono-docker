@@ -16,7 +16,7 @@
       <input type="checkbox" v-model="form.release_flag" id="release_flag" checked="checked">
       <label class="checkbox" for="release_flag">公開する</label>
 
-      <textarea v-model="form.detail"></textarea>
+      <textarea v-model="form.detail" placeholder="本文"></textarea>
 
       <input type="text" @input="form.categories = splitCategory($event.target.value)" placeholder="カテゴリ1,カテゴリ2">
 
@@ -45,6 +45,7 @@
 
 <script>
 import ApiTools from '../../lib/ApiTools';
+import DateUtil from '../../lib/DateUtil';
 import PostApi  from '../../api/PostApi';
 
 export default {
@@ -89,7 +90,7 @@ export default {
       this.isSending = true;
 
       const formatData = ApiTools.makeFormData(post);
-      const api        = PostApi.store(sendData);
+      const api        = PostApi.store(formatData);
 
       const storeResult = await api.then(res => {
         return true;
@@ -128,7 +129,7 @@ export default {
     resetForm() {
       this.form = {
         title: '',
-        date:  '',
+        date:  DateUtil.formatDate('YYYY-MM-dd'),
         release_flag: true,
         detail: '',
         categories: [],
