@@ -15,7 +15,6 @@ class PostCategoryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'       => $this->id,
             'post_id'  => $this->post_id,
             'category' => $this->category,
         ];

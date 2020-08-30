@@ -255,6 +255,81 @@ class PostApiTest extends TestCase
         $response->assertStatus(401);
     }
 
+    public function test_post_update_ok_post()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth  = TestTool::getJwtAuthorization($admin);
+
+        $category_count = 3;
+
+        $post_insert = factory(Post::class)->create(['release_flag' => true]);
+
+        $categories          = factory(PostCategory::class, $category_count)->create(['post_id' => $post_insert->id]);
+        $post_data           = static::model2array($post_insert, $categories,['created_at', 'updated_at']);
+        $post_data['detail'] = 'dummy';
+
+        $suites = [
+            ['title', Str::random(24)],
+            ['date',  date('Y-m-d')],
+        ];
+
+        foreach ($suites as $suite) {
+            $update_data = $post_data;
+            $update_data[$suite[0]] = $suite[1];
+            $update_res = $this->json('PUT', route('post.update'), $update_data, $auth);
+            $update_res->assertOk();
+
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content['detail'] = 'dummy';
+
+            $this->assertEquals($update_data, $content);
+        }
+    }
+
+    public function test_post_update_ok_categories()
+    {
+        $admin = factory(Admin::class)->create();
+        $auth  = TestTool::getJwtAuthorization($admin);
+
+        $category_count = 3;
+
+        $post_insert = factory(Post::class)->create(['release_flag' => true]);
+
+        $categories          = factory(PostCategory::class, $category_count)->create(['post_id' => $post_insert->id]);
+        $post_data           = static::model2array($post_insert, $categories,['created_at', 'updated_at']);
+        $post_data['detail'] = 'dummy';
+
+        foreach (range(0, 1) as $index) {
+            array_pop($post_data['categories']);
+            $update_res = $this->json('PUT', route('post.update'), $post_data, $auth);
+            $update_res->assertOk();
+
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content['detail'] = 'dummy';
+
+            $this->assertEquals($post_data, $content);
+        }
+
+        $insert = [
+            'hogehoge', 'fugafuga', 'piyopiyo',
+        ];
+
+        foreach ($insert as $value) {
+            $post_data['categories'][] = [
+                'post_id'  => $post_data['id'],
+                'category' => $value,
+            ];
+
+            $update_res = $this->json('PUT', route('post.update'), $post_data, $auth);
+            $update_res->assertOk();
+
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content['detail'] = 'dummy';
+
+            $this->assertEquals($post_data, $content);
+        }
+    }
+
     // ==============================================================
 
     /**
@@ -272,7 +347,9 @@ class PostApiTest extends TestCase
         }
 
         if ($categories_reject_keys === []) {
-            $categories_reject_keys = [];
+            $categories_reject_keys = [
+                'id'
+            ];
         }
 
         $post_array               = TestTool::model2array($post, $post_reject_keys);

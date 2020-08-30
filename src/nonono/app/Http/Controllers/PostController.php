@@ -34,7 +34,7 @@ class PostController extends Controller
         'release_flag' => 'required|boolean',
         'detail'       => 'required|string|min:1|max:12800',
         'categories'   => 'required|array|min:0',
-        'categories.*' => 'required|string|distinct|min:1|max:32',
+        'categories.*' => 'required|array|distinct|min:1|max:32',
     ];
 
     public function __construct()

@@ -34,6 +34,7 @@ Route::put('games', 'GameController@update')->name('games.update');
 
 Route::get('posts', 'PostController@index')->name('post.index');
 Route::post('posts', 'PostController@store')->name('post.store');
+Route::put('posts', 'PostController@update')->name('post.update');
 Route::get('posts/all', 'PostController@indexAll')->name('post.index.all');
 Route::get('posts/category/{category}', 'PostController@indexAsCategory')->name('post.index.category');
 Route::get('post/show/{post_id}', 'PostController@show')->name('post.show');
