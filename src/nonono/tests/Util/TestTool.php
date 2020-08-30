@@ -36,6 +36,43 @@ class TestTool
     }
 
     /**
+     * 非公開メソッドを引っ張ってくる
+     * `$method->invoke(class, $args);`
+     *
+     * @param \class  $class
+     * @param string $method_name
+     * @return \ReflectionMethod
+     */
+    public static function getProtectedMethod($class, $method_name): \ReflectionMethod
+    {
+        $ref    = new \ReflectionClass($class);
+        $method = $ref->getMethod($method_name);
+
+        $method->setAccessible(true);
+
+        return $method;
+    }
+
+    /**
+     * 非公開プロパティを引っ張ってくる
+     * $property->getValue(class);
+     * $property->setValue(class, $value);
+     *
+     * @param \class  $class
+     * @param string $property_name
+     * @return \ReflectionProperty
+     */
+    public static function getProtectedProperty($class, $property_name): \ReflectionProperty
+    {
+        $ref      = new \ReflectionClass($class);
+        $property = $ref->getProperty($property_name);
+
+        $property->setAccessible(true);
+
+        return $property;
+    }
+
+    /**
      * 認証済みユーザ情報からjwtトークンを取得する
      * @param  \App\Models\Admin $admin
      * @return array
@@ -44,6 +81,21 @@ class TestTool
     {
         $token = JWTAuth::fromUser($admin);
         return ['Authorization' => "Bearer $token"];
+    }
+
+    /**
+     * モデルを配列に変換する
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param array $reject_keys
+     * @return array
+     */
+    public static function model2array($model, $reject_keys=[]): array
+    {
+        $array = $model->toArray();
+        foreach($reject_keys as $key) {
+            unset($array[$key]);
+        }
+        return $array;
     }
 
     /**
