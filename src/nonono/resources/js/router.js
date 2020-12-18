@@ -57,6 +57,14 @@ const routes = [
     },
   },
   {
+    path: '/admin/blog',
+    name: 'admin.blog',
+    component: () => import('./pages/admin/Blog'),
+    meta: {
+      auth: true,
+    },
+  },
+  {
     path: '*',
     name: 'error.404',
     component: () => import('./pages/error/404'),

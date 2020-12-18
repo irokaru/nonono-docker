@@ -4,7 +4,7 @@
 
   <div class="content">
 
-    <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用履歴管理ページ
+    <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用ゲーム管理ページ
 
     <h3>新規ゲーム登録</h3>
 
@@ -154,7 +154,7 @@ export default {
 
     setThumbnailImage(e) {
       const inputResult     = FileInput.input(e, 'image/');
-      this.form.thumbnail        = inputResult.file;
+      this.form.thumbnail   = inputResult.file;
       this.previewThumbnail = inputResult.blob;
     },
 
