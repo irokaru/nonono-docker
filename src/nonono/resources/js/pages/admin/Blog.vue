@@ -46,18 +46,13 @@
 <script>
 import ApiTools from '../../lib/ApiTools';
 import DateUtil from '../../lib/DateUtil';
+import Post     from '../../model/Post';
 import PostApi  from '../../api/PostApi';
 
 export default {
   data() {
     return {
-      form: {
-        title: '',
-        date:  '',
-        release_flag: true,
-        detail: '',
-        categories: [],
-      },
+      form: Post.model,
       posts:     [],
       isLoading: false,
       isSenging: false,
@@ -127,13 +122,7 @@ export default {
      * @returns {void}
      */
     resetForm() {
-      this.form = {
-        title: '',
-        date:  DateUtil.formatDate('YYYY-MM-dd'),
-        release_flag: true,
-        detail: '',
-        categories: [],
-      };
+      this.form = Post.model;
     },
 
     /**
