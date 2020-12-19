@@ -5,7 +5,7 @@
   <div class="content">
 
     <div class="blog-main">
-      <!-- <component :is="currentView"></component> -->
+      <component :is="currentView"></component>
     </div>
 
     <BlogSideBar :latests="latests" :categories="categories"/>
@@ -14,7 +14,10 @@
 </template>
 
 <script>
-import BlogSideBar from '../components/BlogSideBar';
+import BlogPostList     from '../components/BlogPostList';
+import BlogPostDetail   from '../components/BlogPostDetail';
+import BlogCategoryList from '../components/BlogCategoryList';
+import BlogSideBar      from '../components/BlogSideBar';
 
 import BlogUtil from '../lib/BlogUtil';
 import Post     from '../model/Post';
@@ -59,6 +62,9 @@ export default {
     this.currentView = BlogUtil.mainComponentName(this.getMode());
   },
   components: {
+    BlogPostList,
+    BlogPostDetail,
+    BlogCategoryList,
     BlogSideBar,
   },
 }
