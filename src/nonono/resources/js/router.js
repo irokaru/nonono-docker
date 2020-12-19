@@ -35,11 +35,24 @@ const routes = [
   },
   {
     path: '/blog/:mode',
-    redirect: '/blog',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
   },
   {
     path: '/blog/:mode/:key',
     name: 'blog-any',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
+    path: '/blog/:mode/:key/:page',
+    name: 'blog-any-page',
     component: () => import('./pages/Blog'),
     meta: {
       auth: undefined,
