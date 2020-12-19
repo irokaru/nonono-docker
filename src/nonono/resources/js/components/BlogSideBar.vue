@@ -1,6 +1,6 @@
 <template>
 <div class="blog-sidebar">
-  <h3><i class="far fa-clock"></i> しんちゃく</h3>
+  <h3 class="head"><i class="far fa-clock"></i> しんちゃく</h3>
 
   <ul class="simple">
     <li v-for="(latest, index) in latests" :key="index">

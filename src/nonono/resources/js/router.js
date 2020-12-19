@@ -34,6 +34,19 @@ const routes = [
     }
   },
   {
+    path: '/blog/:mode',
+    redirect: '/blog',
+  },
+  {
+    path: '/blog/:mode/:key',
+    name: 'blog-any',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import('./pages/admin/Admin'),
