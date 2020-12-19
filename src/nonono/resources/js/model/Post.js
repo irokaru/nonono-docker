@@ -12,4 +12,20 @@ export default {
     detail:       '',
     categories:   [],
   },
+
+  dummy(id) {
+    const model = this.model;
+    model.id    = id;
+    model.title = '－－－';
+
+    return model;
+  },
+
+  /**
+   * カテゴリのモデル
+   */
+  category: {
+    category: '－－－',
+    count:    '-',
+  },
 };

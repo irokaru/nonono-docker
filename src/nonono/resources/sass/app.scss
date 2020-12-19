@@ -537,6 +537,28 @@ footer {
   }
 }
 
+@for $i from 1 through 5 {
+  .margin-#{$i} {
+    margin: 1em * $i;
+  }
+
+  .margin-t-#{$i} {
+    margin: 1em * $i 0 0 0;
+  }
+
+  .margin-b-#{$i} {
+    margin: 0 1em * $i 0 0;
+  }
+
+  .margin-tb-#{$i} {
+    margin: 1em * $i 0;
+  }
+
+  .margin-lr-#{$i} {
+    margin: 0 1em *$i;
+  }
+}
+
 /* ==========================================
  カエレバ
  ==========================================*/

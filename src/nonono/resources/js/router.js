@@ -25,6 +25,15 @@ const routes = [
     }
   },
   {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import('./pages/admin/Admin'),
