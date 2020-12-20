@@ -114,6 +114,15 @@ export default {
         }).finally(() => {
           this.flags.isLoading = false;
         });
+      } else if (BlogUtil.isPostDetail(this.currentView)) {
+        const api = PostApi.show(BlogUtil.getKey(this.$route));
+        api.then(res => {
+          this.detail = res.data;
+        }).catch(e => {
+          this.$router.push({path: '/blog'});
+        }).finally(() => {
+          this.flags.isLoading = false;
+        });
       }
     },
   },

@@ -1,3 +1,5 @@
+import Document from './Document';
+
 export default {
   /**
    * パスのアクセスが正しいか判断する
@@ -72,6 +74,20 @@ export default {
   },
 
   /**
+   * mdをhtmlに変換するやつ
+   * @param {string} md
+   * @returns {string}
+   */
+  mdDetail2html(md) {
+    const html   = Document.md2html(md);
+    const listed = Document.addClassToList(html);
+    const anchor = Document.anchorBlank(listed);
+    const coded  = Document.highlightCode(anchor);
+
+    return coded;
+  },
+
+  /**
    * 現在表示中のページは記事一覧かどうかを返す
    * @param {string} view
    * @returns {boolean}
@@ -87,6 +103,15 @@ export default {
    */
   isCategoryList(view) {
     return view === 'BlogCategoryList';
+  },
+
+  /**
+   * 現在表示中のページは記事詳細かどうかを返す
+   * @param {string} view
+   * @returns {boolean}
+   */
+  isPostDetail(view) {
+    return view === 'BlogPostDetail';
   },
 
   /**

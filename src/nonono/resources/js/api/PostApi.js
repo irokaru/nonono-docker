@@ -39,8 +39,8 @@ export default {
    * @param {number} id post id
    * @returns {Promise<AxiosResponse<any>>}
    */
-  show: ($id) => {
-    return axios.get(`/api/posts/show/${id}`);
+  show: (id) => {
+    return axios.get(`/api/post/show/${id}`);
   },
 
   /**
