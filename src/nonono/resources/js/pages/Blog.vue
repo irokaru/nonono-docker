@@ -49,30 +49,6 @@ export default {
   },
   methods: {
     /**
-     * モードを返す
-     * @returns {string}
-     */
-    getMode() {
-      return this.$route.params.mode || '';
-    },
-
-    /**
-     * キーを返す
-     * @returns {string}
-     */
-    getKey() {
-      return this.$route.params.key || '';
-    },
-
-    /**
-     * ページを返す
-     * @returns {string}
-     */
-    getPage() {
-      return this.$route.params.page || '';
-    },
-
-    /**
      * ページネーションを初期化する
      * @returns {void}
      */
@@ -88,53 +64,41 @@ export default {
       return Paginate.list(this.paginate, 5);
     },
 
-    /**
-     * ルートを基に現在のページを返す
-     * @returns {number}
-     */
-    getPageNumber() {
-      if (this.currentView === 'BlogPostList') {
-        return this.getMode() ? parseInt(this.getMode()) : 1;
-      }
-
-      if (this.currentView === 'BlogCategoryList') {
-        return this.getPage() ? parseInt(this.getPage()) : 1;
-      }
-
-      return null;
+    getPageLink(number) {
+      return BlogUtil.getPageLink(this.$route, this.currentView, number);
     },
 
-    getPageLink(number) {
+    /**
+     * ページ読み込み時の処理
+     */
+    async mount() {
+      if (!BlogUtil.validateRoute(this.$route)) {
+        this.$router.push({path: '/blog'});
+      }
+
+      [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.getMode());
+
+      this.paginate.current = BlogUtil.getPageNumber(this.$route, this.currentView);
+
       if (this.currentView === 'BlogPostList') {
-        return `/blog/${number}`;
+        const api = PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
+        api.then(res => {
+          this.posts    = res.data.data;
+          this.paginate = Paginate.setup(res.data.links, res.data.meta);
+        }).catch(e => {
+          alert('ブログ一覧の取得に失敗しました');
+          this.posts = [];
+        });
       }
-
-      if (this.currentView === 'BlogCategoryList') {
-        return `/blog/category/${this.getKey()}/${number}`;
-      }
-
-      return '/blog';
-    }
+    },
   },
   async mounted () {
-    if (!BlogUtil.validateRoute(this.getMode(), this.getKey(), this.getPage())) {
-      this.$router.push({path: '/blog'});
-    }
-
-    [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.getMode());
-
-    this.paginate.current = this.getMode() || 1;
-
-    if (this.currentView === 'BlogPostList') {
-      const api = PostApi.get(this.getPageNumber());
-      api.then(res => {
-        this.posts    = res.data.data;
-        this.paginate = Paginate.setup(res.data.links, res.data.meta);
-      }).catch(e => {
-        alert('ブログ一覧の取得に失敗しました');
-        this.posts = [];
-      });
-    }
+    this.mount();
+  },
+  watch: {
+    $route(to, from) {
+      this.mount();
+    },
   },
   components: {
     BlogPostList,

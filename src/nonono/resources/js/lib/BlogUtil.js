@@ -1,12 +1,14 @@
 export default {
   /**
    * パスのアクセスが正しいか判断する
-   * @param {string} mode
-   * @param {string} key
-   * @param {string} page
+   * @param {object} route
    * @returns {boolean}
    */
-  validateRoute(mode, key, page) {
+  validateRoute(route) {
+    const mode = this.getMode(route);
+    const key  = this.getKey(route);
+    const page = this.getPage(route);
+
     if (mode === '' && key === '' && page === '') {
       return true;
     }
@@ -68,11 +70,94 @@ export default {
   },
 
   /**
+   * 現在表示中のページは記事一覧かどうかを返す
+   * @param {string} view
+   * @returns {boolean}
+   */
+  isPostList(view) {
+    return view === 'BlogPostList';
+  },
+
+  /**
+   * 現在表示中のページはカテゴリ記事一覧かどうかを返す
+   * @param {string} view
+   * @returns {boolean}
+   */
+  isCategoryList(view) {
+    return view === 'BlogCategoryList';
+  },
+
+  /**
+   * ルートを基に現在のページを返す
+   * @param {object} route
+   * @param {string} view
+   * @returns {number}
+   */
+  getPageNumber(route, view) {
+    if (this.isPostList(view)) {
+      return this.getMode(route) ? parseInt(this.getMode(route)) : 1;
+    }
+
+    if (this.isCategoryList(view)) {
+      return this.getPage(route) ? parseInt(this.getPage(route)) : 1;
+    }
+
+    return null;
+  },
+
+  /**
+   * 現在のページを基にリンクを返す
+   * @param {object} route
+   * @param {string} view
+   * @param {number} number
+   * @returns {string}
+   */
+  getPageLink(route, view, number) {
+    if (!number) {
+      return '';
+    }
+
+    if (this.isPostList(view)) {
+      return `/blog/${number}`;
+    }
+
+    if (this.isCategoryList(view)) {
+      return `/blog/category/${this.getKey(route)}/${number}`;
+    }
+
+    return '/blog';
+  },
+
+  /**
    * 数値化する
    * @param {string} val
    * @returns {number}
    */
   toNumber(val) {
     return val.match(/^[0-9]+$/) ? Number(val) : -1;
+  },
+
+  /**
+   * モードを返す
+   * @returns {string}
+   */
+  getMode(route) {
+    return route.params.mode || '';
+  },
+
+  /**
+   * キーを返す
+   * @returns {string}
+   */
+  getKey(route) {
+    return route.params.key || '';
+  },
+
+  /**
+   * ページを返す
+   * @returns {string}
+   */
+  getPage(route) {
+    return route.params.page || '';
   },
 };
