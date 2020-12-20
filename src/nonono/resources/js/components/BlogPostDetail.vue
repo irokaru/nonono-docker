@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="detail">
   <h3 class="head">{{detail.title}}</h3>
 
   <div class="info">

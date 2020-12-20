@@ -159,17 +159,17 @@ export default {
      * ページ読み込み時の処理
      */
     async mount() {
+      const nextView = BlogUtil.mainComponentName(this.$route);
+
       if (!BlogUtil.validateRoute(this.$route)) {
         this.$router.push({path: '/blog'});
       }
 
-      if (BlogUtil.checkRouteChange(this.$route, this.view, this.paginate)) {
+      if (BlogUtil.checkRouteChange(this.$route, this.view, this.paginate) && !BlogUtil.isPostDetail(nextView[0])) {
         return;
       }
 
       this.execSideApi();
-
-      const nextView = BlogUtil.mainComponentName(this.$route);
 
       if (!BlogUtil.isPostDetail(this.view) && BlogUtil.isPostDetail(nextView[0])) {
         this.resetPosts();

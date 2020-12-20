@@ -163,8 +163,8 @@ export default {
    * @returns {boolean}
    */
   checkRouteChange(route, view, paginate) {
-    return view === this.mainComponentName(route)[0] &&
-           paginate.current === this.getPageNumber(route, view);
+    const viewSet = this.mainComponentName(route);
+    return view === viewSet[0] && paginate.current === this.getPageNumber(route, view);
   },
 
   /**

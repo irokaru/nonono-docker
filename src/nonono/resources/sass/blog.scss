@@ -25,22 +25,46 @@
       box-sizing: border-box;
       box-shadow: 0 5px 8px rgba(0,0,0,.4);
 
-      .info {
-        padding: .5em .25em;
-        margin-bottom: 1em;
-        border-bottom: 1px dashed rgba(0, 0, 0, .5);
-        color: #777;
+      .post-box {
+        border-bottom: 1px dashed #888;
+        padding: .4em;
 
-        .date, .category {
-          display: inline-block;
+        .info {
+          color: #777;
+
+          .date, .categories {
+            display: inline;
+            font-size: .9em;
+          }
+
+          .categories {
+            margin-left: 1em;
+
+            a {
+              margin-right: .5em;
+            }
+          }
         }
+      }
 
-        .date {
-          min-width: 8em;
-        }
+      .detail {
+        .info {
+          padding: .5em .25em;
+          margin-bottom: 1em;
+          border-bottom: 1px dashed rgba(0, 0, 0, .5);
+          color: #777;
 
-        .category a {
-          margin-right: .75em;
+          .date, .category {
+            display: inline-block;
+          }
+
+          .date {
+            min-width: 8em;
+          }
+
+          .category a {
+            margin-right: .75em;
+          }
         }
       }
 
@@ -64,28 +88,6 @@
 
       .date {
         font-size: 0.33em;
-      }
-    }
-  }
-
-  .post-box {
-    border-bottom: 1px dashed #888;
-    padding: .4em;
-
-    .info {
-      color: #777;
-
-      .date, .categories {
-        display: inline;
-        font-size: .9em;
-      }
-
-      .categories {
-        margin-left: 1em;
-
-        a {
-          margin-right: .5em;
-        }
       }
     }
   }
