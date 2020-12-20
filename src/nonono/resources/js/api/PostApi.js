@@ -8,6 +8,15 @@ export default {
   },
 
   /**
+   * ブログの新着一覧を取得する
+   * @param {number} len
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getLatests: (len = 4) => {
+    return axios.get(`/api/posts/latest/${len}`);
+  },
+
+  /**
    * カテゴリを基にブログ一覧を取得する
    * @returns {Promise<AxiosResponse<any>>}
    */

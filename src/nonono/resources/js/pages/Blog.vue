@@ -70,8 +70,70 @@ export default {
       return Paginate.list(this.paginate, 5);
     },
 
+    /**
+     * 各種ページのリンクを返す
+     * @returns {string}
+     */
     getPageLink(number) {
       return BlogUtil.getPageLink(this.$route, this.currentView, number);
+    },
+
+    /**
+     * 一覧系APIを実行するやつ
+     * @returns {void}
+     */
+    execListApi() {
+      const api = () => {
+        if (BlogUtil.isPostList(this.currentView)) {
+          return PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
+        }
+        return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
+      }
+
+      api().then(res => {
+        this.posts    = res.data.data;
+        this.paginate = Paginate.setup(res.data.links, res.data.meta);
+      }).catch(e => {
+        alert('ブログ一覧の取得に失敗しました');
+        this.posts = [];
+      }).finally(() => {
+        this.flags.isLoading = false;
+      });
+    },
+
+    /**
+     * 詳細系APIを実行するやつ
+     * @returns {void}
+     */
+    execDetailApi() {
+      const api = PostApi.show(BlogUtil.getKey(this.$route));
+
+      api.then(res => {
+        this.detail = res.data;
+      }).catch(e => {
+        this.$router.push({path: '/blog'});
+      }).finally(() => {
+        this.flags.isLoading = false;
+      });
+    },
+
+    /**
+     * サイドバー系APIを実行するやつ
+     * @returns {void}
+     */
+    execSideApi() {
+      const apis = [
+        PostApi.getLatests(),
+        PostApi.getCategories(),
+      ];
+
+      axios.all(sideApis).then(([latests, categories]) => {
+        this.latests    = latests.data;
+        this.categories = categories.data;
+      }).catch(e => {
+        console.log(e);
+        alert('サイドバーのブログ情報が取得できませんでした')
+      });
     },
 
     /**
@@ -86,6 +148,8 @@ export default {
         return;
       }
 
+      this.execSideApi();
+
       [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.$route);
 
       this.paginate.current = BlogUtil.getPageNumber(this.$route, this.currentView);
@@ -93,34 +157,11 @@ export default {
       this.flags.isLoading = true;
 
       if (!BlogUtil.isPostDetail(this.currentView)) {
-        // 一覧系
-        const api = () => {
-          if (BlogUtil.isPostList(this.currentView)) {
-            return PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
-          }
-          return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
-        }
-        api().then(res => {
-          this.posts    = res.data.data;
-          this.paginate = Paginate.setup(res.data.links, res.data.meta);
-        }).catch(e => {
-          alert('ブログ一覧の取得に失敗しました');
-          this.posts = [];
-        }).finally(() => {
-          this.flags.isLoading = false;
-        });
+        this.execListApi();
       } else {
         // 詳細
         this.detail = Post.model();
-
-        const api = PostApi.show(BlogUtil.getKey(this.$route));
-        api.then(res => {
-          this.detail = res.data;
-        }).catch(e => {
-          this.$router.push({path: '/blog'});
-        }).finally(() => {
-          this.flags.isLoading = false;
-        });
+        this.execDetailApi();
       }
     },
   },
