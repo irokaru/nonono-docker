@@ -76,11 +76,15 @@ export default {
         this.$router.push({path: '/blog'});
       }
 
-      [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.getMode());
+      if (this.paginate.current === BlogUtil.getPageNumber(this.$route, this.currentView)) {
+        return;
+      }
+
+      [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.$route);
 
       this.paginate.current = BlogUtil.getPageNumber(this.$route, this.currentView);
 
-      if (this.currentView === 'BlogPostList') {
+      if (BlogUtil.isPostList(this.currentView)) {
         const api = PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
         api.then(res => {
           this.posts    = res.data.data;

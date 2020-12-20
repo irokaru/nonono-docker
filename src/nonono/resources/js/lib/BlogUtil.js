@@ -52,10 +52,12 @@ export default {
 
   /**
    * モードを基にコンポーネント名とページネーションの有無を返す
-   * @param {string} mode
+   * @param {object} route
    * @returns {[component, paginate]}
    */
-  mainComponentName(mode) {
+  mainComponentName(route) {
+    const mode = this.getMode(route);
+
     const modes = {
       post:     ['BlogPostDetail',   false],
       category: ['BlogCategoryList', true],
@@ -139,6 +141,7 @@ export default {
 
   /**
    * モードを返す
+   * @param {object} route
    * @returns {string}
    */
   getMode(route) {
@@ -147,6 +150,7 @@ export default {
 
   /**
    * キーを返す
+   * @param {object} route
    * @returns {string}
    */
   getKey(route) {
@@ -155,6 +159,7 @@ export default {
 
   /**
    * ページを返す
+   * @param {object} route
    * @returns {string}
    */
   getPage(route) {
