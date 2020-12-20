@@ -49,15 +49,15 @@ export default {
   },
 
   /**
-   * モードを基にコンポーネント名を返す
+   * モードを基にコンポーネント名とページネーションの有無を返す
    * @param {string} mode
-   * @returns {string}
+   * @returns {[component, paginate]}
    */
   mainComponentName(mode) {
     const modes = {
-      post:     'BlogPostDetail',
-      category: 'BlogCategoryList',
-      _other:   'BlogPostList',
+      post:     ['BlogPostDetail',   false],
+      category: ['BlogCategoryList', true],
+      _other:   ['BlogPostList',     true],
     };
 
     if (!Validator.hasKeyInObject(modes, mode)) {
