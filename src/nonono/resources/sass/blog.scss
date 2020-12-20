@@ -1,0 +1,23 @@
+#blog {
+  .post-box {
+    border-bottom: 1px dashed #888;
+    padding: .4em;
+
+    .info {
+      color: #777;
+
+      .date, .categories {
+        display: inline;
+        font-size: .9em;
+      }
+
+      .categories {
+        margin-left: 1em;
+
+        a {
+          margin-right: .5em;
+        }
+      }
+    }
+  }
+}

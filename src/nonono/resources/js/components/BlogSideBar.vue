@@ -15,7 +15,7 @@
 
   <h3><i class="fas fa-tags"></i> かてごりー</h3>
 
-  <ul class="list-box">
+  <ul class="simple">
     <li v-for="(category, index) in categories" :key="index">
       <router-link :to="'/blog/category/' + category.category">{{category.category}} ({{category.count}})</router-link>
     </li>
