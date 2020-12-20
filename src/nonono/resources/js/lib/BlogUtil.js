@@ -131,6 +131,18 @@ export default {
   },
 
   /**
+   * ルートが変更されたのか確認するやつ
+   * @param {object} route
+   * @param {string} view
+   * @param {object} paginate
+   * @returns {boolean}
+   */
+  checkRouteChange(route, view, paginate) {
+    return view === this.mainComponentName(route)[0] &&
+           paginate.current === this.getPageNumber(route, view);
+  },
+
+  /**
    * 数値化する
    * @param {string} val
    * @returns {number}

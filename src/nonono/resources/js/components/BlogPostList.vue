@@ -13,7 +13,8 @@ import BlogPostBox from './BlogPostBox';
 
 export default {
   props: {
-    posts: Array
+    posts: Array,
+    detail: Object,
   },
   methods: {
     /**

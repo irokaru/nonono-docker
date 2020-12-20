@@ -15,6 +15,10 @@
         <router-link class="link next" :class="{current: paginate.next === null}"
                      :to="getPageLink(paginate.next)"><i class="fas fa-chevron-right"></i></router-link>
       </div>
+
+      <div v-if="flags.isLoading" class="loading-wrapper-center">
+        <Loading/>
+      </div>
     </div>
 
     <BlogSideBar :latests="latests" :categories="categories"/>
@@ -27,6 +31,7 @@ import BlogPostList     from '../components/BlogPostList';
 import BlogPostDetail   from '../components/BlogPostDetail';
 import BlogCategoryList from '../components/BlogCategoryList';
 import BlogSideBar      from '../components/BlogSideBar';
+import Loading          from '../components/Loading';
 
 import BlogUtil from '../lib/BlogUtil';
 import Paginate from '../model/Paginate';
@@ -44,6 +49,7 @@ export default {
       paginate:    Paginate.model(),
       flags: {
         showPaginate: true,
+        isLoading:    false,
       },
     };
   },
@@ -76,13 +82,15 @@ export default {
         this.$router.push({path: '/blog'});
       }
 
-      if (this.paginate.current === BlogUtil.getPageNumber(this.$route, this.currentView)) {
+      if (BlogUtil.checkRouteChange(this.$route, this.currentView, this.paginate)) {
         return;
       }
 
       [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.$route);
 
       this.paginate.current = BlogUtil.getPageNumber(this.$route, this.currentView);
+
+      this.flags.isLoading = true;
 
       if (BlogUtil.isPostList(this.currentView)) {
         const api = PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
@@ -92,6 +100,19 @@ export default {
         }).catch(e => {
           alert('ブログ一覧の取得に失敗しました');
           this.posts = [];
+        }).finally(() => {
+          this.flags.isLoading = false;
+        });
+      } else if (BlogUtil.isCategoryList(this.currentView)) {
+        const api = PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
+        api.then(res => {
+          this.posts    = res.data.data;
+          this.paginate = Paginate.setup(res.data.links, res.data.meta);
+        }).catch(e => {
+          alert('ブログ一覧の取得に失敗しました');
+          this.posts = [];
+        }).finally(() => {
+          this.flags.isLoading = false;
         });
       }
     },
@@ -109,10 +130,7 @@ export default {
     BlogPostDetail,
     BlogCategoryList,
     BlogSideBar,
+    Loading,
   },
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
