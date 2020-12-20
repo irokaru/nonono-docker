@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    const PAGINATION = 20;
+    const PAGINATION = 10;
 
     protected static $_validate_store = [
         'title'        => 'required|string|min:1|max:64',
