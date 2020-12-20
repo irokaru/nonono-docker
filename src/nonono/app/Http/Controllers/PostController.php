@@ -62,8 +62,20 @@ class PostController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-
         return PostResource::collection(Post::findAllReleasedPostAsCategory($category, static::PAGINATION));
+    }
+
+    public function indexLatest(Request $request)
+    {
+        $limit = $request->limit ?? 4;
+
+        $validate_limit = ['limit' => 'required|int|min:1|max:10'];
+        $validator = Validator::make(['limit' => $limit], $validate_limit);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        return PostResource::collection(Post::findLatestReleasedPosts($limit));
     }
 
     public function show(Request $request)

@@ -74,6 +74,17 @@ class Post extends Model
     }
 
     /**
+     * 公開済みの新着記事を返す
+     * @param null|int $limit
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function findLatestReleasedPosts($limit = 4)
+    {
+        return  static::withCategories()->select(static::$_select_list_columns)
+                      ->where('release_flag', true)->orderBy('date', 'desc')->take($limit)->get();
+    }
+
+    /**
      * カテゴリを基に記事一覧を返す
      * @param null|string $category
      * @param null|int $pagination
