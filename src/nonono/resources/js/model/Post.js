@@ -4,17 +4,19 @@ export default {
   /**
    * モデル
    */
-  model: {
-    id:           0,
-    title:        'ーーー',
-    date:         DateUtil.formatDate('YYYY-MM-dd'),
-    release_flag: true,
-    detail:       '',
-    categories:   [{post_id: 0, category: 'ーーー'}],
+  model() {
+    return {
+      id:           0,
+      title:        'ーーー',
+      date:         DateUtil.formatDate('YYYY-MM-dd'),
+      release_flag: true,
+      detail:       '',
+      categories:   [{post_id: 0, category: 'ーーー'}],
+    };
   },
 
   dummy(id) {
-    const model                 = Object.create(this.model);
+    const model                 = this.model();
     model.id                    = id;
     model.categories[0].post_id = id;
 

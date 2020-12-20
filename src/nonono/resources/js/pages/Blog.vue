@@ -42,7 +42,7 @@ export default {
   data () {
     return {
       posts:       Post.dummysArray(10),
-      detail:      Post.model,
+      detail:      Post.model(),
       currentView: 'BlogPostList',
       latests:     Post.dummysArray(4),
       categories:  Array(4).fill(Post.category),
@@ -92,9 +92,15 @@ export default {
 
       this.flags.isLoading = true;
 
-      if (BlogUtil.isPostList(this.currentView)) {
-        const api = PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
-        api.then(res => {
+      if (!BlogUtil.isPostDetail(this.currentView)) {
+        // 一覧系
+        const api = () => {
+          if (BlogUtil.isPostList(this.currentView)) {
+            return PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
+          }
+          return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
+        }
+        api().then(res => {
           this.posts    = res.data.data;
           this.paginate = Paginate.setup(res.data.links, res.data.meta);
         }).catch(e => {
@@ -103,18 +109,10 @@ export default {
         }).finally(() => {
           this.flags.isLoading = false;
         });
-      } else if (BlogUtil.isCategoryList(this.currentView)) {
-        const api = PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
-        api.then(res => {
-          this.posts    = res.data.data;
-          this.paginate = Paginate.setup(res.data.links, res.data.meta);
-        }).catch(e => {
-          alert('ブログ一覧の取得に失敗しました');
-          this.posts = [];
-        }).finally(() => {
-          this.flags.isLoading = false;
-        });
-      } else if (BlogUtil.isPostDetail(this.currentView)) {
+      } else {
+        // 詳細
+        this.detail = Post.model();
+
         const api = PostApi.show(BlogUtil.getKey(this.$route));
         api.then(res => {
           this.detail = res.data;
