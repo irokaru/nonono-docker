@@ -171,13 +171,11 @@ export default {
 
       const nextView = BlogUtil.mainComponentName(this.$route);
 
-      if ((BlogUtil.isPostList(this.view) || BlogUtil.isCategoryList(this.view)) &&
-          BlogUtil.isPostDetail(nextView[0])) {
+      if (!BlogUtil.isPostDetail(this.view) && BlogUtil.isPostDetail(nextView[0])) {
         this.resetPosts();
       }
 
-      if (BlogUtil.isPostDetail(this.view) &&
-          (BlogUtil.isPostList(nextView[0]) || BlogUtil.isPostList(nextView[0]))) {
+      if (BlogUtil.isPostDetail(this.view) && !BlogUtil.isPostDetail(nextView[0])) {
         this.resetDetail();
       }
 
@@ -190,8 +188,6 @@ export default {
       if (!BlogUtil.isPostDetail(this.view)) {
         this.execListApi();
       } else {
-        // 詳細
-        this.detail = Post.model();
         this.execDetailApi();
       }
     },

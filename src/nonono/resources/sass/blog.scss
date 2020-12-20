@@ -12,7 +12,7 @@
 
     p {
       margin: 1em 0.5em;
-      line-height: 160%;
+      line-height: 180%;
     }
 
     .blog-main {
@@ -24,6 +24,26 @@
       position: relative;
       box-sizing: border-box;
       box-shadow: 0 5px 8px rgba(0,0,0,.4);
+
+      .info {
+        padding: .5em .25em;
+        margin-bottom: 1em;
+        border-bottom: 1px dashed rgba(0, 0, 0, .5);
+        color: #777;
+
+        .date, .category {
+          display: inline-block;
+        }
+
+        .date {
+          min-width: 8em;
+        }
+
+        .category a {
+          margin-right: .75em;
+        }
+      }
+
       @media (max-width: $mobile-break) {
           margin: 0;
       }
