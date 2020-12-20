@@ -13,6 +13,9 @@ export default {
    * @returns {Promise<AxiosResponse<any>>}
    */
   getLatests: (len = 4) => {
+    if (Vue.$hasStore('$posts.latests')) {
+      return {data: Vue.$getStore('$posts.latests')};
+    }
     return axios.get(`/api/posts/latest/${len}`);
   },
 

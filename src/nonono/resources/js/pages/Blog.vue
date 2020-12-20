@@ -5,7 +5,7 @@
   <div class="content">
 
     <div class="blog-main">
-      <component :is="currentView" :posts="posts" :detail="detail"/>
+      <component :is="view" :posts="posts" :detail="detail"/>
 
       <div class="paginate margin-tb-1" v-if="flags.showPaginate">
         <router-link class="link prev" :class="{current: paginate.prev === null}"
@@ -41,12 +41,12 @@ import PostApi  from '../api/PostApi';
 export default {
   data () {
     return {
-      posts:       Post.dummysArray(10),
-      detail:      Post.model(),
-      currentView: 'BlogPostList',
-      latests:     Post.dummysArray(4),
-      categories:  Array(4).fill(Post.category),
-      paginate:    Paginate.model(),
+      posts:      Post.dummysArray(10),
+      detail:     Post.model(),
+      view:       'BlogPostList',
+      latests:    Post.dummysArray(4),
+      categories: Array(4).fill(Post.category),
+      paginate:   Paginate.model(),
       flags: {
         showPaginate: true,
         isLoading:    false,
@@ -54,6 +54,22 @@ export default {
     };
   },
   methods: {
+    /**
+     * 記事一覧を初期化する
+     * @returns {void}
+     */
+    resetPosts() {
+      this.posts = Post.dummysArray(10);
+    },
+
+    /**
+     * 記事詳細を初期化する
+     * @returns {void}
+     */
+    resetDetail() {
+      this.detail = Post.model();
+    },
+
     /**
      * ページネーションを初期化する
      * @returns {void}
@@ -75,7 +91,7 @@ export default {
      * @returns {string}
      */
     getPageLink(number) {
-      return BlogUtil.getPageLink(this.$route, this.currentView, number);
+      return BlogUtil.getPageLink(this.$route, this.view, number);
     },
 
     /**
@@ -84,10 +100,10 @@ export default {
      */
     execListApi() {
       const api = () => {
-        if (BlogUtil.isPostList(this.currentView)) {
-          return PostApi.get(BlogUtil.getPageNumber(this.$route, this.currentView));
+        if (BlogUtil.isPostList(this.view)) {
+          return PostApi.get(BlogUtil.getPageNumber(this.$route, this.view));
         }
-        return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.currentView));
+        return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.view));
       }
 
       api().then(res => {
@@ -127,9 +143,12 @@ export default {
         PostApi.getCategories(),
       ];
 
-      axios.all(sideApis).then(([latests, categories]) => {
+      axios.all(apis).then(([latests, categories]) => {
         this.latests    = latests.data;
         this.categories = categories.data;
+
+        Vue.$setStore('$posts.latests',    latests.data);
+        Vue.$setStore('$posts.categories', categories.data);
       }).catch(e => {
         console.log(e);
         alert('サイドバーのブログ情報が取得できませんでした')
@@ -144,19 +163,31 @@ export default {
         this.$router.push({path: '/blog'});
       }
 
-      if (BlogUtil.checkRouteChange(this.$route, this.currentView, this.paginate)) {
+      if (BlogUtil.checkRouteChange(this.$route, this.view, this.paginate)) {
         return;
       }
 
       this.execSideApi();
 
-      [this.currentView, this.flags.showPaginate] = BlogUtil.mainComponentName(this.$route);
+      const nextView = BlogUtil.mainComponentName(this.$route);
 
-      this.paginate.current = BlogUtil.getPageNumber(this.$route, this.currentView);
+      if ((BlogUtil.isPostList(this.view) || BlogUtil.isCategoryList(this.view)) &&
+          BlogUtil.isPostDetail(nextView[0])) {
+        this.resetPosts();
+      }
+
+      if (BlogUtil.isPostDetail(this.view) &&
+          (BlogUtil.isPostList(nextView[0]) || BlogUtil.isPostList(nextView[0]))) {
+        this.resetDetail();
+      }
+
+      [this.view, this.flags.showPaginate] = nextView;
+
+      this.paginate.current = BlogUtil.getPageNumber(this.$route, this.view);
 
       this.flags.isLoading = true;
 
-      if (!BlogUtil.isPostDetail(this.currentView)) {
+      if (!BlogUtil.isPostDetail(this.view)) {
         this.execListApi();
       } else {
         // 詳細

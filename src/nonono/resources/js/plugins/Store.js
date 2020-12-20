@@ -2,7 +2,7 @@ export default {
   install(Vue, options) {
     const storeDataList = [
       '$history', '$games', '$apps',
-      '$posts', '$posts.categories',
+      '$posts.latests', '$posts.categories',
     ];
 
     for (const key of storeDataList) {
