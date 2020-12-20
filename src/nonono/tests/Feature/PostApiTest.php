@@ -255,40 +255,16 @@ class PostApiTest extends TestCase
         $response->assertStatus(401);
     }
 
-<<<<<<< HEAD
-    public function test_post_update_ok()
-    {
-=======
     public function test_post_update_ok_post()
     {
         $admin = factory(Admin::class)->create();
         $auth  = TestTool::getJwtAuthorization($admin);
 
->>>>>>> topic/blog
         $category_count = 3;
 
         $post_insert = factory(Post::class)->create(['release_flag' => true]);
 
         $categories          = factory(PostCategory::class, $category_count)->create(['post_id' => $post_insert->id]);
-<<<<<<< HEAD
-        $post_data           = static::model2array($post_insert, $categories, ['created_at', 'updated_at',]);
-        $post_data['detail'] = 'dummy';
-
-        $suites_post = [
-            ['title', Str::random(24)],
-            ['date',  date('Y-m-d')],
-            ['release_flag', false],
-        ];
-
-
-        foreach ($suites_post as $suite) {
-            $update_data = $post_data;
-            $update_data[$suite[0]] = $suite[1];
-
-
-        }
-        $this->assertTrue(true);
-=======
         $post_data           = static::model2array($post_insert, $categories,['created_at', 'updated_at']);
         $post_data['detail'] = 'dummy';
 
@@ -396,7 +372,6 @@ class PostApiTest extends TestCase
 
         $update_res = $this->json('PUT', route('post.update'), $post_data);
         $update_res->assertStatus(401);
->>>>>>> topic/blog
 
     }
 
