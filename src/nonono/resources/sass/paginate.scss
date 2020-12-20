@@ -1,0 +1,28 @@
+.paginate {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+
+  .link {
+    color: #666;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    margin: 0 0.4em;
+    border: 2px solid #666;
+    cursor: pointer;
+
+    &:hover {
+      color: #FFF;;
+      background: #666;
+    }
+
+    transition: .3s all;
+  }
+
+  .current {
+    color: #FFF;;
+    background: #666;
+  }
+}

@@ -8,6 +8,18 @@ export default {
   },
 
   /**
+   * ブログの新着一覧を取得する
+   * @param {number} len
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  getLatests: (len = 4) => {
+    if (Vue.$hasStore('$posts.latests')) {
+      return {data: Vue.$getStore('$posts.latests')};
+    }
+    return axios.get(`/api/posts/latest/${len}`);
+  },
+
+  /**
    * カテゴリを基にブログ一覧を取得する
    * @returns {Promise<AxiosResponse<any>>}
    */
@@ -39,8 +51,8 @@ export default {
    * @param {number} id post id
    * @returns {Promise<AxiosResponse<any>>}
    */
-  show: ($id) => {
-    return axios.get(`/api/posts/show/${id}`);
+  show: (id) => {
+    return axios.get(`/api/post/show/${id}`);
   },
 
   /**
