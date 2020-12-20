@@ -11,6 +11,7 @@
     <ul>
       <li><router-link to="/admin/history">履歴管理ページ</router-link></li>
       <li><router-link to="/admin/game">ゲーム管理ページ</router-link></li>
+      <li><router-link to="/admin/blog">ブログ管理ページ</router-link></li>
     </ul>
 
   </div>

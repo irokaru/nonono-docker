@@ -1,17 +1,6 @@
 import VueRouter from 'vue-router';
 
 // ------------------------------------------------
-// Pages
-import Home  from './pages/Home';
-import Products from './pages/Products';
-import Error404 from './pages/error/404';
-
-import Admin        from './pages/admin/Admin';
-import AdminLogin   from './pages/admin/Login';
-import AdminGame    from './pages/admin/Game';
-import AdminHistory from './pages/admin/History';
-
-// ------------------------------------------------
 
 const DEFAULT_TITLE = 'ののの茶屋';
 
@@ -21,7 +10,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home,
+    component: () => import('./pages/Home'),
     meta: {
       auth: undefined,
     }
@@ -29,16 +18,51 @@ const routes = [
   {
     path: '/products',
     name: 'products',
-    component: Products,
+    component: () => import('./pages/Products'),
     meta: {
       auth: undefined,
       title: 'ぷろだくと',
     }
   },
   {
+    path: '/blog',
+    name: 'blog',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
+    path: '/blog/:mode',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
+    path: '/blog/:mode/:key',
+    name: 'blog-any',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
+    path: '/blog/:mode/:key/:page',
+    name: 'blog-any-page',
+    component: () => import('./pages/Blog'),
+    meta: {
+      auth: undefined,
+      title: 'ぶろぐ',
+    }
+  },
+  {
     path: '/admin',
     name: 'admin',
-    component: Admin,
+    component: () => import('./pages/admin/Admin'),
     meta: {
       auth: true,
     }
@@ -46,7 +70,7 @@ const routes = [
   {
     path: '/login',
     name: 'admin.login',
-    component: AdminLogin,
+    component: () => import('./pages/admin/Login'),
     meta: {
       auth: false,
     }
@@ -54,7 +78,7 @@ const routes = [
   {
     path: '/admin/history',
     name: 'admin.history',
-    component: AdminHistory,
+    component: () => import('./pages/admin/History'),
     meta: {
       auth: true,
     }
@@ -62,7 +86,15 @@ const routes = [
   {
     path: '/admin/game',
     name: 'admin.game',
-    component: AdminGame,
+    component: () => import('./pages/admin/Game'),
+    meta: {
+      auth: true,
+    },
+  },
+  {
+    path: '/admin/blog',
+    name: 'admin.blog',
+    component: () => import('./pages/admin/Blog'),
     meta: {
       auth: true,
     },
@@ -70,7 +102,7 @@ const routes = [
   {
     path: '*',
     name: 'error.404',
-    component: Error404,
+    component: () => import('./pages/error/404'),
     meta: {
       auth: undefined,
       title: '404 Not Found',

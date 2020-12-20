@@ -31,3 +31,12 @@ Route::get('games', 'GameController@index')->name('games.index');
 Route::get('games/all', 'GameController@indexAll')->name('games.index.all');
 Route::post('games', 'GameController@store')->name('games.store');
 Route::put('games', 'GameController@update')->name('games.update');
+
+Route::get('posts', 'PostController@index')->name('post.index');
+Route::post('posts', 'PostController@store')->name('post.store');
+Route::put('posts', 'PostController@update')->name('post.update');
+Route::get('posts/all', 'PostController@indexAll')->name('post.index.all');
+Route::get('posts/latest/{limit}', 'PostController@indexLatest')->name('post.index.latest');
+Route::get('posts/category/{category}', 'PostController@indexAsCategory')->name('post.index.category');
+Route::get('post/show/{post_id}', 'PostController@show')->name('post.show');
+Route::get('posts/categories', 'PostController@indexOfCategories')->name('post.index.categories');
