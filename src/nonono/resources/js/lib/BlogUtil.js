@@ -157,14 +157,32 @@ export default {
 
   /**
    * ルートが変更されたのか確認するやつ
-   * @param {object} route
-   * @param {string} view
-   * @param {object} paginate
+   * @param {object} to
+   * @param {object} from
    * @returns {boolean}
    */
-  checkRouteChange(route, view, paginate) {
-    const viewSet = this.mainComponentName(route);
-    return view === viewSet[0] && paginate.current === this.getPageNumber(route, view);
+  checkRouteChange(to, from) {
+    const beforeComponent = this.mainComponentName(from)[0];
+    const afterComponent  = this.mainComponentName(to)[0];
+
+    const isListBefore = this.isPostList(beforeComponent) || this.isCategoryList(beforeComponent);
+    const isListAfter  = this.isPostList(afterComponent) || this.isCategoryList(afterComponent);
+
+    if (!isListBefore || !isListAfter) {
+      return true;
+    }
+
+    if (this.isPostList(beforeComponent) && from.path.match(/^\/blog\/1?$/) !== null &&
+        this.isPostList(afterComponent) && to.path.match(/^\/blog\/1?$/) !== null) {
+      return false;
+    }
+
+    if (this.isCategoryList(beforeComponent) && from.path.match(/^\/blog\/category\/.+?\/1?$/) !== null &&
+        this.isCategoryList(afterComponent) && to.path.match(/^\/blog\/category\/.+?\/1?$/) !== null) {
+      return false;
+    }
+
+    return true;
   },
 
   /**

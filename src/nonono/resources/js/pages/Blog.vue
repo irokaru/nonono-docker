@@ -165,10 +165,6 @@ export default {
         this.$router.push({path: '/blog'});
       }
 
-      if (BlogUtil.checkRouteChange(this.$route, this.view, this.paginate) && !BlogUtil.isPostDetail(nextView[0])) {
-        return;
-      }
-
       this.execSideApi();
 
       if (!BlogUtil.isPostDetail(this.view) && BlogUtil.isPostDetail(nextView[0])) {
@@ -197,6 +193,9 @@ export default {
   },
   watch: {
     $route(to, from) {
+      if (!BlogUtil.checkRouteChange(to, from)) {
+        return;
+      }
       this.mount();
     },
   },
