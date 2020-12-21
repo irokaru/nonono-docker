@@ -172,8 +172,8 @@ export default {
       return true;
     }
 
-    if (this.isPostList(beforeComponent) && from.path.match(/^\/blog\/1?$/) !== null &&
-        this.isPostList(afterComponent) && to.path.match(/^\/blog\/1?$/) !== null) {
+    if (this.isPostList(beforeComponent) && from.path.match(/^\/blog(\/1)?$/) !== null &&
+        this.isPostList(afterComponent) && to.path.match(/^\/blog(\/1)?$/) !== null) {
       return false;
     }
 
