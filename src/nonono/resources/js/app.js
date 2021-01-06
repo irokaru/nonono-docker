@@ -8,6 +8,12 @@ import auth from './auth';
 import router from './router';
 import Store from './plugins/Store';
 
+import { library }         from '@fortawesome/fontawesome-svg-core';
+import { fas }             from '@fortawesome/free-solid-svg-icons';
+import { far }             from '@fortawesome/free-regular-svg-icons';
+import { fab }             from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 import Main from './Main';
 
 window.Vue = Vue;
@@ -19,6 +25,10 @@ Vue.use(VueRouter);
 // Set Vue authentication
 Vue.use(VueAxios, axios);
 Vue.use(VueAuth, auth);
+
+// Set fontawesome
+library.add(fas, far, fab);
+Vue.component('v-fa', FontAwesomeIcon);
 
 // Set Nonono Store
 Vue.use(Store);
