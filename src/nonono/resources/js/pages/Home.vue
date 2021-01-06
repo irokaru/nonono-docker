@@ -15,7 +15,7 @@
     当サイトのコンテンツはののの茶屋の権利物を含んでおりますが、無断での転載を禁じているわけではありません。
   </p>
 
-  <h3><i class="far fa-file-alt"></i>こうしんりれき</h3>
+  <h3><v-fa :icon="['far', 'file-alt']"/>こうしんりれき</h3>
 
   <dl class="history">
     <template v-for="(history, index) of histories">
@@ -24,7 +24,7 @@
     </template>
   </dl>
 
-  <h3><i class="fas fa-user-alt"></i>なかのひと</h3>
+  <h3><v-fa :icon="['fas', 'user-alt']"/>なかのひと</h3>
 
   <div class="bio">
 
@@ -33,17 +33,17 @@
     <div class="info">
 
       <div class="strong">カル太（かるた）</div>
-      <div class="small"><i class="fas fa-briefcase"></i> Web Developer / Composer</div>
-      <div class="small"><i class="fas fa-code"></i> JavaScript / PHP / Perl / C++ / C# / Java / Processing</div>
+      <div class="small"><v-fa :icon="['fas', 'briefcase']"/> Web Developer / Composer</div>
+      <div class="small"><v-fa :icon="['fas', 'code']"/> JavaScript / PHP / Perl / C++ / C# / Java / Processing</div>
 
       <div class="comment">
         同人サークル”ののの茶屋”主宰。 1996 年生まれ。山に登るのが好きなアウトドア派のインドアにんげん。<a href="//teamark.starfree.jp/" target="_blank">チーム・あーく</a>と<a href="//www.hinezumi.net" target="_blank">ウディフェス実行委員</a>に所属。
       </div>
 
       <div class="social">
-        <a href="https://twitter.com/IroKaru" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
-        <a href="https://github.com/irokaru" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-        <a href="http://amzn.asia/aqypTqg" target="_blank"><i class="fab fa-amazon"></i> Amazon</a>
+        <a href="https://twitter.com/IroKaru" target="_blank"><v-fa :icon="['fab', 'twitter']"/> Twitter</a>
+        <a href="https://github.com/irokaru" target="_blank"><v-fa :icon="['fab', 'github']"/> GitHub</a>
+        <a href="http://amzn.asia/aqypTqg" target="_blank"><v-fa :icon="['fab', 'amazon']"/> Amazon</a>
       </div>
 
     </div>

@@ -3,8 +3,8 @@
   <h3 class="head">{{detail.title}}</h3>
 
   <div class="info">
-    <div class="date"><i class="far fa-clock"></i>{{detail.date}}</div>
-    <div class="category"><i class="fas fa-tag"></i>
+    <div class="date"><v-fa :icon="['far', 'clock']"/> {{detail.date}}</div>
+    <div class="category"><v-fa :icon="['fas', 'tag']"/>
       <router-link :to="'/blog/category/' + category.category" v-for="(category, index) in detail.categories"
                    :key="'category' + category.post_id + '-' + index">
                    {{category.category}}

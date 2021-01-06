@@ -9,11 +9,11 @@
 
       <div class="paginate margin-tb-1" v-if="flags.showPaginate">
         <router-link class="link prev" :class="{current: paginate.prev === null}"
-                     :to="getPageLink(paginate.prev)"><i class="fas fa-chevron-left"></i></router-link>
+                     :to="getPageLink(paginate.prev)"><v-fa :icon="['fas', 'chevron-left']"/></router-link>
         <router-link class="link" :class="{current: paginate.current === n}"
                      :to="getPageLink(n)" v-for="n of paginateList()" :key="n.id">{{n}}</router-link>
         <router-link class="link next" :class="{current: paginate.next === null}"
-                     :to="getPageLink(paginate.next)"><i class="fas fa-chevron-right"></i></router-link>
+                     :to="getPageLink(paginate.next)"><v-fa :icon="['fas', 'chevron-right']"/></router-link>
       </div>
 
       <div v-if="flags.isLoading" class="loading-wrapper-center">

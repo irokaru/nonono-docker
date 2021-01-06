@@ -4,7 +4,7 @@
 
   <div class="content">
 
-    <h3><i class="fas fa-gamepad"></i> げえむ</h3>
+    <h3><v-fa :icon="['fas', 'gamepad']"/> げえむ</h3>
 
     <div class="game-list">
       <GameBox :title="game.title" :release_date="game.release_date"

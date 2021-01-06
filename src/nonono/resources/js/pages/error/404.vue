@@ -4,7 +4,7 @@
 
   <div class="content">
 
-    <h3><i class="fas fa-exclamation-triangle"></i> ページが見つかりませんでした</h3>
+    <h3><v-fa :icon="['fas', 'exclamation-triangle']"/> ページが見つかりませんでした</h3>
 
     <p>
       URL が誤っているか、ページそのものが削除された可能性があります。

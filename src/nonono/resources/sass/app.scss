@@ -1,5 +1,6 @@
 // Fonts
 @import url('//fonts.googleapis.com/earlyaccess/notosansjapanese.css');
+@import url('//use.fontawesome.com/releases/v5.6.3/css/all.css');
 
 // Variables
 @import 'variables';
@@ -56,7 +57,7 @@ h3 {
     margin: .5em 0;
   }
 
-  i {
+  svg.svg-inline--fa {
     font-size: 1.1em;
     text-align: center;
     min-width: 1.3em;
@@ -90,7 +91,7 @@ img {
   vertical-align: bottom;
 }
 
-i {
+svg.svg-inline--fa {
   min-width: 1.5em;
   text-align: center;
 }
@@ -256,7 +257,7 @@ nav {
           display: block;
           padding-left: 2em;
 
-          i {
+          svg.svg-inline--fa {
             font-size: .9em;
           }
         }
@@ -366,7 +367,7 @@ footer {
             background: rgba(255, 255, 255, 0.9);
           }
 
-          i {
+          svg.svg-inline--fa {
             min-width: 1.25em;
             text-align: center;
             font-weight: normal;

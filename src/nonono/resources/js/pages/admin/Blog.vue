@@ -4,7 +4,7 @@
 
   <div class="content">
 
-    <router-link to="/admin">管理者ページ</router-link> <i class="fas fa-chevron-right"></i> 管理者用ブログ管理ページ
+    <router-link to="/admin">管理者ページ</router-link> <v-fa :icon="['fas', 'chevron-right']"/> 管理者用ブログ管理ページ
 
     <h3>新規記事登録</h3>
 

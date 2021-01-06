@@ -1,6 +1,6 @@
 <template>
 <div class="blog-sidebar">
-  <h3 class="head"><i class="far fa-clock"></i> しんちゃく</h3>
+  <h3 class="head"><v-fa :icon="['far', 'clock']"/> しんちゃく</h3>
 
   <ul class="simple">
     <li v-for="(latest, index) in latests" :key="index">
@@ -10,10 +10,10 @@
   </ul>
 
   <div class="margin-tb-1">
-    <router-link to="/blog"><i class="fas fa-angle-double-right"></i>にっき一覧へ</router-link>
+    <router-link to="/blog"><v-fa :icon="['fas', 'angle-double-right']"/> にっき一覧へ</router-link>
   </div>
 
-  <h3><i class="fas fa-tags"></i> かてごりー</h3>
+  <h3><v-fa :icon="['fas', 'tags']"/> かてごりー</h3>
 
   <ul class="simple">
     <li v-for="(category, index) in categories" :key="index">
