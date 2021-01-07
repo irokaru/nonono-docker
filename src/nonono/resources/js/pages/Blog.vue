@@ -185,6 +185,7 @@ export default {
       if (!BlogUtil.isPostDetail(this.view)) {
         this.execListApi();
       } else {
+        // 情報取得を待つ必要があるのでawaitを付ける
         await this.execDetailApi();
       }
 
