@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\GameController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,29 +17,29 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('login', 'AuthController@login')->name('auth.login');
-    Route::get('refresh', 'AuthController@refresh')->name('auth.refresh');
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+    Route::get('refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 
     Route::middleware('auth:api')->group(function () {
-        Route::post('logout', 'AuthController@logout')->name('auth.logout');
+        Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
     });
 });
 
-Route::get('history', 'HistoryController@index')->name('history.index');
-Route::post('history', 'HistoryController@store')->name('history.store');
+Route::get('history', [HistoryController::class, 'index'])->name('history.index');
+Route::post('history', [HistoryController::class, 'store'])->name('history.store');
 Route::put('history', 'HistoryController@update')->name('history.update');
 Route::delete('history/{id}', 'HistoryController@delete')->name('history.delete');
 
-Route::get('games', 'GameController@index')->name('games.index');
-Route::get('games/all', 'GameController@indexAll')->name('games.index.all');
-Route::post('games', 'GameController@store')->name('games.store');
+Route::get('games', [GameController::class, 'index'])->name('games.index');
+Route::get('games/all', [GameController::class, 'indexAll'])->name('games.index.all');
+Route::post('games', [GameController::class, 'store'])->name('games.store');
 Route::put('games', 'GameController@update')->name('games.update');
 
-Route::get('posts', 'PostController@index')->name('post.index');
-Route::post('posts', 'PostController@store')->name('post.store');
+Route::get('posts', [PostController::class, 'index'])->name('post.index');
+Route::post('posts', [PostController::class, 'store'])->name('post.store');
 Route::put('posts', 'PostController@update')->name('post.update');
-Route::get('posts/all', 'PostController@indexAll')->name('post.index.all');
-Route::get('posts/latest/{limit}', 'PostController@indexLatest')->name('post.index.latest');
-Route::get('posts/category/{category}', 'PostController@indexAsCategory')->name('post.index.category');
-Route::get('post/show/{post_id}', 'PostController@show')->name('post.show');
-Route::get('posts/categories', 'PostController@indexOfCategories')->name('post.index.categories');
+Route::get('posts/all', [PostController::class, 'indexAll'])->name('post.index.all');
+Route::get('posts/latest/{limit}', [PostController::class, 'indexLatest'])->name('post.index.latest');
+Route::get('posts/category/{category}', [PostController::class, 'indexAsCategory'])->name('post.index.category');
+Route::get('post/show/{post_id}', [PostController::class, 'show'])->name('post.show');
+Route::get('posts/categories', [PostController::class, 'indexOfCategories'])->name('post.index.categories');
