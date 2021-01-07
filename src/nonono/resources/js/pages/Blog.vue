@@ -98,7 +98,7 @@ export default {
      * 一覧系APIを実行するやつ
      * @returns {void}
      */
-    execListApi() {
+    async execListApi() {
       const api = () => {
         if (BlogUtil.isPostList(this.view)) {
           return PostApi.get(BlogUtil.getPageNumber(this.$route, this.view));
@@ -106,7 +106,7 @@ export default {
         return PostApi.getAsCategory(BlogUtil.getKey(this.$route), BlogUtil.getPageNumber(this.$route, this.view));
       }
 
-      api().then(res => {
+      await api().then(res => {
         this.posts    = res.data.data;
         this.paginate = Paginate.setup(res.data.links, res.data.meta);
       }).catch(e => {
@@ -121,10 +121,10 @@ export default {
      * 詳細系APIを実行するやつ
      * @returns {void}
      */
-    execDetailApi() {
+    async execDetailApi() {
       const api = PostApi.show(BlogUtil.getKey(this.$route));
 
-      api.then(res => {
+      await api.then(res => {
         this.detail = res.data;
       }).catch(e => {
         this.$router.push({path: '/blog'});
@@ -137,13 +137,13 @@ export default {
      * サイドバー系APIを実行するやつ
      * @returns {void}
      */
-    execSideApi() {
+    async execSideApi() {
       const apis = [
         PostApi.getLatests(),
         PostApi.getCategories(),
       ];
 
-      axios.all(apis).then(([latests, categories]) => {
+      await axios.all(apis).then(([latests, categories]) => {
         this.latests    = latests.data;
         this.categories = categories.data;
 
@@ -157,6 +157,7 @@ export default {
 
     /**
      * ページ読み込み時の処理
+     * @returns {void}
      */
     async mount() {
       const nextView = BlogUtil.mainComponentName(this.$route);
@@ -184,8 +185,11 @@ export default {
       if (!BlogUtil.isPostDetail(this.view)) {
         this.execListApi();
       } else {
-        this.execDetailApi();
+        // 情報取得を待つ必要があるのでawaitを付ける
+        await this.execDetailApi();
       }
+
+      Vue.$setTitle(BlogUtil.createTitle(this.$route, this.detail));
     },
   },
   async mounted () {
