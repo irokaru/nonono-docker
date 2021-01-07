@@ -70,40 +70,38 @@ const routes = [
     meta: {
       auth: true,
     },
-    children: [
-      {
-        path: '/login',
-        name: 'admin.login',
-        component: loadView('admin/Login'),
-        meta: {
-          auth: false,
-        }
-      },
-      {
-        path: '/admin/history',
-        name: 'admin.history',
-        component: loadView('admin/History'),
-        meta: {
-          auth: true,
-        }
-      },
-      {
-        path: '/admin/game',
-        name: 'admin.game',
-        component: loadView('admin/Game'),
-        meta: {
-          auth: true,
-        },
-      },
-      {
-        path: '/admin/blog',
-        name: 'admin.blog',
-        component: loadView('admin/Blog'),
-        meta: {
-          auth: true,
-        },
-      },
-    ]
+  },
+  {
+    path: '/login',
+    name: 'admin.login',
+    component: loadView('admin/Login'),
+    meta: {
+      auth: false,
+    }
+  },
+  {
+    path: '/admin/history',
+    name: 'admin.history',
+    component: loadView('admin/History'),
+    meta: {
+      auth: true,
+    }
+  },
+  {
+    path: '/admin/game',
+    name: 'admin.game',
+    component: loadView('admin/Game'),
+    meta: {
+      auth: true,
+    },
+  },
+  {
+    path: '/admin/blog',
+    name: 'admin.blog',
+    component: loadView('admin/Blog'),
+    meta: {
+      auth: true,
+    },
   },
   {
     path: '/:pathMatch(.*)*',
