@@ -18,9 +18,9 @@
   <h3><v-fa :icon="['far', 'file-alt']"/>こうしんりれき</h3>
 
   <dl class="history">
-    <template v-for="(history, index) of histories">
-      <dt :key="`history-date-${index}`">{{history.date}}</dt>
-      <dd :key="`history-discription-${index}`" v-html="history.discription"></dd>
+    <template v-for="history of histories">
+      <dt>{{history.date}}</dt>
+      <dd v-html="history.discription"></dd>
     </template>
   </dl>
 

@@ -1,4 +1,8 @@
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
+
+const loadView = (view) => {
+  return () => import(`./pages/${view}.vue`);
+};
 
 // ------------------------------------------------
 
@@ -10,7 +14,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('./pages/Home'),
+    component: loadView('Home'),
     meta: {
       auth: undefined,
     }
@@ -18,7 +22,7 @@ const routes = [
   {
     path: '/products',
     name: 'products',
-    component: () => import('./pages/Products'),
+    component: loadView('Products'),
     meta: {
       auth: undefined,
       title: 'ぷろだくと',
@@ -27,7 +31,7 @@ const routes = [
   {
     path: '/blog',
     name: 'blog',
-    component: () => import('./pages/Blog'),
+    component: loadView('Blog'),
     meta: {
       auth: undefined,
       title: 'にっき',
@@ -35,7 +39,7 @@ const routes = [
   },
   {
     path: '/blog/:mode',
-    component: () => import('./pages/Blog'),
+    component: loadView('Blog'),
     meta: {
       auth: undefined,
       title: 'にっき',
@@ -44,7 +48,7 @@ const routes = [
   {
     path: '/blog/:mode/:key',
     name: 'blog-any',
-    component: () => import('./pages/Blog'),
+    component: loadView('Blog'),
     meta: {
       auth: undefined,
       title: 'にっき',
@@ -53,7 +57,7 @@ const routes = [
   {
     path: '/blog/:mode/:key/:page',
     name: 'blog-any-page',
-    component: () => import('./pages/Blog'),
+    component: loadView('Blog'),
     meta: {
       auth: undefined,
       title: 'にっき',
@@ -62,45 +66,47 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: () => import('./pages/admin/Admin'),
-    meta: {
-      auth: true,
-    }
-  },
-  {
-    path: '/login',
-    name: 'admin.login',
-    component: () => import('./pages/admin/Login'),
-    meta: {
-      auth: false,
-    }
-  },
-  {
-    path: '/admin/history',
-    name: 'admin.history',
-    component: () => import('./pages/admin/History'),
-    meta: {
-      auth: true,
-    }
-  },
-  {
-    path: '/admin/game',
-    name: 'admin.game',
-    component: () => import('./pages/admin/Game'),
+    component: loadView('admin/Admin'),
     meta: {
       auth: true,
     },
+    children: [
+      {
+        path: '/login',
+        name: 'admin.login',
+        component: loadView('admin/Login'),
+        meta: {
+          auth: false,
+        }
+      },
+      {
+        path: '/admin/history',
+        name: 'admin.history',
+        component: loadView('admin/History'),
+        meta: {
+          auth: true,
+        }
+      },
+      {
+        path: '/admin/game',
+        name: 'admin.game',
+        component: loadView('admin/Game'),
+        meta: {
+          auth: true,
+        },
+      },
+      {
+        path: '/admin/blog',
+        name: 'admin.blog',
+        component: loadView('admin/Blog'),
+        meta: {
+          auth: true,
+        },
+      },
+    ]
   },
   {
-    path: '/admin/blog',
-    name: 'admin.blog',
-    component: () => import('./pages/admin/Blog'),
-    meta: {
-      auth: true,
-    },
-  },
-  {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: 'error.404',
     component: () => import('./pages/error/404'),
     meta: {
@@ -112,10 +118,9 @@ const routes = [
 
 // ------------------------------------------------
 
-const router = new VueRouter({
-  history: true,
-  mode: 'history',
-  routes,
+const router = createRouter({
+  history: createWebHistory(),
+  routes:  routes,
 });
 
 router.beforeEach((to, from, next) => {

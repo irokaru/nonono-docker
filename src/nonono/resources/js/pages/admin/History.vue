@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import HistoryApi from '@/api/HistoryApi';
-import Loading    from '@/components/Loading';
+import HistoryApi from '../../api/HistoryApi';
+import Loading    from '../../components/Loading';
 
 export default {
   data () {
