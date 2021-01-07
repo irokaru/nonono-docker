@@ -1,12 +1,12 @@
 export default {
-  install(Vue, options) {
+  install(app) {
     const storeDataList = [
       '$history', '$games', '$apps',
       '$posts.latests', '$posts.categories',
     ];
 
     for (const key of storeDataList) {
-      Vue.util.defineReactive(Vue.prototype, key, []);
+      app.config.globalProperties[key] = [];
     }
 
     /**
@@ -15,12 +15,12 @@ export default {
      * @param {array}  value
      * @returns {boolean}
      */
-    Vue.$setStore = function(key, value) {
-      if (!Vue.$existsStore(key)) {
+    app.$setStore = function(key, value) {
+      if (!app.$existsStore(key)) {
         console.error(`${key} is not exist.`);
         return false;
       }
-      Vue.prototype[key] = value;
+      app.config.globalProperties[key] = value;
       return true;
     };
 
@@ -29,12 +29,12 @@ export default {
      * @param {string} key
      * @returns {array}
      */
-    Vue.$getStore = function(key) {
-      if (!Vue.$existsStore(key)) {
+    app.$getStore = function(key) {
+      if (!app.$existsStore(key)) {
         console.error(`${key} is not exist.`);
         return [];
       }
-      return Vue.prototype[key];
+      return app.config.globalProperties[key];
     };
 
     /**
@@ -42,28 +42,28 @@ export default {
      * @param {string} key
      * @return {boolean}
      */
-    Vue.$hasStore = function(key) {
-      return Vue.$getStore(key).length !== 0;
+    app.$hasStore = function(key) {
+      return app.$getStore(key).length !== 0;
     };
 
     /**
      * store内に該当するデータが存在するか
      * @param {string} key
      */
-    Vue.$existsStore = function(key) {
-      return key in Vue.prototype;
+    app.$existsStore = function(key) {
+      return key in app.config.globalProperties;
     }
 
     /**
      * store内の該当データを初期化する
      * @param {string} key
      */
-    Vue.$resetStore = function(key) {
-      if (!Vue.$existsStore(key)) {
+    app.$resetStore = function(key) {
+      if (!app.$existsStore(key)) {
         console.error(`${key} is not exist or empty.`);
         return false;
       }
-      Vue.prototype[key] = [];
+      app.config.globalProperties[key] = [];
       return true;
     }
 
@@ -72,7 +72,7 @@ export default {
      * @param {string} title
      * @returns {void}
      */
-    Vue.$setTitle = function(title) {
+    app.$setTitle = function(title) {
       if (!title) {
         title = 'ののの茶屋';
       }

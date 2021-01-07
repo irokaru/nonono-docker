@@ -24,7 +24,7 @@ class GameApiTest extends TestCase
         $games_array = static::collection2array($games);
 
         $response = $this->get(route('games.index'));
-        $response->assertOk()->assertExactJson($games_array);
+        $response->assertOk()->assertSimilarJson($games_array);
     }
 
     public function test_game_index_ok_not_released()
@@ -32,7 +32,7 @@ class GameApiTest extends TestCase
         factory(Game::class, 3)->create(['release_flag' => false,]);
 
         $response = $this->get(route('games.index'));
-        $response->assertOk()->assertExactJson([]);
+        $response->assertOk()->assertSimilarJson([]);
     }
 
     public function test_game_index_all_ok()
@@ -45,7 +45,7 @@ class GameApiTest extends TestCase
         $games_array = array_merge(static::collection2array($games_released), static::collection2array($games_no_release));
 
         $response = $this->withHeaders($auth)->get(route('games.index.all'));
-        $response->assertOk()->assertExactJson($games_array);
+        $response->assertOk()->assertSimilarJson($games_array);
     }
 
     public function test_game_index_all_ng_no_auth()
@@ -54,7 +54,7 @@ class GameApiTest extends TestCase
         factory(Game::class, 3)->create(['release_flag' => false,]);
 
         $response = $this->get(route('games.index.all'));
-        $response->assertStatus(401)->assertExactJson(['error' => 'Unauthorized']);
+        $response->assertStatus(401)->assertSimilarJson(['error' => 'Unauthorized']);
     }
 
     public function test_game_store_ok()
@@ -82,7 +82,7 @@ class GameApiTest extends TestCase
         $game = static::makePostDataArray();
 
         $response = $this->post(route('games.store'), $game);
-        $response->assertStatus(401)->assertExactJson(['error' => 'Unauthorized']);
+        $response->assertStatus(401)->assertSimilarJson(['error' => 'Unauthorized']);
 
         $result = Game::all()->toArray();
         $this->assertEquals([], $result);
@@ -157,7 +157,7 @@ class GameApiTest extends TestCase
         $game = static::makePutDataArray();
 
         $response_store = $this->put(route('games.update'), $game);
-        $response_store->assertStatus(401)->assertExactJson(['error' => 'Unauthorized']);
+        $response_store->assertStatus(401)->assertSimilarJson(['error' => 'Unauthorized']);
 
         $result = Game::find($game['id'])->toArray();
         unset($game['thumbnail_name'], $game['thumbnail']);

@@ -1,11 +1,11 @@
 require('./bootstrap');
 
-import Vue from 'vue';
-import VueAuth from '@websanova/vue-auth';
+import { createApp } from 'vue';
+
 import VueAxios from 'vue-axios';
-import VueRouter from 'vue-router';
-import auth from './auth';
-import router from './router';
+import router   from './router';
+
+import auth  from './plugins/Auth';
 import Store from './plugins/Store';
 
 import { library }         from '@fortawesome/fontawesome-svg-core';
@@ -16,25 +16,23 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import Main from './Main';
 
-window.Vue = Vue;
+const app = createApp(Main);
+
+window.Vue = app;
 
 // Set Vue router
-Vue.router = router;
-Vue.use(VueRouter);
+app.router = router;
+app.use(router);
 
 // Set Vue authentication
-Vue.use(VueAxios, axios);
-Vue.use(VueAuth, auth);
+app.use(VueAxios, axios);
+app.use(auth);
 
 // Set fontawesome
 library.add(fas, far, fab);
-Vue.component('v-fa', FontAwesomeIcon);
+app.component('v-fa', FontAwesomeIcon);
 
 // Set Nonono Store
-Vue.use(Store);
+app.use(Store);
 
-const app = new Vue({
-  el: '#app',
-  router,
-  render: h => h(Main),
-});
+app.mount('#app');
