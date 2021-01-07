@@ -55,7 +55,7 @@ export default {
   /**
    * モードを基にコンポーネント名とページネーションの有無を返す
    * @param {object} route
-   * @returns {[component, paginate]}
+   * @returns {[string, boolean]}
    */
   mainComponentName(route) {
     const mode = this.getMode(route);
@@ -112,6 +112,26 @@ export default {
    */
   isPostDetail(view) {
     return view === 'BlogPostDetail';
+  },
+
+  /**
+   * タイトルを生成する
+   * @param {object} route
+   * @param {object} post
+   * @returns {string}
+   */
+  createTitle(route, post = {}) {
+    const view = this.mainComponentName(route)[0];
+
+    if (this.isPostDetail(view) && post.title) {
+      return `${post.title} - ののの茶屋`;
+    }
+
+    if (this.isCategoryList(view)) {
+      return `${this.getKey(route)}のにっき一覧 - ののの茶屋`;
+    }
+
+    return 'にっき - ののの茶屋';
   },
 
   /**

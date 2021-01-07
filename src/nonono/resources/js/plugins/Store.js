@@ -66,5 +66,18 @@ export default {
       Vue.prototype[key] = [];
       return true;
     }
+
+    /**
+     * ページのタイトルをセットする
+     * @param {string} title
+     * @returns {void}
+     */
+    Vue.$setTitle = function(title) {
+      if (!title) {
+        title = 'ののの茶屋';
+      }
+
+      document.title = title;
+    }
   },
 };

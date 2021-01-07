@@ -30,7 +30,7 @@ const routes = [
     component: () => import('./pages/Blog'),
     meta: {
       auth: undefined,
-      title: 'ぶろぐ',
+      title: 'にっき',
     }
   },
   {
@@ -38,7 +38,7 @@ const routes = [
     component: () => import('./pages/Blog'),
     meta: {
       auth: undefined,
-      title: 'ぶろぐ',
+      title: 'にっき',
     }
   },
   {
@@ -47,7 +47,7 @@ const routes = [
     component: () => import('./pages/Blog'),
     meta: {
       auth: undefined,
-      title: 'ぶろぐ',
+      title: 'にっき',
     }
   },
   {
@@ -56,7 +56,7 @@ const routes = [
     component: () => import('./pages/Blog'),
     meta: {
       auth: undefined,
-      title: 'ぶろぐ',
+      title: 'にっき',
     }
   },
   {
