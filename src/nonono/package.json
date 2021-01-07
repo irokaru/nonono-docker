@@ -33,7 +33,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.32",
-        "@fortawesome/vue-fontawesome": "^2.0.2",
+        "@fortawesome/vue-fontawesome": "^3.0.0-3",
         "@websanova/vue-auth": "^4.1.0",
         "es6-promise": "^4.2.8",
         "vue-axios": "^3.2.2",
