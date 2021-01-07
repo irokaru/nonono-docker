@@ -28,7 +28,7 @@ class HistoryApiTest extends TestCase
             array_push($expect_histories, $history);
         }
 
-        $response->assertOk()->assertExactJson($expect_histories);
+        $response->assertOk()->assertSimilarJson($expect_histories);
     }
 
     public function test_history_store_ok()
@@ -44,7 +44,7 @@ class HistoryApiTest extends TestCase
         $res_store->assertOk();
 
         $res_index = $this->get(route('history.index'));
-        $res_index->assertOk()->assertExactJson([$history_array]);
+        $res_index->assertOk()->assertSimilarJson([$history_array]);
     }
 
     public function test_history_store_ng_validate()
@@ -101,7 +101,7 @@ class HistoryApiTest extends TestCase
             $res_update->assertOk();
 
             $res_index = $this->get(route('history.index'));
-            $res_index->assertOk()->assertExactJson([$history_array]);
+            $res_index->assertOk()->assertSimilarJson([$history_array]);
         }
     }
 

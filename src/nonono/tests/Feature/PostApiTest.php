@@ -39,7 +39,7 @@ class PostApiTest extends TestCase
         }
         array_multisort(array_column($expect_post, 'date'), SORT_DESC, $expect_post);
 
-        $content = $this->get(route('post.index'))->assertOk()->decodeResponseJson();
+        $content = $this->get(route('post.index'))->assertOk()->json();
         $this->assertEquals($expect_post, $content['data']);
     }
 
@@ -75,7 +75,7 @@ class PostApiTest extends TestCase
             $expect_post[] = $ret;
         }
 
-        $content = $this->get(route('post.index.all'), $auth)->assertOk()->decodeResponseJson();
+        $content = $this->get(route('post.index.all'), $auth)->assertOk()->json();
         for ($i = 0; $i < count($content); $i++) {
             $post = $content[$i];
             $post['detail'] = '';
@@ -115,7 +115,7 @@ class PostApiTest extends TestCase
         array_multisort(array_column($expect_post, 'date'), SORT_DESC, $expect_post);
 
 
-        $content = $this->get(route('post.index.category', ['category' => $category_name]))->assertOk()->decodeResponseJson();
+        $content = $this->get(route('post.index.category', ['category' => $category_name]))->assertOk()->json();
         $this->assertEquals($expect_post, $content['data']);
     }
 
@@ -145,12 +145,12 @@ class PostApiTest extends TestCase
         $expect = static::model2array($released, $released_categories, $reject_keys);
         $expect['detail'] = 'dummy';
 
-        $content = $this->get(route('post.show', ['post_id' => $released->id]))->assertOk()->decodeResponseJson();
+        $content = $this->get(route('post.show', ['post_id' => $released->id]))->assertOk()->json();
         $content['detail'] = 'dummy';
 
         $this->assertEquals($expect, $content);
 
-        $this->get(route('post.show', ['post_id' => $not_released->id]))->assertStatus(404)->assertExactJson(['error' => 'not found']);
+        $this->get(route('post.show', ['post_id' => $not_released->id]))->assertStatus(404)->assertSimilarJson(['error' => 'not found']);
     }
 
     public function test_post_show_ng_validate()
@@ -187,7 +187,7 @@ class PostApiTest extends TestCase
             array_multisort(array_column($expect, 'category'), SORT_ASC, $expect);
 
             $response = $this->get(route('post.index.categories'));
-            $response->assertOk()->assertExactJson($expect);
+            $response->assertOk()->assertSimilarJson($expect);
         }
     }
 
@@ -204,14 +204,14 @@ class PostApiTest extends TestCase
 
         $data = static::model2postArray($post, $categories, [], ['post_id']);
         $res_store = $this->json('POST', route('post.store'), $data, $auth);
-        $res_store->assertOk()->assertExactJson(['status' => 'success', 'id' => 1]);
+        $res_store->assertOk()->assertSimilarJson(['status' => 'success', 'id' => 1]);
 
         $reject_keys = ['created_at', 'updated_at'];
         $expect = static::model2array($post, $categories, $reject_keys);
         $expect['id'] = 1;
         $expect['detail'] = '';
 
-        $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+        $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->json();
         $content['detail'] = '';
 
         $this->assertEquals($expect, $content);
@@ -279,7 +279,7 @@ class PostApiTest extends TestCase
             $update_res = $this->json('PUT', route('post.update'), $update_data, $auth);
             $update_res->assertOk();
 
-            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->json();
             $content['detail'] = 'dummy';
 
             $this->assertEquals($update_data, $content);
@@ -304,7 +304,7 @@ class PostApiTest extends TestCase
             $update_res = $this->json('PUT', route('post.update'), $post_data, $auth);
             $update_res->assertOk();
 
-            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->json();
             $content['detail'] = 'dummy';
 
             $this->assertEquals($post_data, $content);
@@ -323,7 +323,7 @@ class PostApiTest extends TestCase
             $update_res = $this->json('PUT', route('post.update'), $post_data, $auth);
             $update_res->assertOk();
 
-            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->decodeResponseJson();
+            $content = $this->get(route('post.show', ['post_id' => '1']))->assertOk()->json();
             $content['detail'] = 'dummy';
 
             $this->assertEquals($post_data, $content);
