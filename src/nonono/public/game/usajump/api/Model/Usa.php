@@ -2,6 +2,8 @@
 
 namespace nonono\usajump\Model;
 
+require_once __DIR__ . '/Util.php';
+
 class Usa
 {
     protected static $_name = '';
@@ -109,8 +111,8 @@ class Usa
         $validate_methods = [
             'name'       => 'is_string',
             'color'      => 'is_string',
-            'jump_power' => 'static::_isStringInt',
-            'jump_arc'   => 'static::_isStringInt',
+            'jump_power' => 'nonono\usajump\Model\Util::isStringInt',
+            'jump_arc'   => 'nonono\usajump\Model\Util::isStringInt',
             'accessory'  => 'is_string',
         ];
 
@@ -138,16 +140,6 @@ class Usa
     }
 
     /**
-     * 文字列が整数かどうか
-     * @param string $val
-     * @return bool
-     */
-    protected static function _isStringInt($val): bool
-    {
-        return preg_match('/^-?\d+$/', $val) !== 0;
-    }
-
-    /**
      * コンマ区切りのパラメータの数と数値をバリデーションするやつ
      * @param string $params
      * @param int $length
@@ -164,7 +156,7 @@ class Usa
         }
 
         $filtered = array_filter($array, function ($num) use ($min, $max) {
-            return static::_isStringInt($num) && $min <= $num && $num <= $max;
+            return Util::isStringInt($num) && $min <= $num && $num <= $max;
         });
 
         return count($filtered) === $length;
