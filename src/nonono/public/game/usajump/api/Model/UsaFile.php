@@ -20,7 +20,7 @@ class UsaFile
         $file_path = self::FILE_PATH . self::SCORE_FILE_NAME;
 
         if (!file_exists($file_path)) {
-            file_put_contents($file_path, '{}');
+            file_put_contents($file_path, '[]');
         }
 
         $datas = json_decode(file_get_contents($file_path), true);
