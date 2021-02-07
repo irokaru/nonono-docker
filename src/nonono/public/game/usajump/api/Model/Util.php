@@ -40,4 +40,18 @@ class Util
 
         return array_slice($array, 0, $length);
     }
+
+    /**
+     * レスポンスを生成する
+     * @param int $code
+     * @param string $message
+     * @return void
+     */
+    public static function response($code, $message)
+    {
+        http_response_code($code);
+        echo $message;
+
+        return;
+    }
 }

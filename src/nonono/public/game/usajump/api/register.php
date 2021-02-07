@@ -2,23 +2,23 @@
 
 use nonono\usajump\Model\Usa;
 use nonono\usajump\Model\UsaFile;
+use nonono\usajump\Model\Util;
 
 require_once __DIR__ . '/Model/Usa.php';
 require_once __DIR__ . '/Model/UsaFile.php';
-
+require_once __DIR__ . '/Model/Util.php';
 
 // --------------------------------------------------------------
 
 $usa = new Usa();
 
 if (!$usa->init($_GET)) {
-    http_response_code(422);
-    echo 'validate error';
+    Util::response(422, 'validate error');
+    return;
 }
 
 if (UsaFile::putScore($usa)) {
-    echo 'success';
+    Util::response(200, 'success');
 } else {
-    http_response_code(400);
-    echo 'fail';
+    Util::response(400, 'error');
 }
