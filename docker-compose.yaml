@@ -23,7 +23,8 @@ services:
       - ./src:/var/www/html
       - ./logs:/var/log/php
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
-    working_dir: /var/www/html
+      - vendor-store:/var/www/html/nonono/vendor
+    working_dir: /var/www/html/nonono
     environment:
       - DB_CONNECTION=mysql
       - DB_HOST=db
@@ -52,7 +53,8 @@ services:
     tty: true
     volumes:
       - ./src:/var/www/html
-    working_dir: /var/www/html
+      - vendor-store:/var/www/html/nonono/node_modules
+    working_dir: /var/www/html/nonono
 
   db:
     image: mysql:8.0
@@ -70,3 +72,5 @@ services:
 
 volumes:
   db-store:
+  vendor-store:
+  node_modules-store:
