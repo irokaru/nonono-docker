@@ -31,7 +31,7 @@ class UsaFile
             return true;
         }
 
-        array_push($datas, $usa_array);
+        array_unshift($datas, $usa_array);
 
         if (!file_put_contents($file_path, json_encode($datas))) {
             return false;
