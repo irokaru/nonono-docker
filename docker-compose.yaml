@@ -53,7 +53,7 @@ services:
     tty: true
     volumes:
       - ./src:/var/www/html
-      - vendor-store:/var/www/html/nonono/node_modules
+      - node_modules-store:/var/www/html/nonono/node_modules
     working_dir: /var/www/html/nonono
 
   db:
