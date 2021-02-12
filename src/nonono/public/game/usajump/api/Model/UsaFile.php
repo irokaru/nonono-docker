@@ -22,7 +22,7 @@ class UsaFile
         $file_path = static::_scoreFilePath();
 
         if (!file_exists($file_path)) {
-            static::_touchScoreFile();
+            static::_touchJsonArrayFile($file_path);
         }
 
         $datas = json_decode(file_get_contents($file_path), true);
@@ -59,7 +59,7 @@ class UsaFile
         $file_path = static::_scoreFilePath();
 
         if (!file_exists($file_path)) {
-            static::_touchScoreFile();
+            static::_touchJsonArrayFile($file_path);
         }
 
         $datas = json_decode(file_get_contents($file_path), true);
@@ -142,9 +142,9 @@ class UsaFile
      * スコア記録用ファイルを生成するやつ
      * @return int|false
      */
-    protected static function _touchScoreFile(): string
+    protected static function _touchJsonArrayFile($path): string
     {
-        return file_put_contents(static::_scoreFilePath(), '[]');
+        return file_put_contents($path, '[]');
     }
 
     /**

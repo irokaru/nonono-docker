@@ -25,6 +25,29 @@ class Util
     }
 
     /**
+     * コンマ区切りのパラメータの数と数値をバリデーションするやつ
+     * @param string $params
+     * @param int $length
+     * @param int $min
+     * @param int $max
+     * @return bool
+     */
+    public static function isCommaParams($params, $length, $min, $max): bool
+    {
+        $array = static::_splitStringParams($params);
+
+        if (count($array) !== $length) {
+            return false;
+        }
+
+        $filtered = array_filter($array, function ($num) use ($min, $max) {
+            return static::isStringInt($num) && $min <= $num && $num <= $max;
+        });
+
+        return count($filtered) === $length;
+    }
+
+    /**
      * 配列から一定数をランダムでピックアップする
      * @param array $array
      * @param int $length
@@ -53,5 +76,15 @@ class Util
         echo $message;
 
         return;
+    }
+
+    /**
+     * パラメータを分割して配列にするやつ
+     * @param string $param
+     * @return bool
+     */
+    public static function _splitStringParams($param): array
+    {
+        return preg_split('/,/', $param);
     }
 }

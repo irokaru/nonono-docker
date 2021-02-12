@@ -16,6 +16,8 @@ class Usa
 
     protected static $_jump_arc = 0;
 
+    protected static $_jump_start_cnt = 0;
+
     protected static $_accessory = [];
 
     const COLOR_LENGTH = 3;
@@ -53,7 +55,7 @@ class Usa
     public function toStringLine(): string
     {
         $array = [
-            static::$_name, ...static::$_color, static::$_jump_power, static::$_jump_arc, ...static::$_accessory
+            static::$_name, ...static::$_color, static::$_jump_power, static::$_jump_arc, static::$_jump_start_cnt, ...static::$_accessory
         ];
 
         return join(',', $array);
@@ -66,11 +68,12 @@ class Usa
     public function toArray(): array
     {
         return [
-            'name'       => static::$_name,
-            'color'      => static::$_color,
-            'jump_power' => static::$_jump_power,
-            'jump_arc'   => static::$_jump_arc,
-            'accessory'  => static::$_accessory
+            'name'           => static::$_name,
+            'color'          => static::$_color,
+            'jump_power'     => static::$_jump_power,
+            'jump_arc'       => static::$_jump_arc,
+            'jump_start_cnt' => static::$_jump_start_cnt,
+            'accessory'      => static::$_accessory,
         ];
     }
 
@@ -87,11 +90,12 @@ class Usa
             return false;
         }
 
-        static::$_name       = $params['name'];
-        static::$_color      = preg_split('/,/', $params['color']);
-        static::$_jump_power = $params['jump_power'];
-        static::$_jump_arc   = $params['jump_arc'];
-        static::$_accessory  = preg_split('/,/', $params['accessory']);
+        static::$_name           = $params['name'];
+        static::$_color          = preg_split('/,/', $params['color']);
+        static::$_jump_power     = $params['jump_power'];
+        static::$_jump_arc       = $params['jump_arc'];
+        static::$_jump_start_cnt = $params['jump_start_cnt'];
+        static::$_accessory      = preg_split('/,/', $params['accessory']);
 
         return true;
     }
@@ -109,11 +113,12 @@ class Usa
 
         // 型チェック
         $validate_methods = [
-            'name'       => 'is_string',
-            'color'      => 'is_string',
-            'jump_power' => 'nonono\usajump\Model\Util::isStringInt',
-            'jump_arc'   => 'nonono\usajump\Model\Util::isStringInt',
-            'accessory'  => 'is_string',
+            'name'           => 'is_string',
+            'color'          => 'is_string',
+            'jump_power'     => 'nonono\usajump\Model\Util::isStringInt',
+            'jump_arc'       => 'nonono\usajump\Model\Util::isStringInt',
+            'jump_start_cnt' => 'nonono\usajump\Model\Util::isStringUInt',
+            'accessory'      => 'is_string',
         ];
 
         foreach ($validate_methods as $key => $method) {
@@ -127,48 +132,15 @@ class Usa
         }
 
         // color
-        if (!static::_validateCommaParams($array['color'], self::COLOR_LENGTH, self::COLOR_MIN, self::COLOR_MAX)) {
+        if (!Util::isCommaParams($array['color'], self::COLOR_LENGTH, self::COLOR_MIN, self::COLOR_MAX)) {
             return false;
         }
 
         // accessory
-        if (!static::_validateCommaParams($array['accessory'], self::ACCESSORY_LENGTH, self::ACCESSORY_MIN, self::ACCESSORY_MAX)) {
+        if (!Util::isCommaParams($array['accessory'], self::ACCESSORY_LENGTH, self::ACCESSORY_MIN, self::ACCESSORY_MAX)) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * コンマ区切りのパラメータの数と数値をバリデーションするやつ
-     * @param string $params
-     * @param int $length
-     * @param int $min
-     * @param int $max
-     * @return bool
-     */
-    protected static function _validateCommaParams($params, $length, $min, $max): bool
-    {
-        $array = static::_splitParams($params);
-
-        if (count($array) !== $length) {
-            return false;
-        }
-
-        $filtered = array_filter($array, function ($num) use ($min, $max) {
-            return Util::isStringInt($num) && $min <= $num && $num <= $max;
-        });
-
-        return count($filtered) === $length;
-    }
-
-    /**
-     * パラメータを分割して配列にするやつ
-     * @param string $param
-     * @return bool
-     */
-    protected static function _splitParams($param): array
-    {
-        return preg_split('/,/', $param);
     }
 }
