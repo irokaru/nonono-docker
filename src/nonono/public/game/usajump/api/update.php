@@ -15,7 +15,7 @@ const FILE_WEBPATH = '/game/usajump/update/';
 
 $updater = json_decode(file_get_contents(FILE_PATH . 'versions.json'), true);
 
-$file_path = [];
+$file_pathes = [];
 
 foreach (array_keys($updater) as $key) {
     if (!isset($_GET[$key])) {
@@ -32,10 +32,10 @@ foreach (array_keys($updater) as $key) {
 
     $path = FILE_PATH . "$latest_version/$key.wolf";
 
-    array_push($file_path, $path);
+    array_push($file_pathes, $path);
 }
 
-if (count($file_path) === 0) {
+if (count($file_pathes) === 0) {
     Util::response(200, 'latest');
     exit;
 }
@@ -43,7 +43,7 @@ if (count($file_path) === 0) {
 // --------------------------------------------------------------
 // 更新用ファイルの作成
 
-$hash = hash('ripemd160', implode(',', $file_path));
+$hash = hash('ripemd160', implode(',', $file_pathes));
 
 $zip_path = FILE_PATH . "$hash.zip";
 
@@ -55,13 +55,13 @@ if (!file_exists($zip_path)) {
         exit;
     }
 
-    foreach ($file_path as $path) {
-        $zip->addFile($path);
+    foreach ($file_pathes as $path) {
+        $zip->addFile($path, Util::cutoutFileName($path));
     }
 
     $zip->close();
 }
 
-$zip_webpath = FILE_WEBPATH . "$hash.zip";
+$zip_webpath = Util::domain() . FILE_WEBPATH . "$hash.zip";
 
 Util::response(200, $zip_webpath);

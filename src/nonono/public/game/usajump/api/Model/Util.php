@@ -65,17 +65,37 @@ class Util
     }
 
     /**
+     * ファイル名のみを抜き出して返す
+     * @param string $path
+     * @return string
+     */
+    public static function cutoutFileName($path): string
+    {
+        return preg_replace('/^.*\//', '', $path);
+    }
+
+    /**
      * レスポンスを生成する
      * @param int $code
      * @param string $message
      * @return void
      */
-    public static function response($code, $message)
+    public static function response($code, $message): void
     {
         http_response_code($code);
         echo $message;
 
         return;
+    }
+
+    /**
+     * ドメインを返す
+     * @return string
+     */
+    public static function domain(): string
+    {
+        $protocol = empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
+        return $protocol . $_SERVER["HTTP_HOST"];
     }
 
     /**
