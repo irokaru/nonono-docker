@@ -14,6 +14,7 @@ if (!Util::isWoditor()) {
 }
 
 $length = $_GET['length'] ?? 3;
+$name   = $_GET['name'] ?? '';
 $unique = isset($_GET['unique']) ? boolval($_GET['unique']) : true;
 
-Util::response(200, UsaFile::getScores($length, $unique));
+Util::response(200, UsaFile::getScores($length, $name, $unique));

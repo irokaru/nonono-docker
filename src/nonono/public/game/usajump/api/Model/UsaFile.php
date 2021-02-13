@@ -46,10 +46,14 @@ class UsaFile
      * @param bool $unique
      * @return string
      */
-    public static function getScores($length = 3, $unique = true): string
+    public static function getScores($length = 3, $name = '', $unique = true): string
     {
         if (!Util::isStringUint($length) || $length == 0) {
             $length = 3;
+        }
+
+        if (!Util::isStringUint($name)) {
+            $name = '';
         }
 
         if (!is_bool($unique)) {
@@ -66,6 +70,7 @@ class UsaFile
 
         if ($unique) {
             $datas = static::_deleteDuplicateItemAsValue($datas, 'name');
+            $datas = static::_deleteDuplicateValueAsKey($datas, 'name', $name);
         }
 
         $usa_array = [];
@@ -119,7 +124,7 @@ class UsaFile
      * 連想配列内で$keyと重複しているデータがあれば削除して返すやつ
      * @param array $array
      * @param string $key
-     * @return string
+     * @return array
      */
     protected static function _deleteDuplicateItemAsValue($array, $key): array
     {
@@ -131,6 +136,27 @@ class UsaFile
 
             if (!in_array($value, $value_array)) {
                 $value_array[]  = $value;
+                $unique_array[] = $item;
+            }
+        }
+
+        return $unique_array;
+    }
+
+    /**
+     * 連想配列内で$keyの値と同じ$valueがあれば削除して返すやつ
+     * @param array $array
+     * @param string $key
+     * @param string $value
+     * @return array
+     */
+    protected static function _deleteDuplicateValueAsKey($array, $key, $value): array
+    {
+        $unique_array = [];
+
+        foreach ($array as $item) {
+            $item_value = $item[$key];
+            if ($item_value !== $value) {
                 $unique_array[] = $item;
             }
         }
