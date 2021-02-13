@@ -99,6 +99,16 @@ class Util
     }
 
     /**
+     * ウディタからの通信かどうかを簡易的に判断する
+     * @return bool
+     */
+    public static function isWoditor(): bool
+    {
+        $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        return $ua === 'WOLF RPG EDITOR';
+    }
+
+    /**
      * パラメータを分割して配列にするやつ
      * @param string $param
      * @return bool

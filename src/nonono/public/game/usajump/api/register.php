@@ -10,6 +10,11 @@ require_once __DIR__ . '/Model/Util.php';
 
 // --------------------------------------------------------------
 
+if (!Util::isWoditor()) {
+    Util::response(400, 'bad request');
+    return;
+}
+
 $usa = new Usa();
 
 if (!$usa->init($_GET)) {

@@ -11,6 +11,13 @@ const FILE_PATH = __DIR__ . '/../update/';
 const FILE_WEBPATH = '/game/usajump/update/';
 
 // --------------------------------------------------------------
+
+if (!Util::isWoditor()) {
+    Util::response(400, 'bad request');
+    return;
+}
+
+// --------------------------------------------------------------
 // 更新のチェック
 
 $updater = json_decode(file_get_contents(FILE_PATH . 'versions.json'), true);

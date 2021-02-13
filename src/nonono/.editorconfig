@@ -13,3 +13,6 @@ trim_trailing_whitespace = false
 
 [*.{yml,json,scss,html,js,vue,blade.php}]
 indent_size = 2
+
+[*.sh]
+end_of_line = lf
