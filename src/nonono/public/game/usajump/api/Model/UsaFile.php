@@ -31,7 +31,7 @@ class UsaFile
             return true;
         }
 
-        $usa_array['created_at'] = date('Y/m/d h:i:s');
+        $usa_array['created_at'] = date('Y/m/d H:i:s');
 
         array_unshift($datas, $usa_array);
 
