@@ -4,22 +4,46 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>管理者用ユーザ確認ツール</title>
+  <title>うさじゃんぷ - 管理者向けユーザ確認ツール</title>
+  <meta name="robots" content="noindex">
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    th {
+      width: 180px;
+    }
+
+    th,td {
+      border: solid 1px;
+      padding: 10px;
+    }
+
+    td.color {
+      text-align: center;
+    }
+
+    td.number {
+      text-align: right;
+    }
+  </style>
 </head>
 <body>
   <div id="main">
     <table>
       <tr>
-        <th>名前</th><th>色</th><th>ジャンプ力</th><th>角度</th><th>タイミング(frame)</th>
+        <th>名前</th><th>色</th><th>ジャンプ力</th><th>角度</th><th>タイミング(frame)</th><th>登録日時</th>
       </tr>
       <tr v-for="user in users">
         <td>{{codeToKana(user.name)}}</td>
-        <td :style="{'background-color': colorToStyle(user.color), 'color': fontColorAsBrightness(user.color)}">{{user.color}}</td>
-        <td>{{user.jump_power}}</td>
-        <td>{{user.jump_arc}}</td>
-        <td>{{user.jump_start_cnt}}</td>
+        <td class="color" :style="{'background-color': colorToStyle(user.color), 'color': fontColorAsBrightness(user.color)}">{{user.color}}</td>
+        <td class="number">{{user.jump_power}}</td>
+        <td class="number">{{user.jump_arc}}</td>
+        <td class="number">{{user.jump_start_cnt}}</td>
+        <td>{{user.created_at || '0000/00/00 00:00:00'}}</td>
       </tr>
     </table>
   </div>

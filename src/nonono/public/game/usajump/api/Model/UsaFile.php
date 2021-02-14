@@ -31,6 +31,8 @@ class UsaFile
             return true;
         }
 
+        $usa_array['created_at'] = date('Y/m/d h:i:s');
+
         array_unshift($datas, $usa_array);
 
         if (!file_put_contents($file_path, json_encode($datas))) {
