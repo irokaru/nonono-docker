@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理者用ユーザ確認ツール</title>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <div id="main">
+    <table>
+      <tr>
+        <th>名前</th><th>色</th><th>ジャンプ力</th><th>角度</th><th>タイミング(frame)</th>
+      </tr>
+      <tr v-for="user in users">
+        <td>{{codeToKana(user.name)}}</td>
+        <td :style="{color: colorToStyle(user.color)}">{{user.color}}</td>
+        <td>{{user.jump_power}}</td>
+        <td>{{user.jump_arc}}</td>
+        <td>{{user.jump_start_cnt}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <script defer>
+    const KANA = [
+      ['あ', 'ぁ'], ['い', 'ぃ'], ['う', 'ぅ'], ['え', 'ぇ'], ['お', 'ぉ'],
+      ['か', 'が'], ['き', 'ぎ'], ['く', 'ぐ'], ['け', 'げ'], ['こ', 'ご'],
+      ['さ', 'ざ'], ['し', 'じ'], ['す', 'ず'], ['せ', 'ぜ'], ['そ', 'ぞ'],
+      ['た', 'だ'], ['ち', 'ぢ'], ['つ', 'づ', 'っ', 'っ'], ['て', 'で'], ['ど', 'ど'],
+      ['な'], ['に'], ['ぬ'], ['ね'], ['の'],
+      ['は', 'ば', 'ぱ'], ['ひ', 'び', 'ぴ'], ['ふ', 'ぶ', 'ぷ'], ['へ', 'べ', 'ぺ'], ['ほ', 'ぼ', 'ぽ'],
+      ['ま'], ['み'], ['む'], ['め'], ['も'],
+      ['や', 'ゃ'], ['ゆ', 'ゅ'], ['よ', 'ょ'],
+      ['ら'], ['り'], ['る'], ['れ'], ['ろ'],
+      ['わ'], ['を'], ['ん'],
+    ];
+
+    const users = {
+      data() {
+        return {
+          users: [],
+        };
+      },
+      methods: {
+        async getUsers() {
+          const api = axios.get('/game/usajump/score/score.json');
+          this.users = await api.then(res => {
+            return res.data;
+          }).catch(e => {
+            alert(e);
+            return [];
+          });
+        },
+        codeToKana(str) {
+          let ret = '';
+
+          for (const code of str.match(/.{3}/g)) {
+            const number = code.slice(0, 2);
+            const meta   = code.slice(-1);
+
+            ret += KANA[Number(number)][meta];
+          }
+
+          return ret;
+        },
+        colorToStyle(color) {
+          return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        },
+      },
+      created () {
+        this.getUsers();
+      },
+    };
+    Vue.createApp(users).mount('#main');
+  </script>
+</body>
+</html>
