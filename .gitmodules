@@ -1,0 +1,5 @@
+[submodule "src/nonono/public/game/usajump"]
+	path = src/nonono/public/game/usajump
+	url = git@github.com:irokaru/usajump-web.git
+	branch = main
+	ignore = dirty
