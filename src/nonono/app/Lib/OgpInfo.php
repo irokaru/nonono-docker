@@ -10,7 +10,7 @@ class OgpInfo
 
     protected $_thumbnail = '';
 
-    protected $_param = '';
+    protected $_params = [];
 
     public function __construct(array $params = [])
     {
@@ -26,8 +26,8 @@ class OgpInfo
             $this->_thumbnail = $params['thumbnail'];
         }
 
-        if (isset($params['param'])) {
-            $this->_param = $params['param'];
+        if (isset($params['params'])) {
+            $this->_params = $params['params'];
         }
     }
 
@@ -143,39 +143,36 @@ class OgpInfo
      * パラメータを返す
      * @return string
      */
-    public function getParam()
+    public function getParams()
     {
-        return $this->_param;
+        return $this->_params;
     }
 
     /**
      * 各種パラメータのキーを基に各種値に置き換えたタイトルを返す
-     * @param array $params
      * @return string
      */
-    public function replaceTitleWithParam($params): string
+    public function replaceTitleWithParams(): string
     {
-        return static::_replaceValueWithParam($this->getTitle(), $params);
+        return static::_replaceValueWithParams($this->getTitle(), $this->getParams());
     }
 
     /**
      * 各種パラメータのキーを基に各種値に置き換えた説明を返す
-     * @param array $params
      * @return string
      */
-    public function replaceDescriptionWithParam($params): string
+    public function replaceDescriptionWithParams(): string
     {
-        return static::_replaceValueWithParam($this->getDescription(), $params);
+        return static::_replaceValueWithParams($this->getDescription(), $this->getParams());
     }
 
     /**
      * 各種パラメータのキーを基に各種値に置き換えたサムネイルパスを返す
-     * @param array $params
      * @return string
      */
-    public function replaceThumbnailWithParam($params): string
+    public function replaceThumbnailWithParams(): string
     {
-        return static::_replaceValueWithParam($this->getThumbnail(), $params);
+        return static::_replaceValueWithParams($this->getThumbnail(), $this->getParams());
     }
 
     // ======================================================================
@@ -234,7 +231,7 @@ class OgpInfo
      * @param array $params
      * @param string
      */
-    protected static function _replaceValueWithParam($target, $params)
+    protected static function _replaceValueWithParams($target, $params)
     {
         foreach ($params as $key => $value) {
             $target = preg_replace("/\{\{$key\}\}/", static::escapeReplaceScope($value), $target);

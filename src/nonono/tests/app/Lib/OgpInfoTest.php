@@ -212,79 +212,78 @@ class OgpInfoTest extends TestCase
         }
     }
 
-    public function test_get_param()
+    public function test_get_params()
     {
         $suites = [
             // expect, ogp
-            ['a', ['title', 'desc', 'thumb', 'a']],
-            [null,  ['title##', 'hoge##', 'aaa##', null]],
-            ['', ['title##', '##fuga', '', '']],
+            [['a'], ['title', 'desc', 'thumb', ['a']]],
+            [[],  ['title##', 'hoge##', 'aaa##', null]],
+            [[], ['title##', '##fuga', '', []]],
         ];
 
         foreach ($suites as $suite) {
             $ogp_info = new OgpInfo(static::_p(...$suite[1]));
-            $this->assertEquals($suite[0], $ogp_info->getParam());
+            $this->assertEquals($suite[0], $ogp_info->getParams(), json_encode([$ogp_info, $ogp_info->getParams()]));
         }
     }
 
     public function test_replace_title_with_param()
     {
         $suites = [
-            // expect, ogp, params
-            ['title',         ['title', null, null, null],          ['value' => 'hoge']],
-            ['',              ['', null, null, null],               ['value' => 'hoge']],
-            ['tihogetle',     ['ti{{value}}tle', null, null, null], ['value' => 'hoge']],
-            ['ti{value}}tle', ['ti{value}}tle', null, null, null],  ['value' => 'hoge']],
-            ['ti{{value}tle', ['ti{{value}tle', null, null, null],  ['value' => 'hoge']],
-            ['ti{value}tle',  ['ti{value}tle', null, null, null],   ['value' => 'hoge']],
+            // expect, ogp
+            ['title',         ['title', null, null, ['value' => 'hoge']]],
+            ['',              ['', null, null, ['value' => 'hoge']]],
+            ['tihogetle',     ['ti{{value}}tle', null, null, ['value' => 'hoge']]],
+            ['ti{value}}tle', ['ti{value}}tle', null, null, ['value' => 'hoge']]],
+            ['ti{{value}tle', ['ti{{value}tle', null, null, ['value' => 'hoge']]],
+            ['ti{value}tle',  ['ti{value}tle', null, null, ['value' => 'hoge']]],
         ];
 
         foreach ($suites as $suite) {
             $ogp_info = new OgpInfo(static::_p(...$suite[1]));
-            $this->assertEquals($suite[0], $ogp_info->replaceTitleWithParam($suite[2]));
+            $this->assertEquals($suite[0], $ogp_info->replaceTitleWithParams());
         }
     }
 
     public function test_replace_descrpition_with_param()
     {
         $suites = [
-            // expect, ogp, params
-            ['title',         [null, 'title', null, null],          ['value' => 'hoge']],
-            ['',              [null, '', null, null],               ['value' => 'hoge']],
-            ['tihogetle',     [null, 'ti{{value}}tle', null, null], ['value' => 'hoge']],
-            ['ti{value}}tle', [null, 'ti{value}}tle', null, null],  ['value' => 'hoge']],
-            ['ti{{value}tle', [null, 'ti{{value}tle', null, null],  ['value' => 'hoge']],
-            ['ti{value}tle',  [null, 'ti{value}tle', null, null],   ['value' => 'hoge']],
+            // expect, ogp
+            ['title',         [null, 'title', null, ['value' => 'hoge']]],
+            ['',              [null, '', null, ['value' => 'hoge']]],
+            ['tihogetle',     [null, 'ti{{value}}tle', null, ['value' => 'hoge']]],
+            ['ti{value}}tle', [null, 'ti{value}}tle', null, ['value' => 'hoge']]],
+            ['ti{{value}tle', [null, 'ti{{value}tle', null, ['value' => 'hoge']]],
+            ['ti{value}tle',  [null, 'ti{value}tle', null, ['value' => 'hoge']]],
         ];
 
         foreach ($suites as $suite) {
             $ogp_info = new OgpInfo(static::_p(...$suite[1]));
-            $this->assertEquals($suite[0], $ogp_info->replaceDescriptionWithParam($suite[2]));
+            $this->assertEquals($suite[0], $ogp_info->replaceDescriptionWithParams());
         }
     }
 
     public function test_replace_thumbnail_with_param()
     {
         $suites = [
-            // expect, ogp, params
-            ['title',         [null, null, 'title', null],          ['value' => 'hoge']],
-            ['',              [null, null, '', null],               ['value' => 'hoge']],
-            ['tihogetle',     [null, null, 'ti{{value}}tle', null], ['value' => 'hoge']],
-            ['ti{value}}tle', [null, null, 'ti{value}}tle', null],  ['value' => 'hoge']],
-            ['ti{{value}tle', [null, null, 'ti{{value}tle', null],  ['value' => 'hoge']],
-            ['ti{value}tle',  [null, null, 'ti{value}tle', null],   ['value' => 'hoge']],
-            ['ti{{hoge}}tle', [null, null, 'ti{{value}}tle', null],   ['value' => '{{hoge}}']],
+            // expect, ogp
+            ['title',         [null, null, 'title', ['value' => 'hoge']]],
+            ['',              [null, null, '', ['value' => 'hoge']]],
+            ['tihogetle',     [null, null, 'ti{{value}}tle', ['value' => 'hoge']]],
+            ['ti{value}}tle', [null, null, 'ti{value}}tle', ['value' => 'hoge']]],
+            ['ti{{value}tle', [null, null, 'ti{{value}tle', ['value' => 'hoge']]],
+            ['ti{value}tle',  [null, null, 'ti{value}tle', ['value' => 'hoge']]],
         ];
 
         foreach ($suites as $suite) {
             $ogp_info = new OgpInfo(static::_p(...$suite[1]));
-            $this->assertEquals($suite[0], $ogp_info->replaceThumbnailWithParam($suite[2]));
+            $this->assertEquals($suite[0], $ogp_info->replaceThumbnailWithParams());
         }
     }
 
     // ======================================================================
 
-    protected static function _p($title = '', $description = '', $thumbnail = '', $param = '')
+    protected static function _p($title = '', $description = '', $thumbnail = '', $params = [])
     {
         $ret = [];
 
@@ -300,8 +299,8 @@ class OgpInfoTest extends TestCase
             $ret['thumbnail'] = $thumbnail;
         }
 
-        if ($param) {
-            $ret['param'] = $param;
+        if ($params) {
+            $ret['params'] = $params;
         }
 
         return $ret;
