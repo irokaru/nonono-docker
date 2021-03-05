@@ -18,38 +18,37 @@ class OgpController extends Controller
      // 'パス名(regex)' => [
      //     'title' => '表示したいタイトル(二重波括弧で変数焼き込み)',
      // ];
-        '\/products' => [
+        '/products' => [
             'title'       => 'ぷろだくと',
             'description' => null,
             'thumbnail'   => null,
         ],
-        '\/blog' => [
+        '/blog' => [
             'title'       => 'にっき',
             'description' => null,
             'thumbnail'   => null,
         ],
-        '\/blog\/(\d+)' => [
+        '/blog/\d+' => [
             'title'       => 'にっき',
             'description' => null,
             'thumbnail'   => null,
         ],
-        '\/blog\/post\/(\d+)' => [
-            'title'       => 'getPostTitle##{{value}}',
-            'description' => 'getPostDescription##{{value}}',
-            'thumbnail'   => 'getPostThumbnail##{{value}}',
+        '/blog/post/{{id}}' => [
+            'title'       => 'getPostTitle##{{title}}',
+            'description' => 'getPostDescription##{{description}}',
+            'thumbnail'   => 'getPostThumbnail##{{thumbnail}}',
         ],
-        '\/blog\/category\/(.+?)\/(\d+)' => [
-            'title'       => 'getCategoryTitle##{{value}}のにっき一覧',
+        '/blog/category/{{category}}' => [
+            'title'       => 'getCategoryTitle##{{category}}のにっき一覧',
             'description' => null,
             'thumbnail'   => null,
         ],
-        '\/blog\/category\/(.+?)' => [
-            'title'       => 'getCategoryTitle##{{value}}のにっき一覧',
+        '/blog/category/{{category}}/\d+' => [
+            'title'       => 'getCategoryTitle##{{category}}のにっき一覧',
             'description' => null,
             'thumbnail'   => null,
         ],
     ];
-
 
     /**
      * urlからページタイトルを返す
@@ -61,20 +60,17 @@ class OgpController extends Controller
         $format_url = static::formatUrl($url);
         $info       = static::makeOgpInfoAsUrl($format_url);
 
-        $params = [];
-        $params['param'] = $info->getParam();
-
         if ($info->hasMethodInTitle()) {
-            $method           = $info->getMethodInTitle();
-            $params['value']  = static::executeStaticMethod($method, $params['param']);
+            $method = $info->getMethodInTitle();
+            $title  = static::executeStaticMethod($method, $info->getParams());
 
-            if ($params['value'] === '') {
+            if ($title === '') {
                 return static::DEFAULT_TITLE;
             }
         }
 
-        return $info->replaceTitleWithParam($params) ?
-               $info->replaceTitleWithParam($params) . ' - ' . static::DEFAULT_TITLE :
+        return $info->replaceTitleWithParams() ?
+               $info->replaceTitleWithParams() . ' - ' . static::DEFAULT_TITLE :
                static::DEFAULT_TITLE;
     }
 
@@ -89,7 +85,7 @@ class OgpController extends Controller
         $info       = static::makeOgpInfoAsUrl($format_url);
 
         $params = [];
-        $params['param'] = $info->getParam();
+        $params['param'] = $info->getParams();
 
         if ($info->hasMethodInDescription()) {
             $method           = $info->getMethodInDescription();
@@ -100,7 +96,7 @@ class OgpController extends Controller
             }
         }
 
-        $descriptioin = $info->replaceDescriptionWithParam($params) ?: static::DEFAULT_DESCRIPTION;
+        $descriptioin = $info->replaceDescriptionWithParams($params) ?: static::DEFAULT_DESCRIPTION;
         $descriptioin = preg_replace('/\\\n|\\\r|\\\r\\\n/', '', $descriptioin);
 
         return mb_strimwidth($descriptioin, 0, 120, '...');
@@ -117,7 +113,7 @@ class OgpController extends Controller
         $info       = static::makeOgpInfoAsUrl($format_url);
 
         $params = [];
-        $params['param'] = $info->getParam();
+        $params['param'] = $info->getParams();
 
         if ($info->hasMethodInThumbnail()) {
             $method           = $info->getMethodInThumbnail();
@@ -128,7 +124,7 @@ class OgpController extends Controller
             }
         }
 
-        return $info->replaceThumbnailWithParam($params) ?: static::DEFAULT_THUMBNAIL;
+        return $info->replaceThumbnailWithParams($params) ?: static::DEFAULT_THUMBNAIL;
     }
 
     /**
@@ -150,7 +146,7 @@ class OgpController extends Controller
     // ======================================================================
 
     /**
-     * クエリストリング(URLの?以降)と最後のスラッシュを削除して返す
+     * クエリストリング(URLの?以降)を削除して返す
      * @param string $url
      * @return string
      */
@@ -176,42 +172,37 @@ class OgpController extends Controller
     {
         $keys = array_keys(static::$_path_list);
 
-        foreach ($keys as $key) {
-            if (preg_match("/^$key$/", $url, $result)) {
-                $path_data = static::$_path_list[$key];
-                $param     = isset($result[1]) ? $result[1] : $result[0];
+        foreach ($keys as $key => $value) {
+            ['result' => $result, 'params' => $params] = static::compareUrl($url, $key);
 
-                return new OgpInfo([
-                    'title'       => $path_data['title'],
-                    'description' => $path_data['description'],
-                    'thumbnail'   => $path_data['thumbnail'],
-                    'param'       => $param,
-                ]);
+            if ($result) {
+                $value['params'] = $params;
+                return new OgpInfo($value);
             }
         }
 
         return new OgpInfo();
     }
 
-    protected static function getPostTitle($param): string
+    protected static function getPostTitle($params): string
     {
-        $post = Post::findOne($param);
+        $post = Post::findOne($params);
         return $post->title ?? '';
     }
 
-    protected static function getPostDescription($param): string
+    protected static function getPostDescription($params): string
     {
-        return PostResource::getPostContent($param);
+        return PostResource::getPostContent($params);
     }
 
-    protected static function getPostThumbnail($param): string
+    protected static function getPostThumbnail($params): string
     {
         $exts        = ['.jpg', '.JPG', '.png', '.PNG'];
         $img_path    = __DIR__ . '/../../../public/img/post/';
         $img_webpath = '/img/post/';
 
         foreach ($exts as $ext) {
-            $filename = $param . '_01' . $ext;
+            $filename = $params . '_01' . $ext;
 
             if (file_exists($img_path . $filename)) {
                 return $img_webpath . $filename;
@@ -221,9 +212,51 @@ class OgpController extends Controller
         return '';
     }
 
-    protected static function getCategoryTitle($param): string
+    protected static function getCategoryTitle($params): string
     {
-        return urldecode($param);
+        return urldecode($params);
+    }
+
+    /**
+     * URLを比べる
+     * @param string $target
+     * @param string $url
+     * @return ['result' => bool, 'params' => array]
+     */
+    protected static function compareUrl($target, $url)
+    {
+        $splited_target = explode('/', $target);
+        $splited_url    = explode('/', $url);
+
+        if (count($splited_target) !== count($splited_url)) {
+            return [
+                'result' => false,
+                'params' => [],
+            ];
+        }
+
+        $ret    = true;
+        $params = [];
+
+        for ($idx = 0; $idx < count($splited_target); $idx++) {
+            $piece_url    = $splited_url[$idx];
+            $piece_target = $splited_target[$idx];
+
+            if (preg_match("/^{{(.+?)}}$/", $piece_url, $var)) {
+                $params[$var[1]] = $piece_target;
+                continue;
+            }
+
+            if (!preg_match("/^$piece_url$/", $piece_target)) {
+                $ret = false;
+                break;
+            }
+        }
+
+        return [
+            'result' => $ret,
+            'params' => $params,
+        ];
     }
 
     /**
