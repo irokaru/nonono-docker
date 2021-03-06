@@ -169,51 +169,6 @@ class OgpController extends Controller
         return new OgpInfo();
     }
 
-    protected static function getPostTitle($params): array
-    {
-        if (!isset($params['id'])) {
-            return '';
-        }
-
-        $post = Post::findOne($params['id']);
-        $params['title'] = $post->title ?? '';
-        return $params;
-    }
-
-    protected static function getPostDescription($params): array
-    {
-        if (!isset($params['id'])) {
-            return '';
-        }
-
-        $params['description'] = PostResource::getPostContent($params['id']);
-        return $params;
-    }
-
-    protected static function getPostThumbnail($params): array
-    {
-        $params['thumbnail'] = '';
-
-        if (!isset($params['id']) || static::getPostTitle($params) === '') {
-            return $params;
-        }
-
-        $exts        = ['.jpg', '.JPG', '.png', '.PNG'];
-        $img_path    = __DIR__ . '/../../../public/img/post/';
-        $img_webpath = '/img/post/';
-
-        foreach ($exts as $ext) {
-            $filename = $params['id'] . '_01' . $ext;
-
-            if (file_exists($img_path . $filename)) {
-                $params['thumbnail'] = $img_webpath . $filename;
-                break;
-            }
-        }
-
-        return $params;
-    }
-
     /**
      * URLを比べる
      * @param string $target
@@ -254,6 +209,51 @@ class OgpController extends Controller
             'result' => $ret,
             'params' => $params,
         ];
+    }
+
+    protected static function getPostTitle($params): array
+    {
+        if (!isset($params['id']) || !preg_match('/^\d+$/', $params['id'])) {
+            return $params;
+        }
+
+        $post = Post::findOne($params['id']);
+        $params['title'] = $post->title ?? '';
+        return $params;
+    }
+
+    protected static function getPostDescription($params): array
+    {
+        if (!isset($params['id']) || !preg_match('/^\d+$/', $params['id'])) {
+            return $params;
+        }
+
+        $params['description'] = PostResource::getPostContent($params['id']);
+        return $params;
+    }
+
+    protected static function getPostThumbnail($params): array
+    {
+        $params['thumbnail'] = '';
+
+        if (!isset($params['id']) || static::getPostTitle($params) === '') {
+            return $params;
+        }
+
+        $exts        = ['.jpg', '.JPG', '.png', '.PNG'];
+        $img_path    = __DIR__ . '/../../../public/img/post/';
+        $img_webpath = '/img/post/';
+
+        foreach ($exts as $ext) {
+            $filename = $params['id'] . '_01' . $ext;
+
+            if (file_exists($img_path . $filename)) {
+                $params['thumbnail'] = $img_webpath . $filename;
+                break;
+            }
+        }
+
+        return $params;
     }
 
     /**

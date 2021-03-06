@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Lib\OgpInfo;
+
 use Tests\TestCase;
 use Tests\Util\TestTool;
 
@@ -125,6 +125,54 @@ class OgpControllerTest extends TestCase
         $this->simpleSuitesCheck($suites, OgpController::class . '::getCardTypeForTwitter');
     }
 
+    public function test_format_url()
+    {
+        $suites = [
+            // expect, url
+            ['',      ''],
+            ['/test', '/test'],
+            ['/test', '/test?hoge'],
+            ['/test', '/test' . '/'],
+        ];
+
+        $ctrl = new OgpController();
+
+        foreach ($suites as $suite) {
+            $result = TestTool::getProtectedMethod($ctrl, 'formatUrl')->invoke($ctrl, $suite[1]);
+            $this->assertEquals($suite[0], $result, json_encode($suite));
+        }
+    }
+
+    public function test_make_ogp_info_as_url()
+    {
+        $suites = [
+            // expect, url
+            [[], '/'],
+            [[], '/aaaaa'],
+            [['ぷろだくと'], '/products'],
+
+            [['にっき'], '/blog'],
+            [['にっき'], '/blog/123'],
+            [[], '/blog/1２3'],
+
+            [['getPostTitle##{{title}}', 'getPostDescription##{{description}}', 'getPostThumbnail##{{thumbnail}}', ['id' => '123']], '/blog/post/123'],
+            [['getPostTitle##{{title}}', 'getPostDescription##{{description}}', 'getPostThumbnail##{{thumbnail}}', ['id' => '1２3']], '/blog/post/1２3'],
+
+            [['{{category}}のにっき一覧', null, null, ['category' => '{{test}}']], '/blog/category/{{test}}'],
+            [['{{category}}のにっき一覧', null, null, ['category' => 'hogehoge']], '/blog/category/hogehoge'],
+            [['{{category}}のにっき一覧', null, null, ['category' => 'hogehoge']], '/blog/category/hogehoge/123'],
+
+            [[], '/blog/category/hogehoge/1２3'],
+        ];
+
+        $ctrl = new OgpController();
+
+        foreach ($suites as $suite) {
+            $result = TestTool::getProtectedMethod($ctrl, 'makeOgpInfoAsUrl')->invoke($ctrl, $suite[1]);
+            $this->assertEquals(static::makeOgpInfo(...$suite[0]), $result, json_encode($suite));
+        }
+    }
+
     public function test_compare_url()
     {
         $suites = [
@@ -144,11 +192,23 @@ class OgpControllerTest extends TestCase
             [['result' => false, 'params' => ['bbb' => 'usi']], '/hoge/usi/1２3', '/hoge/{{bbb}}/\d+'],
         ];
 
-        $controller = new OgpController();
+        $ctrl = new OgpController();
 
         foreach ($suites as $suite) {
-            $result = TestTool::getProtectedMethod(OgpController::class, 'compareUrl')->invoke($controller, $suite[1], $suite[2]);
+            $result = TestTool::getProtectedMethod($ctrl, 'compareUrl')->invoke($ctrl, $suite[1], $suite[2]);
             $this->assertEquals($suite[0], $result, json_encode($suite));
         }
+    }
+
+    // ======================================================================
+
+    protected static function makeOgpInfo($title = '', $description = '', $thumbnail = '', $params = []): \App\Lib\OgpInfo
+    {
+        return new OgpInfo([
+            'title'       => $title ?? '',
+            'description' => $description ?? '',
+            'thumbnail'   => $thumbnail ?? '',
+            'params'      => $params ?? [],
+        ]);
     }
 }
