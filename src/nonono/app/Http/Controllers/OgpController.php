@@ -214,6 +214,7 @@ class OgpController extends Controller
     protected static function getPostTitle($params): array
     {
         if (!isset($params['id']) || !preg_match('/^\d+$/', $params['id'])) {
+            $params['title'] = '';
             return $params;
         }
 
@@ -225,6 +226,7 @@ class OgpController extends Controller
     protected static function getPostDescription($params): array
     {
         if (!isset($params['id']) || !preg_match('/^\d+$/', $params['id'])) {
+            $params['description'] = '';
             return $params;
         }
 
@@ -237,6 +239,7 @@ class OgpController extends Controller
         $params['thumbnail'] = '';
 
         if (!isset($params['id']) || static::getPostTitle($params) === '') {
+            $params['description'] = '';
             return $params;
         }
 
