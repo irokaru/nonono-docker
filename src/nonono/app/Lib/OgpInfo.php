@@ -139,9 +139,14 @@ class OgpInfo
         return $this->getMethodInThumbnail() !== '';
     }
 
+    public function setParams($params)
+    {
+        $this->_params = $params;
+    }
+
     /**
      * パラメータを返す
-     * @return string
+     * @return array
      */
     public function getParams()
     {

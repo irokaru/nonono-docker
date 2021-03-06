@@ -62,11 +62,8 @@ class OgpController extends Controller
 
         if ($info->hasMethodInTitle()) {
             $method = $info->getMethodInTitle();
-            $title  = static::executeStaticMethod($method, $info->getParams());
-
-            if ($title === '') {
-                return static::DEFAULT_TITLE;
-            }
+            $params = static::executeStaticMethod($method, $info->getParams());
+            $info->setParams($params);
         }
 
         return $info->replaceTitleWithParams() ?
@@ -84,22 +81,19 @@ class OgpController extends Controller
         $format_url = static::formatUrl($url);
         $info       = static::makeOgpInfoAsUrl($format_url);
 
-        $params = [];
-        $params['param'] = $info->getParams();
-
         if ($info->hasMethodInDescription()) {
-            $method           = $info->getMethodInDescription();
-            $params['value']  = static::executeStaticMethod($method, $params['param']);
+            $method      = $info->getMethodInDescription();
+            $description = static::executeStaticMethod($method, $info->getParams());
 
-            if ($params['value'] === '') {
+            if ($description === '') {
                 return static::DEFAULT_DESCRIPTION;
             }
         }
 
-        $descriptioin = $info->replaceDescriptionWithParams($params) ?: static::DEFAULT_DESCRIPTION;
-        $descriptioin = preg_replace('/\\\n|\\\r|\\\r\\\n/', '', $descriptioin);
+        $description = $info->replaceDescriptionWithParams() ?: static::DEFAULT_DESCRIPTION;
+        $description = preg_replace('/\\\n|\\\r|\\\r\\\n/', '', $description);
 
-        return mb_strimwidth($descriptioin, 0, 120, '...');
+        return mb_strimwidth($description, 0, 120, '...');
     }
 
     /**
@@ -184,29 +178,33 @@ class OgpController extends Controller
         return new OgpInfo();
     }
 
-    protected static function getPostTitle($params): string
+    protected static function getPostTitle($params): array
     {
         if (!isset($params['id'])) {
             return '';
         }
 
         $post = Post::findOne($params['id']);
-        return $post->title ?? '';
+        $params['title'] = $post->title ?? '';
+        return $params;
     }
 
-    protected static function getPostDescription($params): string
+    protected static function getPostDescription($params): array
     {
         if (!isset($params['id'])) {
             return '';
         }
 
-        return PostResource::getPostContent($params['id']);
+        $params['description'] = PostResource::getPostContent($params['id']);
+        return $params;
     }
 
-    protected static function getPostThumbnail($params): string
+    protected static function getPostThumbnail($params): array
     {
+        $params['thumbnail'] = '';
+
         if (!isset($params['id']) || static::getPostTitle($params) === '') {
-            return '';
+            return $params;
         }
 
         $exts        = ['.jpg', '.JPG', '.png', '.PNG'];
@@ -217,20 +215,12 @@ class OgpController extends Controller
             $filename = $params['id'] . '_01' . $ext;
 
             if (file_exists($img_path . $filename)) {
-                return $img_webpath . $filename;
+                $params['thumbnail'] = $img_webpath . $filename;
+                break;
             }
         }
 
-        return '';
-    }
-
-    protected static function getCategoryTitle($params): string
-    {
-        if (!isset($params['category'])) {
-            return '';
-        }
-
-        return urldecode($params['category']);
+        return $params;
     }
 
     /**

@@ -31,12 +31,42 @@ class OgpControllerTest extends TestCase
             ['あああのにっき一覧 - ののの茶屋', '/blog/category/あああ'],
             ['testのにっき一覧 - ののの茶屋',   '/blog/category/test/2222'],
 
-            ['ののの茶屋',   '/blog/category/test/hogehoge/2222'],
-            ['ののの茶屋',   '/blog/category/test/a'],
+            ['ののの茶屋', '/blog/category/test/hogehoge/2222'],
+            ['ののの茶屋', '/blog/category/test/a'],
         ];
 
         foreach ($suites as $suite) {
             $this->assertEquals($suite[0], OgpController::getTitle($suite[1]), json_encode($suite));
+        }
+    }
+    public function test_get_description()
+    {
+        $suites = [
+            // expect, url
+            ['ゲームづくりの甘味処', '/'],
+            ['ゲームづくりの甘味処', '/?query'],
+            ['ゲームづくりの甘味処', '/dummy'],
+
+            ['ゲームづくりの甘味処', '/products'],
+            ['ゲームづくりの甘味処', '/products?test'],
+
+            ['ゲームづくりの甘味処', '/blog'],
+            ['ゲームづくりの甘味処', '/blog/1'],
+            ['ゲームづくりの甘味処', '/blog/123'],
+
+            // [' - ののの茶屋', '/blog/post/1'],
+
+            ['ゲームづくりの甘味処', '/blog/aaa'],
+
+            ['ゲームづくりの甘味処', '/blog/category/あああ'],
+            ['ゲームづくりの甘味処',   '/blog/category/test/2222'],
+
+            ['ゲームづくりの甘味処', '/blog/category/test/hogehoge/2222'],
+            ['ゲームづくりの甘味処', '/blog/category/test/a'],
+        ];
+
+        foreach ($suites as $suite) {
+            $this->assertEquals($suite[0], OgpController::getDescription($suite[1]), json_encode($suite));
         }
     }
 
