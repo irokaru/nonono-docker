@@ -42,7 +42,7 @@ class PostResource extends JsonResource
      * @param int $id
      * @return string
      */
-    protected static function getPostContent($id): string
+    public static function getPostContent($id): string
     {
         try {
             return Storage::disk('local')->get("posts/$id.md");
