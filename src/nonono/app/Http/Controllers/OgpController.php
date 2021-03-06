@@ -82,16 +82,13 @@ class OgpController extends Controller
         $info       = static::makeOgpInfoAsUrl($format_url);
 
         if ($info->hasMethodInDescription()) {
-            $method      = $info->getMethodInDescription();
-            $description = static::executeStaticMethod($method, $info->getParams());
-
-            if ($description === '') {
-                return static::DEFAULT_DESCRIPTION;
-            }
+            $method = $info->getMethodInDescription();
+            $params = static::executeStaticMethod($method, $info->getParams());
+            $info->setParams($params);
         }
 
         $description = $info->replaceDescriptionWithParams() ?: static::DEFAULT_DESCRIPTION;
-        $description = preg_replace('/\\\n|\\\r|\\\r\\\n/', '', $description);
+        $description = preg_replace('/\\n|\\r|\\r\\n/', '', $description);
 
         return mb_strimwidth($description, 0, 120, '...');
     }
@@ -106,19 +103,13 @@ class OgpController extends Controller
         $format_url = static::formatUrl($url);
         $info       = static::makeOgpInfoAsUrl($format_url);
 
-        $params = [];
-        $params['param'] = $info->getParams();
-
         if ($info->hasMethodInThumbnail()) {
-            $method           = $info->getMethodInThumbnail();
-            $params['value']  = static::executeStaticMethod($method, $params['param']);
-
-            if ($params['value'] === '') {
-                return static::DEFAULT_THUMBNAIL;
-            }
+            $method = $info->getMethodInThumbnail();
+            $params = static::executeStaticMethod($method, $info->getParams());
+            $info->setParams($params);
         }
 
-        return $info->replaceThumbnailWithParams($params) ?: static::DEFAULT_THUMBNAIL;
+        return $info->replaceThumbnailWithParams() ?: static::DEFAULT_THUMBNAIL;
     }
 
     /**

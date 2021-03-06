@@ -39,6 +39,7 @@ class OgpControllerTest extends TestCase
             $this->assertEquals($suite[0], OgpController::getTitle($suite[1]), json_encode($suite));
         }
     }
+
     public function test_get_description()
     {
         $suites = [
@@ -59,7 +60,7 @@ class OgpControllerTest extends TestCase
             ['ゲームづくりの甘味処', '/blog/aaa'],
 
             ['ゲームづくりの甘味処', '/blog/category/あああ'],
-            ['ゲームづくりの甘味処',   '/blog/category/test/2222'],
+            ['ゲームづくりの甘味処', '/blog/category/test/2222'],
 
             ['ゲームづくりの甘味処', '/blog/category/test/hogehoge/2222'],
             ['ゲームづくりの甘味処', '/blog/category/test/a'],
@@ -67,6 +68,37 @@ class OgpControllerTest extends TestCase
 
         foreach ($suites as $suite) {
             $this->assertEquals($suite[0], OgpController::getDescription($suite[1]), json_encode($suite));
+        }
+    }
+
+    public function test_get_thumbnail()
+    {
+        $suites = [
+            // expect, url
+            ['/img/thumbnail.png', '/'],
+            ['/img/thumbnail.png', '/?query'],
+            ['/img/thumbnail.png', '/dummy'],
+
+            ['/img/thumbnail.png', '/products'],
+            ['/img/thumbnail.png', '/products?test'],
+
+            ['/img/thumbnail.png', '/blog'],
+            ['/img/thumbnail.png', '/blog/1'],
+            ['/img/thumbnail.png', '/blog/123'],
+
+            // [' - ののの茶屋', '/blog/post/1'],
+
+            ['/img/thumbnail.png', '/blog/aaa'],
+
+            ['/img/thumbnail.png', '/blog/category/あああ'],
+            ['/img/thumbnail.png', '/blog/category/test/2222'],
+
+            ['/img/thumbnail.png', '/blog/category/test/hogehoge/2222'],
+            ['/img/thumbnail.png', '/blog/category/test/a'],
+        ];
+
+        foreach ($suites as $suite) {
+            $this->assertEquals($suite[0], OgpController::getThumbnail($suite[1]), json_encode($suite));
         }
     }
 
