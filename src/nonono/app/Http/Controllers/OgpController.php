@@ -39,12 +39,12 @@ class OgpController extends Controller
             'thumbnail'   => 'getPostThumbnail##{{thumbnail}}',
         ],
         '/blog/category/{{category}}' => [
-            'title'       => 'getCategoryTitle##{{category}}のにっき一覧',
+            'title'       => '{{category}}のにっき一覧',
             'description' => null,
             'thumbnail'   => null,
         ],
         '/blog/category/{{category}}/\d+' => [
-            'title'       => 'getCategoryTitle##{{category}}のにっき一覧',
+            'title'       => '{{category}}のにっき一覧',
             'description' => null,
             'thumbnail'   => null,
         ],
@@ -170,9 +170,9 @@ class OgpController extends Controller
      */
     protected static function makeOgpInfoAsUrl($url): \App\Lib\OgpInfo
     {
-        $keys = array_keys(static::$_path_list);
+        $list = static::$_path_list;
 
-        foreach ($keys as $key => $value) {
+        foreach ($list as $key => $value) {
             ['result' => $result, 'params' => $params] = static::compareUrl($url, $key);
 
             if ($result) {
@@ -186,23 +186,35 @@ class OgpController extends Controller
 
     protected static function getPostTitle($params): string
     {
-        $post = Post::findOne($params);
+        if (!isset($params['id'])) {
+            return '';
+        }
+
+        $post = Post::findOne($params['id']);
         return $post->title ?? '';
     }
 
     protected static function getPostDescription($params): string
     {
-        return PostResource::getPostContent($params);
+        if (!isset($params['id'])) {
+            return '';
+        }
+
+        return PostResource::getPostContent($params['id']);
     }
 
     protected static function getPostThumbnail($params): string
     {
+        if (!isset($params['id']) || static::getPostTitle($params) === '') {
+            return '';
+        }
+
         $exts        = ['.jpg', '.JPG', '.png', '.PNG'];
         $img_path    = __DIR__ . '/../../../public/img/post/';
         $img_webpath = '/img/post/';
 
         foreach ($exts as $ext) {
-            $filename = $params . '_01' . $ext;
+            $filename = $params['id'] . '_01' . $ext;
 
             if (file_exists($img_path . $filename)) {
                 return $img_webpath . $filename;
@@ -214,7 +226,11 @@ class OgpController extends Controller
 
     protected static function getCategoryTitle($params): string
     {
-        return urldecode($params);
+        if (!isset($params['category'])) {
+            return '';
+        }
+
+        return urldecode($params['category']);
     }
 
     /**
