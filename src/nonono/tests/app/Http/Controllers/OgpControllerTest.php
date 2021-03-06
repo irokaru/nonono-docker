@@ -35,9 +35,7 @@ class OgpControllerTest extends TestCase
             ['ののの茶屋', '/blog/category/test/a'],
         ];
 
-        foreach ($suites as $suite) {
-            $this->assertEquals($suite[0], OgpController::getTitle($suite[1]), json_encode($suite));
-        }
+        $this->simpleSuitesCheck($suites, OgpController::class . '::getTitle');
     }
 
     public function test_get_description()
@@ -66,9 +64,7 @@ class OgpControllerTest extends TestCase
             ['ゲームづくりの甘味処', '/blog/category/test/a'],
         ];
 
-        foreach ($suites as $suite) {
-            $this->assertEquals($suite[0], OgpController::getDescription($suite[1]), json_encode($suite));
-        }
+        $this->simpleSuitesCheck($suites, OgpController::class . '::getDescription');
     }
 
     public function test_get_thumbnail()
@@ -97,9 +93,36 @@ class OgpControllerTest extends TestCase
             ['/img/thumbnail.png', '/blog/category/test/a'],
         ];
 
-        foreach ($suites as $suite) {
-            $this->assertEquals($suite[0], OgpController::getThumbnail($suite[1]), json_encode($suite));
-        }
+        $this->simpleSuitesCheck($suites, OgpController::class . '::getThumbnail');
+    }
+
+    public function test_get_card_type_for_twitter()
+    {
+        $suites = [
+            // expect, url
+            ['summary', '/'],
+            ['summary', '/?query'],
+            ['summary', '/dummy'],
+
+            ['summary', '/products'],
+            ['summary', '/products?test'],
+
+            ['summary', '/blog'],
+            ['summary', '/blog/1'],
+            ['summary', '/blog/123'],
+
+            // ['summary_large_image', '/blog/post/1'],
+
+            ['summary', '/blog/aaa'],
+
+            ['summary', '/blog/category/あああ'],
+            ['summary', '/blog/category/test/2222'],
+
+            ['summary', '/blog/category/test/hogehoge/2222'],
+            ['summary', '/blog/category/test/a'],
+        ];
+
+        $this->simpleSuitesCheck($suites, OgpController::class . '::getCardTypeForTwitter');
     }
 
     public function test_compare_url()
