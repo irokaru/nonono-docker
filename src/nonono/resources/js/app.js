@@ -5,8 +5,9 @@ import { createApp } from 'vue';
 import VueAxios from 'vue-axios';
 import router   from './router';
 
-import auth  from './plugins/Auth';
-import Store from './plugins/Store';
+import auth        from './plugins/Auth';
+import Store       from './plugins/Store';
+import WindowState from './plugins/WindowState';
 
 import { library }         from '@fortawesome/fontawesome-svg-core';
 import { fas }             from '@fortawesome/free-solid-svg-icons';
@@ -34,5 +35,8 @@ app.component('v-fa', FontAwesomeIcon);
 
 // Set Nonono Store
 app.use(Store);
+
+// Set window state
+app.use(WindowState);
 
 app.mount('#app');
