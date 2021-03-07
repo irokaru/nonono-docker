@@ -1,6 +1,6 @@
 <template>
-<nav :class="{hidden: isAdminPage(), pc: !isSmartPhone(), sp: isSmartPhone()}">
-  <template v-if="!isSmartPhone()">
+<nav :class="{hidden: isAdminPage(), pc: !isSmartPhone, sp: isSmartPhone}">
+  <template v-if="!isSmartPhone">
     <h1 title="トップへ">
       <router-link to="/"><img src="/img/logo.min.png" alt="ののの茶屋"></router-link>
     </h1>
@@ -39,7 +39,7 @@ export default {
         {to: '/link',     title: 'りんく',       en: 'LINK',     icon: ['fas', 'box']},
         {to: '/contact',  title: 'おといあわせ', en: 'CONTACT',  icon: ['fas', 'envelope']},
       ],
-      width: document.documentElement.clientWidth,
+      isSmartPhone: Vue.$isSmartPhone(),
     };
   },
   methods: {
@@ -55,15 +55,8 @@ export default {
      * @returns {void}
      */
     handleResize() {
-      this.width = document.documentElement.clientWidth;
+      this.isSmartPhone = Vue.$isSmartPhone();
     },
-    /**
-     * スマホ判定
-     * @returns {boolean}
-     */
-    isSmartPhone() {
-      return this.width <= 700;
-    }
   },
   mounted() {
     window.addEventListener('resize', _.throttle(e => {
