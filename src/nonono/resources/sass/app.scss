@@ -724,6 +724,20 @@ footer {
             }
           }
         }
+
+        .shoplinkyahoo {
+          float: left;
+          min-width: 128px;
+          a {
+            $btn-color: #bd2121;
+            background: $btn-color;
+            border: 2px solid $btn-color;
+            &:hover {
+                color: $btn-color;
+                background: none;
+            }
+          }
+        }
       }
     }
   }
