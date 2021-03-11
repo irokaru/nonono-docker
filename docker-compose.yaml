@@ -12,6 +12,7 @@ services:
       STAGE: ${STAGE}
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
+      - ./logs/proxy:/var/log/nginx
 
   php:
     build:
