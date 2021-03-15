@@ -19,5 +19,5 @@ WORKDIR /var/www/html
 
 # user settings
 RUN groupadd -g 1000 php && \
-    useradd -u 1000 -sm /bin/bash -g php irokaru
+    useradd -u 1000 -s /bin/bash -g php irokaru
 USER irokaru
