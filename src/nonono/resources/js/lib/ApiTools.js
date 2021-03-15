@@ -59,8 +59,9 @@ const ApiTools = {
    * @param {string} name array name
    */
   _objectExpand (obj, name) {
+    let ret = {};
+
     name = name || '';
-    let array = [];
 
     for (let [key, value] of Object.entries(obj)) {
       if (value === null) {
@@ -70,12 +71,13 @@ const ApiTools = {
       const keyName = name ? `${name}[${key}]` : key;
 
       if (typeof value === 'object' && !(value instanceof File)) {
-        array = {...array, ...this._objectExpand(value, keyName)};
+        ret = {...ret, ...this._objectExpand(value, keyName)};
       } else {
-        array[keyName] = value;
+        ret[keyName] = value;
       }
     }
-    return array;
+
+    return ret;
   },
 };
 
