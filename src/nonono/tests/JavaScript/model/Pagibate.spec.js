@@ -131,3 +131,36 @@ describe('list', () => {
     }
   });
 });
+
+describe('_getPageAsUrl', () => {
+  test('[OK] is match page number', () => {
+    const suites = [
+      // expect, url
+      [10,   'http://nononotyaya.net/?page=10'],
+      [0,    'http://nononotyaya.net/?page=0'],
+      [null, 'http://nononotyaya.net/?page=-1'],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect(Paginate._getPageAsUrl(suite[1]), msg).toBe(suite[0]);
+    }
+  });
+
+  test('[NG] invalid param', () => {
+    const suites = [
+      1,
+      'aaa',
+      'http://nononotyaya.net/?_page=10',
+      'http://nononotyaya.net/?page=aaa',
+      [],
+      {},
+      true,
+    ];
+
+    for (const suite of suites) {
+      expect(Paginate._getPageAsUrl(suite), suite).toBeNull();
+    }
+  });
+});

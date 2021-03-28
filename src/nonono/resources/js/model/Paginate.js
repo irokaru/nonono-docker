@@ -22,10 +22,10 @@ export default class {
     }
 
     this.current = meta.current_page;
-    this.first   = this._getPageAsUrl(links.first);
-    this.last    = this._getPageAsUrl(links.last);
-    this.next    = this._getPageAsUrl(links.next);
-    this.prev    = this._getPageAsUrl(links.prev);
+    this.first   = this.constructor._getPageAsUrl(links.first);
+    this.last    = this.constructor._getPageAsUrl(links.last);
+    this.next    = this.constructor._getPageAsUrl(links.next);
+    this.prev    = this.constructor._getPageAsUrl(links.prev);
 
     return this;
   };
@@ -64,10 +64,12 @@ export default class {
   /**
    * URLを基にページ番号を抜き出す
    * @param {string} url
-   * @returns {string}
+   * @returns {string|null}
    */
-  _getPageAsUrl(url) {
-    url ||= '';
+  static _getPageAsUrl(url) {
+    if (!Validator.isString(url)) {
+      return null;
+    }
 
     const ret = url.match(/\?page=(\d+)$/);
     return ret !== null ? Number(ret[1]) : null;
