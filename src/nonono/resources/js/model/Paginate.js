@@ -1,31 +1,34 @@
-export default {
-  model() {
-    return {
-      current: null,
-      first:   null,
-      last:    null,
-      next:    null,
-      prev:    null,
-    };
-  },
-
+export default class {
   /**
-   * ページネーション用オブジェクトを返す
+   * 初期化処理
    * @param {object} links
    * @param {object} meta
-   * @returns {object}
+   * @returns {this|null}
    */
-  setup(links, meta) {
-    let paginate = this.model();
+  init(links, meta) {
+    const linksKeys = [
+      'first', 'last', 'next', 'prev',
+    ];
 
-    paginate.current = meta.current_page || null;
-    paginate.first   = this._getPageAsUrl(links.first || '');
-    paginate.last    = this._getPageAsUrl(links.last || '');
-    paginate.next    = this._getPageAsUrl(links.next || '');
-    paginate.prev    = this._getPageAsUrl(links.prev || '');
+    for (const key of linksKeys) {
+      if (!Validator.hasKeyInObject(links, key) ||
+         (!Validator.isString(links[key]) && links[key] !== null)) {
+        return null;
+      }
+    }
 
-    return paginate;
-  },
+    if (!Validator.hasKeyInObject(meta, 'current_page') || !Validator.isInteger(meta.current_page)) {
+      return null;
+    }
+
+    this.current = meta.current_page;
+    this.first   = this._getPageAsUrl(links.first);
+    this.last    = this._getPageAsUrl(links.last);
+    this.next    = this._getPageAsUrl(links.next);
+    this.prev    = this._getPageAsUrl(links.prev);
+
+    return this;
+  };
 
   /**
    * ページネーション用の数字配列
@@ -62,7 +65,7 @@ export default {
     const start = p.current - half;
 
     return Array.from({length: length}, (k, v) => v + start);
-  },
+  };
 
   /**
    * URLを基にページ番号を抜き出す
@@ -70,7 +73,9 @@ export default {
    * @returns {string}
    */
   _getPageAsUrl(url) {
+    url ||= '';
+
     const ret = url.match(/\?page=(\d+)$/);
     return ret !== null ? Number(ret[1]) : null;
-  },
+  };
 };
