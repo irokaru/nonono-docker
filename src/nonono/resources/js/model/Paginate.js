@@ -36,8 +36,8 @@ export default class {
    * @param {array}
    */
   list(length) {
-    if (!Validator.isInteger(this.current)) {
-      return Array(length).fill('-');
+    if (!Validator.isInteger(length) || length < 0) {
+      return [];
     }
 
     const pageLength = this.last - this.first + 1;
@@ -46,7 +46,7 @@ export default class {
       return Array.from({length: pageLength}, (k, v) => v + this.first);
     }
 
-    const half   = parseInt(length / 2);
+    const half = parseInt(length / 2);
 
     if (this.current - half < this.first) {
       return Array.from({length: length}, (k, v) => v + this.first);

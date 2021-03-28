@@ -106,4 +106,28 @@ describe('list', () => {
       expect(p.list(suite[2]), msg).toEqual(suite[0]);
     }
   });
+
+  test('[NG] invalid params', () => {
+    const suites = [
+      // expect, length
+      [[], 0],
+      [[], -1],
+
+      [[1, 2, 3, 4, 5], 5],
+      [[1, 2, 3, 4, 5], 6],
+
+      [[], 'a'],
+      [[], []],
+      [[], true],
+    ];
+
+    const p = (new Paginate).init(..._p(1, 1, 5));
+    expect(p).toBeInstanceOf(Paginate);
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect(p.list(suite[1]), msg).toEqual(suite[0]);
+    }
+  });
 });
