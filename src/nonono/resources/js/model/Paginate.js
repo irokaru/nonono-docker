@@ -30,40 +30,38 @@ export default {
   /**
    * ページネーション用の数字配列
    * @param {{current: number, first: number, last: number, next: number, prev: number}} p
-   * @param {number} number
+   * @param {number} length
    * @param {array}
    */
-  list(p, number) {
-    if (!Validator.isInteger(p.current)) {
-      return Array(number).fill('-');
+  list(p, length) {
+    if (!Validator.isObject(p)) {
+      return [];
     }
 
-    const half = parseInt(number / 2);
+    if (!Validator.isInteger(p.current)) {
+      return Array(length).fill('-');
+    }
 
-    const start = () => {
-      if (p.current - half < p.first) {
-        return p.first;
-      }
+    const pageLength = p.last - p.first + 1;
 
-      if (p.last < p.current + half) {
-        return p.current - number + 1;
-      }
+    if (pageLength < length) {
+      return Array.from({length: pageLength}, (k, v) => v + p.first);
+    }
 
-      return p.current - half;
-    };
+    const half   = parseInt(length / 2);
+    const isEven = Boolean(length % 2);
 
-    const end = () => {
-      if (start() + number - 1 > p.last) {
-        return p.last;
-      }
+    if (p.current - half < p.first) {
+      return Array.from({length: length}, (k, v) => v + p.first);
+    }
 
-      return start() + number - 1;
-    };
+    if (p.current + half > p.last) {
+      return Array.from({length: length}, (k, v) => p.last - length + v + 1);
+    }
 
-    return Array.from(
-      {length: (end() - start() + 1)},
-      (v, k) => k + start(),
-    );
+    const start = p.current - half;
+
+    return Array.from({length: length}, (k, v) => v + start);
   },
 
   /**

@@ -43,30 +43,47 @@ describe('setup', () => {
     ];
 
     for (const suite of suites) {
-      expect(Paginate.setup(suite[1], suite[2])).toMatchObject(suite[0]);
+      const msg = JSON.stringify(suite);
+      expect(Paginate.setup(suite[1], suite[2]), msg).toMatchObject(suite[0]);
     }
   });
 });
 
 describe('list', () => {
   const _p = (...args) => {
+    const next = args[0] + 1;
+    const prev = args[0] - 1;
     return {
       current: args[0],
       first:   args[1],
       last:    args[2],
-      next:    args[3],
-      prev:    args[4],
+      next:    next <= args[2] ? next : null,
+      prev:    prev >= args[1] ? prev : null,
     };
   };
 
   test('[OK] is match object', () => {
     const suites = [
       // expect, p, number
-      [[1, 2, 3], _p(1, 1, 5, 2, null), 3],
+      [[1, 2, 3, 4, 5],  _p(1, 1, 10),  5],
+      [[1, 2, 3, 4, 5],  _p(2, 1, 10),  5],
+      [[1, 2, 3, 4, 5],  _p(3, 1, 10),  5],
+      [[2, 3, 4, 5, 6],  _p(4, 1, 10),  5],
+      [[3, 4, 5, 6, 7],  _p(5, 1, 10),  5],
+      [[4, 5, 6, 7, 8],  _p(6, 1, 10),  5],
+      [[5, 6, 7, 8, 9],  _p(7, 1, 10),  5],
+      [[6, 7, 8, 9, 10], _p(8, 1, 10),  5],
+      [[6, 7, 8, 9, 10], _p(9, 1, 10),  5],
+      [[6, 7, 8, 9, 10], _p(10, 1, 10), 5],
+
+      [[1], _p(1, 1, 10), 1],
+
+      [[1, 2, 3], _p(1, 1, 3), 100],
     ];
 
     for (const suite of suites) {
-      expect(Paginate.list(suite[1], suite[2])).toEqual(suite[0]);
+      const msg = JSON.stringify(suite);
+      expect(Paginate.list(suite[1], suite[2]), msg).toEqual(suite[0]);
     }
   });
 });
