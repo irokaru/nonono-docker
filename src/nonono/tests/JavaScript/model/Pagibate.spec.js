@@ -7,19 +7,7 @@ global.Validator = Validator;
 
 // -----------------------------------------------------------------
 
-describe('model', () => {
-  test('[OK] is match object', () => {
-    expect(Paginate.model()).toMatchObject({
-      current: null,
-      first:   null,
-      last:    null,
-      next:    null,
-      prev:    null,
-    });
-  });
-});
-
-describe('setup', () => {
+describe('init', () => {
   const _e = (...args) => {
     return {
       current: args[0],
@@ -33,18 +21,43 @@ describe('setup', () => {
   test('[OK] is match object', () => {
     const suites = [
       // expect, links, meta
-      [_e(null, null, null, null, null), {}, {}],
-      [_e('hogehoge', 1, 2, 3, 4),    {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 'hogehoge'}],
-      [_e('hogehoge', null, 2, 3, 4), {last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 'hogehoge'}],
-      [_e('hogehoge', 1, null, 3, 4), {first: 'hogehoge?page=1', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 'hogehoge'}],
-      [_e('hogehoge', 1, 2, null, 4), {first: 'hogehoge?page=1', last: 'hogehoge?page=2', prev: 'hogehoge?page=4'}, {current_page: 'hogehoge'}],
-      [_e('hogehoge', 1, 2, 3, null), {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3'}, {current_page: 'hogehoge'}],
-      [_e(null, 1, 2, 3, 4), {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current: 'hogehoge'}],
+      [_e(1, 1, 2, 3, 4),    {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [_e(1, 1, 5, 2, null), {first: 'hogehoge?page=1', last: 'hogehoge?page=5', next: 'hogehoge?page=2', prev: null},              {current_page: 1}],
+      [_e(5, 1, 5, null, 4), {first: 'hogehoge?page=1', last: 'hogehoge?page=5', next: null, prev: 'hogehoge?page=4'},              {current_page: 5}],
     ];
 
     for (const suite of suites) {
       const msg = JSON.stringify(suite);
-      expect(Paginate.setup(suite[1], suite[2]), msg).toMatchObject(suite[0]);
+
+      const p = (new Paginate).init(suite[1], suite[2]);
+
+      expect(p, msg).toBeInstanceOf(Paginate);
+
+      for (const [k, v] of Object.entries(suite[0])) {
+        expect(p[k], msg).toBe(v);
+      }
+    }
+  });
+
+  test('[NG] bad params', () => {
+    const suites =[
+      [null, {last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {}],
+
+      [null, {first: 2, last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: [], next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: {}, prev: 'hogehoge?page=4'}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: false}, {current_page: 1}],
+      [null, {first: 'hogehoge?page=1', last: 'hogehoge?page=2', next: 'hogehoge?page=3', prev: 'hogehoge?page=4'}, {current_page: '1'}],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect((new Paginate).init(suite[1], suite[2]), msg).toBeNull();
     }
   });
 });
@@ -53,37 +66,44 @@ describe('list', () => {
   const _p = (...args) => {
     const next = args[0] + 1;
     const prev = args[0] - 1;
-    return {
-      current: args[0],
-      first:   args[1],
-      last:    args[2],
-      next:    next <= args[2] ? next : null,
-      prev:    prev >= args[1] ? prev : null,
-    };
+
+    return [
+      {
+        first: 'hogehoge?page=' + args[1],
+        last:  'hogehoge?page=' + args[2],
+        next:  'hogehoge?page=' + (next <= args[2] ? next : null),
+        prev:  'hogehoge?page=' + (prev >= args[1] ? prev : null),
+      },
+      {
+        current_page: args[0],
+      },
+    ];
   };
 
-  test('[OK] is match object', () => {
+  test('[OK] is match array', () => {
     const suites = [
-      // expect, p, number
-      [[1, 2, 3, 4, 5],  _p(1, 1, 10),  5],
-      [[1, 2, 3, 4, 5],  _p(2, 1, 10),  5],
-      [[1, 2, 3, 4, 5],  _p(3, 1, 10),  5],
-      [[2, 3, 4, 5, 6],  _p(4, 1, 10),  5],
-      [[3, 4, 5, 6, 7],  _p(5, 1, 10),  5],
-      [[4, 5, 6, 7, 8],  _p(6, 1, 10),  5],
-      [[5, 6, 7, 8, 9],  _p(7, 1, 10),  5],
-      [[6, 7, 8, 9, 10], _p(8, 1, 10),  5],
-      [[6, 7, 8, 9, 10], _p(9, 1, 10),  5],
-      [[6, 7, 8, 9, 10], _p(10, 1, 10), 5],
+      // expect, p, length
+      [[1, 2, 3], _p(1, 1, 5), 3],
+      [[1, 2, 3], _p(2, 1, 5), 3],
+      [[2, 3, 4], _p(3, 1, 5), 3],
+      [[3, 4, 5], _p(4, 1, 5), 3],
+      [[3, 4, 5], _p(5, 1, 5), 3],
 
-      [[1], _p(1, 1, 10), 1],
-
-      [[1, 2, 3], _p(1, 1, 3), 100],
+      [[1, 2, 3, 4], _p(1, 1, 6), 4],
+      [[1, 2, 3, 4], _p(2, 1, 6), 4],
+      [[1, 2, 3, 4], _p(3, 1, 6), 4],
+      [[2, 3, 4, 5], _p(4, 1, 6), 4],
+      [[3, 4, 5, 6], _p(5, 1, 6), 4],
+      [[3, 4, 5, 6], _p(6, 1, 6), 4],
     ];
 
     for (const suite of suites) {
       const msg = JSON.stringify(suite);
-      expect(Paginate.list(suite[1], suite[2]), msg).toEqual(suite[0]);
+
+      const p = (new Paginate).init(...suite[1]);
+
+      expect(p, msg).toBeInstanceOf(Paginate);
+      expect(p.list(suite[2]), msg).toEqual(suite[0]);
     }
   });
 });
