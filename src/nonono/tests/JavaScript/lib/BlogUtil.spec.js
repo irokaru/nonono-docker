@@ -22,25 +22,25 @@ describe('validateRoute', () => {
     const suites = [
       // expect, route
       // /
-      [true, _r('', '', '')],
+      [true, _r()],
 
       // 記事リスト
-      [true,  _r('100', '', '')],
-      [true,  _r('1',   '', '')],
-      [false, _r('0',   '', '')],
-      [false, _r('-1',  '', '')],
+      [true,  _r('100')],
+      [true,  _r('1')],
+      [false, _r('0')],
+      [false, _r('-1')],
 
       // 記事詳細
-      [true,  _r('post', '100', '')],
-      [true,  _r('post', '1',   '')],
-      [false, _r('post', '0',   '')],
-      [false, _r('post', '-1',  '')],
+      [true,  _r('post', '100')],
+      [true,  _r('post', '1')],
+      [false, _r('post', '0')],
+      [false, _r('post', '-1')],
 
       // カテゴリリスト
-      [true, _r('category', 'aaaaa', '')],
-      [true, _r('category', '1',     '')],
-      [true, _r('category', '0',     '')],
-      [true, _r('category', '-1',    '')],
+      [true, _r('category', 'aaaaa')],
+      [true, _r('category', '1')],
+      [true, _r('category', '0')],
+      [true, _r('category', '-1')],
 
       // カテゴリリスト(ページ付き)
       [true,  _r('category', 'aaaaa', '1')],
@@ -76,3 +76,29 @@ describe('validateRoute', () => {
   });
 });
 
+describe('mainComponentName', () => {
+  test('[OK] is match array', () => {
+    const suites = [
+      // expect, route
+      [['BlogPostDetail', false], _r('post', '100')],
+      [['BlogPostDetail', false], _r('post', '1')],
+      [['BlogPostDetail', false], _r('post', '0')],
+      [['BlogPostDetail', false], _r('post', '-1')],
+
+      [['BlogCategoryList', true],  _r('category', 'aaaaa')],
+      [['BlogCategoryList', true],  _r('category', '1')],
+      [['BlogCategoryList', true],  _r('category', '0')],
+      [['BlogCategoryList', true],  _r('category', '-1')],
+
+      [['BlogCategoryList', true],  _r('category', 'aaaaa', '1')],
+      [['BlogCategoryList', true],  _r('category', '1',     '100')],
+      [['BlogCategoryList', true],  _r('category', '0',     '-1')],
+      [['BlogCategoryList', true],  _r('category', '-1',    '0')],
+
+      [['BlogPostList', false], _r('posts')],
+      [['BlogPostList', false], _r('11111')],
+      [['BlogPostList', false], _r('categories')],
+      [['BlogPostList', false], _r('list')],
+    ];
+  });
+});
