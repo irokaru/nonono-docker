@@ -112,6 +112,7 @@ describe('mainComponentName', () => {
 describe('mdDetail2html', () => {
   test('[OK] is match string', () => {
     const suites = [
+      // expect, md
       ["<p>aaaaa</p>\n<p>bbbbb</p>\n", "aaaaa\n\nbbbbb"],
       ["<p>aaaa<a href=\"https://nononotyaya.net\" target=\"_blank\">bbbb</a>cccc</p>\n", "aaaa[bbbb](https://nononotyaya.net)cccc"],
       ["<ul class=\"dash\">\n<li class=\"arrow\">aaa</li>\n<li class=\"arrow\">bbb</li>\n</ul>\n", "- aaa\n- bbb"],
@@ -134,6 +135,32 @@ describe('mdDetail2html', () => {
       const msg = JSON.stringify(suite);
 
       expect(BlogUtil.mdDetail2html(suite), msg).toBe('');
+    }
+  });
+});
+
+describe('isXXXXXXXX', () => {
+  test('[OK/NG] tests', () => {
+    const funcs = [
+      BlogUtil.isPostList, BlogUtil.isCategoryList, BlogUtil.isPostDetail,
+    ];
+
+    const suites = [
+      // [ispostlist, iscategory, ispostdetail], param
+      [[true, false, false], 'BlogPostList'],
+      [[false, true, false], 'BlogCategoryList'],
+      [[false, false, true], 'BlogPostDetail'],
+
+      [[false, false, false], ''],
+      [[false, false, false], 1],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      for (const [index, func] of Object.entries(funcs)) {
+        expect(func(suite[1]), msg).toBe(suite[0][index]);
+      }
     }
   });
 });
