@@ -74,4 +74,6 @@ services:
 volumes:
   db-store:
   vendor-store:
+    driver: local
   node_modules-store:
+    driver: local

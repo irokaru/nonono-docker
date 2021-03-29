@@ -1,78 +1,77 @@
-export default {
-  model() {
-    return {
-      current: null,
-      first:   null,
-      last:    null,
-      next:    null,
-      prev:    null,
-    };
-  },
-
+export default class {
   /**
-   * ページネーション用オブジェクトを返す
+   * 初期化処理
    * @param {object} links
    * @param {object} meta
-   * @returns {object}
+   * @returns {this|null}
    */
-  setup(links, meta) {
-    let paginate = this.model();
+  init(links, meta) {
+    const linksKeys = [
+      'first', 'last', 'next', 'prev',
+    ];
 
-    paginate.current = meta.current_page || null;
-    paginate.first   = this._getPageAsUrl(links.first || '');
-    paginate.last    = this._getPageAsUrl(links.last || '');
-    paginate.next    = this._getPageAsUrl(links.next || '');
-    paginate.prev    = this._getPageAsUrl(links.prev || '');
+    for (const key of linksKeys) {
+      if (!Validator.hasKeyInObject(links, key) ||
+         (!Validator.isString(links[key]) && links[key] !== null)) {
+        return null;
+      }
+    }
 
-    return paginate;
-  },
+    if (!Validator.hasKeyInObject(meta, 'current_page') || !Validator.isInteger(meta.current_page)) {
+      return null;
+    }
+
+    this.current = meta.current_page;
+    this.first   = this.constructor._getPageAsUrl(links.first);
+    this.last    = this.constructor._getPageAsUrl(links.last);
+    this.next    = this.constructor._getPageAsUrl(links.next);
+    this.prev    = this.constructor._getPageAsUrl(links.prev);
+
+    return this;
+  };
 
   /**
    * ページネーション用の数字配列
-   * @param {{current: number, first: number, last: number, next: number, prev: number}} p
-   * @param {number} number
+   * @param {number} length
    * @param {array}
    */
-  list(p, number) {
-    if (!Validator.isInteger(p.current)) {
-      return Array(number).fill('-');
+  list(length) {
+    if (!Validator.isInteger(length) || length < 0) {
+      return [];
     }
 
-    const half = parseInt(number / 2);
+    const pageLength = this.last - this.first + 1;
 
-    const start = () => {
-      if (p.current - half < p.first) {
-        return p.first;
-      }
+    if (pageLength < length) {
+      return Array.from({length: pageLength}, (k, v) => v + this.first);
+    }
 
-      if (p.last < p.current + half) {
-        return p.current - number + 1;
-      }
+    const half = parseInt(length / 2);
 
-      return p.current - half;
-    };
+    if (this.current - half < this.first) {
+      return Array.from({length: length}, (k, v) => v + this.first);
+    }
 
-    const end = () => {
-      if (start() + number - 1 > p.last) {
-        return p.last;
-      }
+    if (this.current + half > this.last) {
+      return Array.from({length: length}, (k, v) => this.last - length + v + 1);
+    }
 
-      return start() + number - 1;
-    };
+    const start = this.current - half;
 
-    return Array.from(
-      {length: (end() - start() + 1)},
-      (v, k) => k + start(),
-    );
-  },
+    return Array.from({length: length}, (k, v) => v + start);
+  };
 
   /**
    * URLを基にページ番号を抜き出す
    * @param {string} url
-   * @returns {string}
+   * @returns {string|null}
    */
-  _getPageAsUrl(url) {
+  static _getPageAsUrl(url) {
+    if (!Validator.isString(url)) {
+      return null;
+    }
+
     const ret = url.match(/\?page=(\d+)$/);
     return ret !== null ? Number(ret[1]) : null;
-  },
+  };
 };
