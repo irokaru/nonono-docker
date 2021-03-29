@@ -1,6 +1,5 @@
 import marked from 'marked';
 import hljs   from 'highlight.js';
-import 'highlight.js/styles/kimbie.light.css';
 
 export default {
   /**
