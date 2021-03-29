@@ -79,6 +79,10 @@ export default {
    * @returns {string}
    */
   mdDetail2html(md) {
+    if (!Validator.isString(md)) {
+      return '';
+    }
+
     const html   = Document.md2html(md);
     const listed = Document.addClassToList(html);
     const anchor = Document.anchorBlank(listed);

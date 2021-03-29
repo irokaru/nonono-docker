@@ -95,10 +95,45 @@ describe('mainComponentName', () => {
       [['BlogCategoryList', true],  _r('category', '0',     '-1')],
       [['BlogCategoryList', true],  _r('category', '-1',    '0')],
 
-      [['BlogPostList', false], _r('posts')],
-      [['BlogPostList', false], _r('11111')],
-      [['BlogPostList', false], _r('categories')],
-      [['BlogPostList', false], _r('list')],
+      [['BlogPostList', true], _r('posts')],
+      [['BlogPostList', true], _r('11111')],
+      [['BlogPostList', true], _r('categories')],
+      [['BlogPostList', true], _r('list')],
     ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect(BlogUtil.mainComponentName(suite[1]), msg).toEqual(suite[0]);
+    }
+  });
+});
+
+describe('mdDetail2html', () => {
+  test('[OK] is match string', () => {
+    const suites = [
+      ["<p>aaaaa</p>\n<p>bbbbb</p>\n", "aaaaa\n\nbbbbb"],
+      ["<p>aaaa<a href=\"https://nononotyaya.net\" target=\"_blank\">bbbb</a>cccc</p>\n", "aaaa[bbbb](https://nononotyaya.net)cccc"],
+      ["<ul class=\"dash\">\n<li class=\"arrow\">aaa</li>\n<li class=\"arrow\">bbb</li>\n</ul>\n", "- aaa\n- bbb"],
+      ["<p><code>aaaaa</code></p>\n", "`aaaaa`"],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect(BlogUtil.mdDetail2html(suite[1]), msg).toBe(suite[0]);
+    }
+  });
+
+  test('[NG] invalid param', () => {
+    const suites = [
+      1, ['aaa', 'vvv'], {}, true,
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+
+      expect(BlogUtil.mdDetail2html(suite), msg).toBe('');
+    }
   });
 });
