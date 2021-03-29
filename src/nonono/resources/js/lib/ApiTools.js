@@ -38,6 +38,7 @@ const ApiTools = {
   /**
    * 連想配列からFormDataを作成する
    * @param {object} obj target array
+   * @returns {FormData}
    */
   makeFormData (obj) {
     const array = this._objectExpand(obj);
@@ -64,11 +65,12 @@ const ApiTools = {
     name = name || '';
 
     for (let [key, value] of Object.entries(obj)) {
+      const keyName = name ? `${name}[${key}]` : key;
+
       if (value === null) {
+        ret[keyName] = value;
         continue;
       }
-
-      const keyName = name ? `${name}[${key}]` : key;
 
       if (typeof value === 'object' && !(value instanceof File)) {
         ret = {...ret, ...this._objectExpand(value, keyName)};

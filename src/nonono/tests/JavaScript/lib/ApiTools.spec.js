@@ -92,19 +92,33 @@ describe('_getErrorMessageForAdmin', () => {
 });
 
 describe('makeFormData', () => {
+  const _f = (params) => {
+    const f = new FormData();
+
+    for (const [k, v] of Object.entries(params)) {
+      f.append(k, v);
+    }
+
+    return f;
+  };
 
   test('[OK] is match form data', () => {
-    // TODO
     const suites = [
       // expect, params
-      [{}, {'aaa': 1, 'bbb': 'a'}],
+      [_f({aaa: 1, bbb: 'a'}), {aaa: 1, bbb: 'a'}],
+      [_f({'aaa[bbb]': 1, 'aaa[ccc]': 0}), {aaa: {bbb: true, ccc: false}}],
     ];
 
     for (const suite of suites) {
-      const result = ApiTools.makeFormData(suite[1]);
+      const result      = ApiTools.makeFormData(suite[1])
+      const resultArray = [];
+      resultArray.push(...result.entries());
+
+      const expectArray = [];
+      expectArray.push(...suite[0].entries());
 
       expect(result).toBeInstanceOf(FormData);
-      expect(result).toMatchObject(suite[0]);
+      expect(resultArray).toEqual(expectArray);
     }
   });
 });
@@ -116,7 +130,8 @@ describe('_objectExpand', () => {
       // expect, params
       [{hoge: 0, fuga: 'test'},                    {hoge: 0, fuga: 'test'}],
       [{'hoge[aaa]': 0},                           {hoge: {aaa: 0}}],
-      [{'aaa[bbb][111]': 'a', 'aaa[bbb][ccc]': 1}, {aaa: {bbb: {111: 'a', 'ccc': 1}}}],
+      [{'aaa[bbb][111]': 'a', 'aaa[bbb][ccc]': 1}, {aaa: {bbb: {111: 'a', ccc: 1}}}],
+      [{abc: null, 'aaa[bbb]': null},               {abc: null, aaa: {bbb: null}}],
     ];
 
     for (const suite of suites) {
