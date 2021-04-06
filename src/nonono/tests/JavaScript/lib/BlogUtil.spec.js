@@ -171,6 +171,7 @@ describe('createTitle', () => {
       title: title,
     };
   };
+
   test('[OK] is match string', () => {
     const suites = [
       // expect, route, post
@@ -188,6 +189,43 @@ describe('createTitle', () => {
     for (const suite of suites) {
       const msg = JSON.stringify(suite);
       expect(BlogUtil.createTitle(suite[1], suite[2]), msg).toBe(suite[0]);
+    }
+  });
+});
+
+describe('getPageNumber', () => {
+  test('[OK] is match number', () => {
+    const suites = [
+      // expect, route, view
+      [0,  _r('0'),  'BlogPostList'],
+      [10, _r('10'), 'BlogPostList'],
+
+      [100, _r('category', 'aaa', '100'), 'BlogCategoryList'],
+
+      [null, _r('post', '10'), 'BlogPostDetail'],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+      expect(BlogUtil.getPageNumber(suite[1], suite[2]), msg).toBe(suite[0]);
+    }
+  });
+
+  test('[NG] invalid param', () => {
+      // expect, route, view
+      const suites = [
+      // expect, route, view
+      [null, _r(), null],
+
+      [NaN, _r('aaa'), 'BlogPostList'],
+
+      [1, _r(), 'BlogPostList'],
+      [1, _r(), 'BlogCategoryList'],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+      expect(BlogUtil.getPageNumber(suite[1], suite[2]), msg).toBe(suite[0]);
     }
   });
 });
