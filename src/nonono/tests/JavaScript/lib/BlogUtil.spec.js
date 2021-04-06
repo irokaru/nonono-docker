@@ -229,3 +229,24 @@ describe('getPageNumber', () => {
     }
   });
 });
+
+describe('getPageLink', () => {
+  test('[OK] is match link', () => {
+    const suites = [
+      // expect, route, view, number
+      ['', _r('1'), 'BlogPostList', null],
+
+      ['/blog/1', _r(), 'BlogPostList', 1],
+      ['/blog/2', _r(), 'BlogPostList', 2],
+
+      ['/blog/category/aaa/1', _r('category', 'aaa', 1), 'BlogCategoryList', 1],
+
+      ['/blog', _r('post', 1), 'BlogPostDetail', 1],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+      expect(BlogUtil.getPageLink(suite[1], suite[2], suite[3]), msg).toBe(suite[0]);
+    }
+  });
+});
