@@ -131,7 +131,7 @@ export default {
       return `${post.title} - ののの茶屋`;
     }
 
-    if (this.isCategoryList(view)) {
+    if (this.isCategoryList(view) && this.getKey(route)) {
       return `${this.getKey(route)}のにっき一覧 - ののの茶屋`;
     }
 

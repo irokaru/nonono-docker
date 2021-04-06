@@ -164,3 +164,30 @@ describe('isXXXXXXXX', () => {
     }
   });
 });
+
+describe('createTitle', () => {
+  const _p = (title) => {
+    return {
+      title: title,
+    };
+  };
+  test('[OK] is match string', () => {
+    const suites = [
+      // expect, route, post
+      ['にっき - ののの茶屋', _r(), _p()],
+
+      ['ほげほげ - ののの茶屋', _r('post', '1'),  _p('ほげほげ')],
+      ['にっき - ののの茶屋',   _r('post', '99'), _p()],
+
+      ['カテゴリ名のにっき一覧 - ののの茶屋', _r('category', 'カテゴリ名'),      _p()],
+      ['カテゴリのにっき一覧 - ののの茶屋'  , _r('category', 'カテゴリ', '111'), _p()],
+      ['にっき - ののの茶屋',                 _r('category'),                    _p()],
+      ['にっき - ののの茶屋',                 _r('category', null, '10'),        _p()],
+    ];
+
+    for (const suite of suites) {
+      const msg = JSON.stringify(suite);
+      expect(BlogUtil.createTitle(suite[1], suite[2]), msg).toBe(suite[0]);
+    }
+  });
+});
