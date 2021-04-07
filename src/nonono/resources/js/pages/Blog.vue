@@ -38,6 +38,8 @@ import Paginate from '../model/Paginate';
 import Post     from '../model/Post';
 import PostApi  from '../api/PostApi';
 
+import 'highlight.js/styles/kimbie.light.css';
+
 export default {
   data () {
     return {

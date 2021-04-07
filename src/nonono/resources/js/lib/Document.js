@@ -1,6 +1,5 @@
 import marked from 'marked';
 import hljs   from 'highlight.js';
-import 'highlight.js/styles/kimbie.light.css';
 
 export default {
   /**
@@ -18,7 +17,7 @@ export default {
    * @returns {string}
    */
   addClassToList(html) {
-    return html.replace(/<ul>/g, "<ul class='dash'>").replace(/<li>/g, "<li class='arrow'>");
+    return html.replace(/<ul>/g, '<ul class="dash">').replace(/<li>/g, '<li class="arrow">');
   },
 
   /**
@@ -31,7 +30,7 @@ export default {
 
     if (anchors !== null) {
       anchors.map(anchor => {
-        html = html.replace(anchor, anchor + 'target="_blank"');
+        html = html.replace(anchor, anchor + ' target="_blank"');
       });
     }
 
